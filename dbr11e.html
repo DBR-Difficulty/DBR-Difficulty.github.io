@@ -5,8 +5,8 @@
 <title>Lv11 DBR EASY</title>
 <meta http-equiv="Content-Script-Type" content="text/javascript" />
 <meta http-equiv="Content-Style-Type" content="text/css" />
-<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS" />
-<meta name="11dbrtable" content="./dbr11eheader.json" /> <!--  “Ç‚İ‚Ş“ïˆÕ“x•\‚Ìƒwƒbƒ_ƒtƒ@ƒCƒ‹‚ğ‚±‚±‚Éw’è  -->
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="11dbrtable" content="./dbr11eheader.json" /> <!--  èª­ã¿è¾¼ã‚€é›£æ˜“åº¦è¡¨ã®ãƒ˜ãƒƒãƒ€ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ã“ã“ã«æŒ‡å®š  -->
 <link href="style/style.css" rel="stylesheet" type="text/css" media="screen,print" />
 <script src="style/jquery-2.0.2.min.js"></script>
 </head>
@@ -14,12 +14,12 @@
 <body>
 
 <center>
-<strong><span style="font-size: 24pt;">™11 DBR“ïˆÕ“x•\(ƒC[ƒW[)</span></strong><br>
-<a href="index.html">TOP‚É–ß‚é</a><br>
+<strong><span style="font-size: 24pt;">â˜†11 DBRé›£æ˜“åº¦è¡¨(ã‚¤ãƒ¼ã‚¸ãƒ¼)</span></strong><br>
+<a href="index.html">TOPã«æˆ»ã‚‹</a><br>
 </center>
 
 
-<!--          ‚±‚±‚©‚ç“ïˆÕ“x•\–{‘Ì          -->
+<!--          ã“ã“ã‹ã‚‰é›£æ˜“åº¦è¡¨æœ¬ä½“          -->
 <div class="tableflame">
 <table align="center" cellspacing="1" cellpadding=2  border="0" bgcolor="#000000" id="table_int">
 </table>
@@ -27,7 +27,7 @@
 
 <script language="javascript" type="text/javascript">
 
-// ƒƒjƒ…[ŠJ•Â
+// ãƒ¡ãƒ‹ãƒ¥ãƒ¼é–‹é–‰
 function menu(tName){
 	var tMenu = document.getElementById(tName).style;
 	if (tMenu.display == 'none'){
@@ -41,7 +41,7 @@ function menu(tName){
 $(document).ready(function(){
 	$.getJSON($("meta[name=11dbrtable]").attr("content"), function(header){
 		$.getJSON(header.data_url, function(information){
-			// header‚Ìsort—L–³‚Å•ªŠò
+			// headerã®sortæœ‰ç„¡ã§åˆ†å²
 			if(header["level_order"]){
 				makeDBRTable(information,header.symbol,header["level_order"]);
 			} else {
@@ -52,9 +52,9 @@ $(document).ready(function(){
 });
 
 
-// ƒ\[ƒg‚Ì‚½‚ß‚Ìˆø”’Ç‰Á
+// ã‚½ãƒ¼ãƒˆã®ãŸã‚ã®å¼•æ•°è¿½åŠ 
 function makeDBRTable(info, mark, order) {
-	// order‚ª–¢w’è‚Ìê‡‚Ínull
+	// orderãŒæœªæŒ‡å®šã®å ´åˆã¯null
 	if(typeof order === 'undefined'){
 		order = null;
 	}
@@ -64,15 +64,15 @@ function makeDBRTable(info, mark, order) {
     var count = 0;
     var obj = $("#table_int");
 
-	// ƒ\[ƒg
-		// ‚»‚¤‚Å‚È‚¢ê‡‚ÍƒŒƒxƒ‹‡->ƒ^ƒCƒgƒ‹‡‚Éƒ\[ƒg
+	// ã‚½ãƒ¼ãƒˆ
+		// ãã†ã§ãªã„å ´åˆã¯ãƒ¬ãƒ™ãƒ«é †->ã‚¿ã‚¤ãƒˆãƒ«é †ã«ã‚½ãƒ¼ãƒˆ
 		info.sort(
 			function(a,b){
 				if(a["level"] == "") {
-				  a["level"] = "–¢¸’è";
+				  a["level"] = "æœªæŸ»å®š";
 				}
 				if(b["level"] == "") {
-				  b["level"] = "–¢¸’è";
+				  b["level"] = "æœªæŸ»å®š";
 				}
 				var aLv = a["level"].toString();
 				var bLv = b["level"].toString();
@@ -93,26 +93,26 @@ function makeDBRTable(info, mark, order) {
 			}
 		);
 	
-    // •\‚ÌƒNƒŠƒA
+    // è¡¨ã®ã‚¯ãƒªã‚¢
     obj.html("");
-    $("<tr height='20' style='color:white;background-color:#666666'><td align='center'>ƒŒƒxƒ‹</td><td align='center'>¸’è’†“ïˆÕ“x</td><td align='center'>ƒo[ƒWƒ‡ƒ“</td><td align='center'>‚¨‚·‚·‚ß“x</td><td align='center'>ƒ^ƒCƒgƒ‹</td><td align='center'>BPM</td><td align='center'>ƒm[ƒc”</td><td align='center'>•ˆ–ÊŒXŒü</td><td align='center'>ƒRƒƒ“ƒg</td></tr>").appendTo(obj);
+    $("<tr height='20' style='color:white;background-color:#666666'><td align='center'>ãƒ¬ãƒ™ãƒ«</td><td align='center'>æŸ»å®šä¸­é›£æ˜“åº¦</td><td align='center'>ãƒãƒ¼ã‚¸ãƒ§ãƒ³</td><td align='center'>ãŠã™ã™ã‚åº¦</td><td align='center'>ã‚¿ã‚¤ãƒˆãƒ«</td><td align='center'>BPM</td><td align='center'>ãƒãƒ¼ãƒ„æ•°</td><td align='center'>è­œé¢å‚¾å‘</td><td align='center'>ã‚³ãƒ¡ãƒ³ãƒˆ</td></tr>").appendTo(obj);
     var obj_sep = null;
     for (var i = 0; i < info.length; i++) {
-        // “ï“x‚²‚Æ‚Ì‹æØ‚è
+        // é›£åº¦ã”ã¨ã®åŒºåˆ‡ã‚Š
         if (info[i].level == "") {
-          info[i].level = "–¢¸’è";
+          info[i].level = "æœªæŸ»å®š";
          }
         if (x != info[i].level) {
-            // ‘O‚Ì‹æØ‚è‚É•ˆ–Ê”A•½‹Ï–§“x‚ğ’Ç‰Á
+            // å‰ã®åŒºåˆ‡ã‚Šã«è­œé¢æ•°ã€å¹³å‡å¯†åº¦ã‚’è¿½åŠ 
           	if (obj_sep != null) {
-                obj_sep.html("<td colspan='9' align='center'>" + "<b>" + mark + x + " (" + count + "•ˆ–Ê)</b></td>");
+                obj_sep.html("<td colspan='9' align='center'>" + "<b>" + mark + x + " (" + count + "è­œé¢)</b></td>");
             }
             obj_sep = $("<tr class='tr_separate' id='" + mark + info[i].level + "'></tr>");
             obj_sep.appendTo(obj);
             count = 0;
             x = info[i].level;
         }
-        // –{•¶
+        // æœ¬æ–‡
         var str = $("<tr class='tr_normal'></tr>");
 
 /*
@@ -137,33 +137,33 @@ function makeDBRTable(info, mark, order) {
         }
 */
 
-        // ƒŒƒxƒ‹•\‹L
+        // ãƒ¬ãƒ™ãƒ«è¡¨è¨˜
         $("<td width='1%'>" + mark + x + "</td>").appendTo(str);
-        // ¸’è’†“ïˆÕ“x
+        // æŸ»å®šä¸­é›£æ˜“åº¦
         $("<td width='0.1%'>" + info[i].pending + "</td>").appendTo(str);
-        // ƒo[ƒWƒ‡ƒ“
+        // ãƒãƒ¼ã‚¸ãƒ§ãƒ³
         $("<td width='1%' align='left'>" + info[i].ver + "</td>").appendTo(str);
-        // ‚¨‚·‚·‚ß“x
+        // ãŠã™ã™ã‚åº¦
         $("<td width='1%' align='center'><a>" + info[i].recommend1 + info[i].recommend2 + info[i].recommend3 + "</a></td>").appendTo(str);
-        // ƒ^ƒCƒgƒ‹
+        // ã‚¿ã‚¤ãƒˆãƒ«
         $("<td width='14%' align='left'>" + "<a>" + info[i].title + "</a></td>").appendTo(str);
         // BPM
         $("<td width='1%' align='left'>" + "<a>" + info[i].bpm + "</a></td>").appendTo(str);
-        // ƒm[ƒc”
+        // ãƒãƒ¼ãƒ„æ•°
         $("<td width='1%' align='left'>" + "<a>" + info[i].notes + "</a></td>").appendTo(str);
-        // •ˆ–ÊŒXŒü
+        // è­œé¢å‚¾å‘
         $("<td width='7%' align='left'>" + info[i].type + "</div></td>").appendTo(str);
-        // ƒRƒƒ“ƒg
+        // ã‚³ãƒ¡ãƒ³ãƒˆ
         $("<td width='25%'>" + info[i].comment1 + " " + info[i].comment2 + "</div></td>").appendTo(str);
         str.appendTo(obj);
         count++;
     }
 
     
-    // ÅŒã‚Ì‹æØ‚èˆ—
-	// ƒ}[ƒN‚ª”²‚¯—‚¿‚Ä‚½‚Ì‚Å’Ç‰Á
+    // æœ€å¾Œã®åŒºåˆ‡ã‚Šå‡¦ç†
+	// ãƒãƒ¼ã‚¯ãŒæŠœã‘è½ã¡ã¦ãŸã®ã§è¿½åŠ 
     if (obj_sep != null) {
-        obj_sep.html("<td colspan='9' align='center'>" + "<b>" + mark + x + " (" + count + "•ˆ–Ê)</b></td>");
+        obj_sep.html("<td colspan='9' align='center'>" + "<b>" + mark + x + " (" + count + "è­œé¢)</b></td>");
     }
 }
 </script>
