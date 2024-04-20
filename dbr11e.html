@@ -1,0 +1,173 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="ja">
+
+<head>
+<title>Lv11 DBR EASY</title>
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS" />
+<meta name="11dbrtable" content="./dbr11eheader.json" /> <!--　読み込む難易度表のヘッダファイルをここに指定　-->
+<link href="style/style.css" rel="stylesheet" type="text/css" media="screen,print" />
+<script src="style/jquery-2.0.2.min.js"></script>
+</head>
+
+<body>
+
+<center>
+<strong><span style="font-size: 24pt;">☆11 DBR難易度表(イージー)</span></strong><br>
+<a href="index.html">TOPに戻る</a><br>
+</center>
+
+
+<!--　　　　　ここから難易度表本体　　　　　-->
+<div class="tableflame">
+<table align="center" cellspacing="1" cellpadding=2　border="0" bgcolor="#000000" id="table_int">
+</table>
+</div>
+
+<script language="javascript" type="text/javascript">
+
+// メニュー開閉
+function menu(tName){
+	var tMenu = document.getElementById(tName).style;
+	if (tMenu.display == 'none'){
+		tMenu.display = "block";
+	}else{
+		tMenu.display = "none";
+	}
+}
+
+
+$(document).ready(function(){
+	$.getJSON($("meta[name=11dbrtable]").attr("content"), function(header){
+		$.getJSON(header.data_url, function(information){
+			// headerのsort有無で分岐
+			if(header["level_order"]){
+				makeDBRTable(information,header.symbol,header["level_order"]);
+			} else {
+			makeDBRTable(information,header.symbol);
+			}
+		});
+	});
+});
+
+
+// ソートのための引数追加
+function makeDBRTable(info, mark, order) {
+	// orderが未指定の場合はnull
+	if(typeof order === 'undefined'){
+		order = null;
+	}
+	
+    var x = "";
+    var ev = "";
+    var count = 0;
+    var obj = $("#table_int");
+
+	// ソート
+		// そうでない場合はレベル順->タイトル順にソート
+		info.sort(
+			function(a,b){
+				if(a["level"] == "") {
+				  a["level"] = "未査定";
+				}
+				if(b["level"] == "") {
+				  b["level"] = "未査定";
+				}
+				var aLv = a["level"].toString();
+				var bLv = b["level"].toString();
+				
+				if(isNaN(a["level"]) == false && isNaN(b["level"]) == false){
+					return a["level"]-b["level"];
+				} else if( aLv < bLv ){
+					return -1;
+				} else if( aLv > bLv ){
+					return 1;
+				} else if( a["title"].toLowerCase() < b["title"].toLowerCase() ){
+					return -1;
+				} else if( a["title"].toLowerCase() > b["title"].toLowerCase() ){
+					return 1;
+				} else {
+		　	　　	return 0;
+				}
+			}
+		);
+	
+    // 表のクリア
+    obj.html("");
+    $("<tr height='20' style='color:white;background-color:#666666'><td align='center'>レベル</td><td align='center'>査定中難易度</td><td align='center'>バージョン</td><td align='center'>おすすめ度</td><td align='center'>タイトル</td><td align='center'>BPM</td><td align='center'>ノーツ数</td><td align='center'>譜面傾向</td><td align='center'>コメント</td></tr>").appendTo(obj);
+    var obj_sep = null;
+    for (var i = 0; i < info.length; i++) {
+        // 難度ごとの区切り
+        if (info[i].level == "") {
+          info[i].level = "未査定";
+         }
+        if (x != info[i].level) {
+            // 前の区切りに譜面数、平均密度を追加
+          	if (obj_sep != null) {
+                obj_sep.html("<td colspan='9' align='center'>" + "<b>" + mark + x + " (" + count + "譜面)</b></td>");
+            }
+            obj_sep = $("<tr class='tr_separate' id='" + mark + info[i].level + "'></tr>");
+            obj_sep.appendTo(obj);
+            count = 0;
+            x = info[i].level;
+        }
+        // 本文
+        var str = $("<tr class='tr_normal'></tr>");
+
+/*
+        if(info[i].state == 1) {
+        str = $("<tr class='state1'></tr>");
+        }
+        if(info[i].state == 2) {
+        str = $("<tr class='state2'></tr>");
+        }
+        if(info[i].state == 3) {
+        str = $("<tr class='state3'></tr>");
+        }
+        if(info[i].state == 4) {
+        str = $("<tr class='state4'></tr>");
+        }
+        if(info[i].state == 5) {
+        str = $("<tr class='state5'></tr>");
+        }
+        if(info[i].state == 6) {
+        str = $("<tr class='state6'></tr>");
+
+        }
+*/
+
+        // レベル表記
+        $("<td width='1%'>" + mark + x + "</td>").appendTo(str);
+        // 査定中難易度
+        $("<td width='0.1%'>" + info[i].pending + "</td>").appendTo(str);
+        // バージョン
+        $("<td width='1%' align='left'>" + info[i].ver + "</td>").appendTo(str);
+        // おすすめ度
+        $("<td width='1%' align='center'><a>" + info[i].recommend1 + info[i].recommend2 + info[i].recommend3 + "</a></td>").appendTo(str);
+        // タイトル
+        $("<td width='14%' align='left'>" + "<a>" + info[i].title + "</a></td>").appendTo(str);
+        // BPM
+        $("<td width='1%' align='left'>" + "<a>" + info[i].bpm + "</a></td>").appendTo(str);
+        // ノーツ数
+        $("<td width='1%' align='left'>" + "<a>" + info[i].notes + "</a></td>").appendTo(str);
+        // 譜面傾向
+        $("<td width='7%' align='left'>" + info[i].type + "</div></td>").appendTo(str);
+        // コメント
+        $("<td width='25%'>" + info[i].comment1 + " " + info[i].comment2 + "</div></td>").appendTo(str);
+        str.appendTo(obj);
+        count++;
+    }
+
+    
+    // 最後の区切り処理
+	// マークが抜け落ちてたので追加
+    if (obj_sep != null) {
+        obj_sep.html("<td colspan='9' align='center'>" + "<b>" + mark + x + " (" + count + "譜面)</b></td>");
+    }
+}
+</script>
+
+
+</body>
+</html>
