@@ -21,6 +21,7 @@
       </li>
       <li>ノーツ数: 全ノーツ数からスクラッチの数を引いた値です。スクラッチの数が設定されていない場合、全ノーツ数を括弧付きで表示しています。</li>
       <li>レベル査定済みの中で評価のとても高い譜面を表示しています。(<a href="./dbralle_normal.html" target="_self">少しおすすめ範囲を広げた難易度表</a>もあります。曲数が欲しい方はこちらへ)</li>
+      <li>読み込みに時間がかかります。難易度表が表示されない場合、しばらくお待ちください。</li>
     </ul>
   </div>
 
@@ -122,7 +123,12 @@ function makeDBRTable(info, mark, order) {
 function generateTextageSuffix(title, splv) {
     let titleChar = title.slice(-2, -1);
     let titleCode = titleChar === "L" ? "X" : titleChar === "B" ? "P" : titleChar;
-    let levelCode = splv === 10 ? "A" : splv === 11 ? "B" : splv === 12 ? "C" : splv;
+
+    // SPLvを数値に変換
+    let levelNum = Number(splv);
+    let levelCodeMap = { 10: "A", 11: "B", 12: "C" };
+    let levelCode = levelCodeMap[levelNum] || splv; // 1桁の数値はそのまま
+
     let randomDigits = shuffle("1234567");
     return `B${titleCode}${levelCode}00R0${randomDigits}0${shuffle("1234567")}`;
 }
