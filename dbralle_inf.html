@@ -11,7 +11,7 @@
 
 <body>
 <center>
-  <strong><span style="font-size: 24pt;">DBR難易度表(イージー)(全譜面)</span></strong><br>
+  <strong><span style="font-size: 24pt;">DBR難易度表(イージー)(INF収録)</span></strong><br>
 
   <!-- ここに注意書きの枠を追加 -->
   <div class="notice-box">
@@ -20,7 +20,7 @@
         (<a href="https://zenn.dev/waisky/articles/b97a35fe042b51" target="_blank">参考</a>)
       </li>
       <li>ノーツ数: 全ノーツ数からスクラッチの数を引いた値です。スクラッチの数が設定されていない場合、全ノーツ数を括弧付きで表示しています。</li>
-      <li>レベル査定済みの全譜面を表示しています。(<a href="./dbralle_normal.html" target="_self">評価の高い譜面のみを表示した難易度表</a>もあります。)</li>
+      <li>INFINITASに収録された譜面のみを表示しています。最新の収録状況を反映していない可能性があります。(<a href="./dbralle.html" target="_self">通常の表</a>はこちら)</li>
     </ul>
   </div>
 
@@ -67,6 +67,7 @@ function makeDBRTable(info, mark, order) {
     
     info.forEach(data => {    
         if (!data.level || data.level === "未査定") return; // 未査定のデータをスキップ
+        if (!data.inf) return; // INFINITASに含まれないデータをスキップ
         
         let baseLevel = data.level || "未査定";
         let isDeleted = data.acdelete ? 1 : 0;
