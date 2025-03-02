@@ -25,9 +25,6 @@ body.diff {
   color: #0000c0;
 }
 
-.tableflame a:visited {
-  color: #0000c0;
-}
 
 .tr_separate {
   height: 20px;
@@ -89,4 +86,32 @@ body.diff {
 
 .tableflame tr.tr_normal:hover {
   background-color: #70f0f0;
+}
+
+.notice-box {
+  border: 2px solid #666;
+  background-color: #353535;
+  color: white;
+  padding: 10px;
+  margin: 10px auto;
+  width: 80%;
+  text-align: left;
+  border-radius: 5px;
+}
+
+.notice-box ul {
+  list-style-type: square;
+  padding-left: 20px;
+}
+
+.notice-box li {
+  margin-bottom: 5px;
+}
+
+.notice-box a:visited {
+  color: purple;
+}
+
+.notice-box a {
+  color: #bce2e8;
 }
