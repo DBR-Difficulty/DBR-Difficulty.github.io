@@ -71,11 +71,11 @@ function makeDBRTable(info, mark, order) {
         if (!data.inf) return; // INFINITASに含まれないデータをスキップ
         
         let baseLevel = data.level || "未査定";
-        let isDeleted = data.acdelete ? 1 : 0;
-        let displayLevel = data.acdelete ? `†${mark}${baseLevel}` : `${mark}${baseLevel}`;
+        let isDeleted = 0; // INFINITAS収録の場合AC削除は関係ないので0固定
+        let displayLevel = data.acdelete ? `${mark}${baseLevel}` : `${mark}${baseLevel}`; // †もつけない
         
         if (!sections[displayLevel]) {
-            sections[displayLevel] = { count: 0, rows: [], displayLevel, isDeleted };
+            sections[displayLevel] = { count: 0, rows: [], displayLevel }; // 分けない
         }
         
         let notesValue = data.notes * 2;
