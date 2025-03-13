@@ -62,7 +62,7 @@ function makeDBRTable(info, mark, order) {
     var obj = $("#table_int");
     obj.html("").append("<tr height='20' style='color:white;background-color:#666666'>"
         + "<td>レベル</td><td>ver</td><td>タイトル</td><td>BPM</td>"
-        + "<td>ノーツ数</td><td>SPLv</td><td>動画</td><td>Textage</td>"
+        + "<td>ノーツ数</td><td>SPLv</td><td>動画</td><td>TexTage</td>"
         + "<td>ゲージ増加量</td><td>コメント</td><td>解禁方法</td></tr>"); // 解禁方法の列を追加
     
     let sections = {};
@@ -102,7 +102,7 @@ function makeDBRTable(info, mark, order) {
         if (data.textageid) {
             let suffix = generateTextageSuffix(data.title, data.splv);
             let textageURL = `https://textage.cc/score/${data.ver}/${data.textageid}.html?${suffix}`;
-            row.append(`<td width='1%' align='center'><a href='${textageURL}' target='_blank'>Textage</a></td>`);
+            row.append(`<td width='1%' align='center'><a href='${textageURL}' target='_blank'>TexTage</a></td>`);
         } else {
             row.append(`<td width='1%'></td>`);
         }
