@@ -115,3 +115,7 @@ body.diff {
 .notice-box a {
   color: #bce2e8;
 }
+
+.small-text {
+    font-size: 12px;
+}

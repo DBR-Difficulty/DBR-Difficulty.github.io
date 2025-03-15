@@ -1,0 +1,207 @@
+<!DOCTYPE HTML>
+<html lang="ja">
+
+<head>
+<title>DBR段位(仮)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="alldbrtable" content="./dbralleheader.json">
+<link href="style/style.css" rel="stylesheet">
+<script src="style/jquery-2.0.2.min.js"></script>
+</head>
+
+<body>
+<center>
+  <strong><span style="font-size: 24pt;">DBR段位(仮)</span></strong><br>
+
+  <!-- ここに注意書きの枠を追加 -->
+  <div class="notice-box">
+    <ul>
+    	<li>
+	    DBR段位(仮) ４曲中３曲以上Assist Easyで合格☺
+	    <br>
+	    <span class="small-text">You must "ASSISTED EASY" clear at least 3 out of 4 songs to pass the course!</span>
+	  </li>
+	  <li>
+	    コース内で難易度差がある場合や練習効果が薄い曲がある場合は教えてください。
+	    <br>
+	    <span class="small-text">Please let me know if there are differences in difficulty within the course or if the practice is not effective.</span>
+	  </li><br>
+	  <li><a href="https://x.com/DBR_MEN/status/1852700632035332317" target="_blank">2024/11時点の段位内容</a>を参照しています。</li>
+      <li>ゲージ増加量: NORMAL以下のゲージでGREAT以上を出した際の、1ノーツあたりのゲージ増加量です。
+        (<a href="https://zenn.dev/waisky/articles/b97a35fe042b51" target="_blank">参考</a>)
+      </li>
+      <li>ノーツ数: 全ノーツ数からスクラッチの数を引いた値です。スクラッチの数が設定されていない場合、全ノーツ数を括弧付きで表示しています。</li>
+      <li>読み込みに時間がかかります。内容が表示されない場合、しばらくお待ちください。</li>
+    </ul>
+  </div>
+
+  <a href="index.html">TOPに戻る</a><br>
+</center>
+
+<div class="tableflame">
+<!-- テーブルを表示する場所 -->
+<table align="center" cellspacing="1" cellpadding="2" border="0" bgcolor="#000000" id="table_int"></table>
+</div>
+<script>
+// ドキュメントが読み込まれたときに実行される関数
+$(document).ready(function() {
+    $.getJSON($("meta[name=alldbrtable]").attr("content"), function(header) {
+        $.getJSON(header.data_url, function(info) {
+            makeDBRTable(info, header.symbol, header.level_order || null);
+        });
+    });
+});
+
+function parseCourseName(comment) {
+    const match = comment.match(/DBR段位 #(\d+(?:\.5)?[WM.5S↑]?)(?:-(\d+(?:\.5)?))?(?:-(\d+(?:\.5)?))?(?:\s+#(\d+))?/);
+    if (!match) return null;
+
+    let base = match[1];  // "xx" / "xx.5" / "xxW" など
+    let firstLevel = match[2] ? match[2] : null;  // `-x` / `-x.5`
+    let secondLevel = match[3] ? match[3] : null; // `-x-x`
+    let songOrder = match[4] ? parseInt(match[4], 10) : 0; // 半角スペース後の `#x`
+
+    // `course` を `xx-x-x` まで含める
+    let course = secondLevel !== null 
+        ? `${base}-${firstLevel}-${secondLevel}`
+        : firstLevel !== null 
+        ? `${base}-${firstLevel}`
+        : base;
+
+    return { course, songOrder };
+}
+
+function sortCourses(a, b) {
+    const order = { "W": 1, "M": 2, "S": 3, ".5": 4, "↑": 5 };
+
+    // 正規表現でコース名とレベルを抽出
+    const aParts = a.match(/^(\d+(?:\.5)?)([WM.5S↑]?)(?:-(\d+))?(?:-(\d+))?/);
+    const bParts = b.match(/^(\d+(?:\.5)?)([WM.5S↑]?)(?:-(\d+))?(?:-(\d+))?/);
+
+    if (!aParts || !bParts) return a.localeCompare(b); // 安全策
+
+    let [ , aBase, aSuffix, aFirstLevel, aSecondLevel ] = aParts;
+    let [ , bBase, bSuffix, bFirstLevel, bSecondLevel ] = bParts;
+
+    aBase = parseFloat(aBase); // `xx.5` を数値化
+    bBase = parseFloat(bBase);
+
+    // 数値部分で比較 (整数 → .5)
+    if (aBase !== bBase) return aBase - bBase;
+
+    // `W` → `M` → `S` → `.5` → `↑` の順にソート
+    let aOrder = order[aSuffix] || 0;
+    let bOrder = order[bSuffix] || 0;
+    if (aOrder !== bOrder) return aOrder - bOrder;
+
+    // `-x` や `-x-x` のレベルで比較
+    let firstLevelA = parseInt(aFirstLevel, 10) || 0;
+    let firstLevelB = parseInt(bFirstLevel, 10) || 0;
+    if (firstLevelA !== firstLevelB) return firstLevelA - firstLevelB;
+
+    // `-x-x` の部分も考慮して、第二レベルで比較
+    let secondLevelA = parseInt(aSecondLevel, 10) || 0;
+    let secondLevelB = parseInt(bSecondLevel, 10) || 0;
+    return secondLevelA - secondLevelB;
+}
+
+function calculateGaugeIncrease(x) {
+    let gaugeIncrease;
+
+    if (x < 350) {
+        gaugeIncrease = 80000 / ((x * 6) * 50);
+    } else {
+        gaugeIncrease = 80000 / ((x * 2 + 1400) * 50);
+    }
+
+    // 0.02% 刻みで「切り捨て」
+    let roundedValue = Math.floor(gaugeIncrease / 0.02) * 0.02;
+
+    return roundedValue.toFixed(2);
+}
+
+function makeDBRTable(info, mark) {
+    var obj = $("#table_int");
+    obj.html("").append("<tr height='20' style='color:white;background-color:#666666'>"
+        + "<td>レベル</td><td>ver</td><td>タイトル</td><td>BPM</td>"
+        + "<td>ノーツ数</td><td>SPLv</td><td>動画</td><td>TexTage</td><td>ゲージ増加量</td><td>コメント</td></tr>");
+    
+    let sections = {};
+    
+    info.forEach(data => {
+        let baseLevel = data.level || "未査定";
+        let isDeleted = data.acdelete ? 1 : 0;
+        let displayLevel = data.acdelete ? `†${mark}${baseLevel}` : `${mark}${baseLevel}`;
+        let courseInfo = parseCourseName(data.comment);
+        if (!courseInfo) return;
+        
+        let { course, songOrder } = courseInfo;
+
+        if (!sections[course]) {
+            sections[course] = { rows: [], course };
+        }
+        
+        let notesValue = data.notes * 2;
+        let notesDisplay = data.scratch ? (notesValue - (data.scratch * 2)) : `(${notesValue})`;
+        let gaugeIncrease = calculateGaugeIncrease(notesValue);
+        
+        let row = $("<tr class='tr_normal'></tr>")
+            .append(`<td width='1%' align='left'>${displayLevel}</td>`)
+            .append(`<td width='1%' align='left'>${data.ver}</td>`)
+            .append(`<td width='14%' align='left'><a>${data.title}</a></td>`)
+            .append(`<td width='1%' align='left'><a>${data.bpm}</a></td>`)
+            .append(`<td width='1%' align='left'><a>${notesDisplay}</a></td>`)
+            .append(`<td width='1%' align='left'><a>☆${data.splv}</a></td>`);
+        
+        if (data.video) {
+            let videoIcon = data.video.includes("nicovideo.jp") ? "<img src='style/nico.gif' alt='ニコニコ動画' />" :
+                            data.video.includes("youtube.com") ? "<img src='style/youtube.gif' alt='YouTube' />" : "";
+            row.append(`<td width='1%' align='center'>${videoIcon ? `<a href='${data.video}' target='_blank'>${videoIcon}</a>` : ""}</td>`);
+        } else {
+            row.append(`<td width='1%'></td>`);
+        }
+        
+        if (data.textageid) {
+            let suffix = generateTextageSuffix(data.title, data.splv);
+            let textageURL = `https://textage.cc/score/${data.ver}/${data.textageid}.html?${suffix}`;
+            row.append(`<td width='1%' align='center'><a href='${textageURL}' target='_blank'>TexTage</a></td>`);
+        } else {
+            row.append(`<td width='1%'></td>`);
+        }
+        
+        row.append(`<td width='3%' align='center'>${gaugeIncrease}%/note</td>`)
+        .append(`<td width='50%' align='left'>${data.comment}</td>`);
+        
+        sections[course].rows.push({ row, songOrder });
+    });
+
+    // `course` を xx-x の順番でソートし、その後 `songOrder` で並べる
+    Object.values(sections)
+        .sort((a, b) => sortCourses(a.course, b.course))
+        .forEach(section => {
+            // section名に#を追加して表示
+            obj.append(`<tr class='tr_separate'><td colspan='10' align='center'><b>#${section.course}</b></td></tr>`);
+            section.rows.sort((a, b) => a.songOrder - b.songOrder).forEach(entry => obj.append(entry.row));
+        });
+}
+
+function generateTextageSuffix(title, splv) {
+    let titleChar = title.slice(-2, -1);
+    let titleCode = titleChar === "L" ? "X" : titleChar === "B" ? "P" : titleChar;
+
+    // SPLvを数値に変換
+    let levelNum = Number(splv);
+    let levelCodeMap = { 10: "A", 11: "B", 12: "C" };
+    let levelCode = levelCodeMap[levelNum] || splv; // 1桁の数値はそのまま
+
+    let randomDigits = shuffle("1234567");
+    return `B${titleCode}${levelCode}00R0${randomDigits}0${shuffle("1234567")}`;
+}
+
+function shuffle(str) {
+    return str.split('').sort(() => Math.random() - 0.5).join('');
+}
+</script>
+
+</body>
+</html>
