@@ -152,15 +152,32 @@ function makeDBRTable(info, mark) {
             .append(`<td width='1%' align='left'><a>${data.bpm}</a></td>`)
             .append(`<td width='1%' align='left'><a>${notesDisplay}</a></td>`)
             .append(`<td width='1%' align='left'><a>☆${data.splv}</a></td>`);
-        
+
+        let videoCell = "<td width='1%' align='center'>";
+        let videoContent = "";
+
         if (data.video) {
             let videoIcon = data.video.includes("nicovideo.jp") ? "<img src='style/nico.gif' alt='ニコニコ動画' />" :
                             data.video.includes("youtube.com") ? "<img src='style/youtube.gif' alt='YouTube' />" : "";
-            row.append(`<td width='1%' align='center'>${videoIcon ? `<a href='${data.video}' target='_blank'>${videoIcon}</a>` : ""}</td>`);
-        } else {
-            row.append(`<td width='1%'></td>`);
+            if (videoIcon) {
+                videoContent += `<a href='${data.video}' target='_blank'>${videoIcon}</a>`;
+            }
         }
-        
+
+        if (data.video2) {
+            let videoIcon2 = data.video2.includes("nicovideo.jp") ? "<img src='style/nico.gif' alt='ニコニコ動画' />" :
+                             data.video2.includes("youtube.com") ? "<img src='style/youtube.gif' alt='YouTube' />" : "";
+            if (videoIcon2) {
+                if (videoContent) videoContent += "<br>"; // 既に何かある場合は改行
+                videoContent += `<a href='${data.video2}' target='_blank'>${videoIcon2}</a>`;
+            }
+        }
+
+        videoCell += videoContent || "";
+        videoCell += "</td>";
+
+        row.append(videoCell);
+
         if (data.textageid) {
             let suffix = generateTextageSuffix(data.title, data.splv);
             let textageURL = `https://textage.cc/score/${data.ver}/${data.textageid}.html?${suffix}`;
