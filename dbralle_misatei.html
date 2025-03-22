@@ -20,7 +20,7 @@
         (<a href="https://zenn.dev/waisky/articles/b97a35fe042b51" target="_blank">参考</a>)
       </li>
       <li>ノーツ数: 全ノーツ数からスクラッチの数を引いた値です。スクラッチの数が設定されていない場合、全ノーツ数を括弧付きで表示しています。</li>
-      <li>未査定の譜面も合わせて表示しています。表メンテナンス用のページです。(<a href="./dbralle.html" target="_self">通常の表</a>はこちら)</li>
+      <li>未査定の譜面も合わせて表示しています。提案検討や表メンテナンス用のページです。(<a href="./dbralle.html" target="_self">通常の表</a>はこちら)</li>
       <li>難易度表への新規提案、レベルの変更提案等は<a href="https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?usp=sharing" target="_blank">管理用スプレッドシート</a>で行っています。プレイした譜面を記録する程度の感覚で構いませんので、ぜひご協力をお願いします。</li>
       <li>読み込みに時間がかかります。難易度表が表示されない場合、しばらくお待ちください。</li>
     </ul>
@@ -63,7 +63,7 @@ function makeDBRTable(info, mark, order) {
     var obj = $("#table_int");
     obj.html("").append("<tr height='20' style='color:white;background-color:#666666'>"
         + "<td>レベル</td><td>査定中</td><td>ver</td><td>タイトル</td><td>BPM</td>"
-        + "<td>ノーツ数</td><td>SPLv</td><td>動画</td><td>TexTage</td><td>ゲージ増加量</td><td>コメント</td></tr>");
+        + "<td>ノーツ数</td><td>SPLv</td><td>動画</td><td>TexTage</td><td>ゲージ増加量</td><td>コメント</td><td>その他</td><td>INF有</td><td>解禁方法</td></tr>");
     
     let sections = {};
     
@@ -79,6 +79,10 @@ function makeDBRTable(info, mark, order) {
         let notesValue = data.notes * 2;
         let notesDisplay = data.scratch ? (notesValue - (data.scratch * 2)) : `(${notesValue})`;
         let gaugeIncrease = calculateGaugeIncrease(notesValue);
+        let unlockMethod = formatUnlockMethod(data.infpack); // 解禁方法をフォーマット
+
+       // 備考列を作成（comment1 と comment2 を結合）
+        let remarks = [data.comment1, data.comment2].filter(Boolean).join(" ");
         
         let row = $("<tr class='tr_normal'></tr>")
             .append(`<td width='1%' align='left'>${displayLevel}</td>`)
@@ -123,7 +127,10 @@ function makeDBRTable(info, mark, order) {
         }
         
         row.append(`<td width='3%' align='center'>${gaugeIncrease}%/note</td>`)
-        .append(`<td width='50%' align='left'>${data.comment}</td>`);
+            .append(`<td width='15%' align='left'>${data.comment || ''}</td>`)
+            .append(`<td width='20%' align='left'>${remarks}</td>`) // 備考列を追加
+            .append(`<td width='1%' align='left'>${data.inf || ''}</td>`)
+            .append(`<td width='25%' align='left'>${unlockMethod}</td>`); // 解禁方法の列を追加
         sections[displayLevel].rows.push(row);
         sections[displayLevel].count++;
     });
@@ -131,10 +138,26 @@ function makeDBRTable(info, mark, order) {
     Object.values(sections)
         .sort((a, b) => a.isDeleted - b.isDeleted || a.displayLevel.localeCompare(b.displayLevel))
         .forEach(section => {
-            let separator = `<tr class='tr_separate'><td colspan='11' align='center'><b>${section.displayLevel} (${section.count}譜面)</b></td></tr>`;
+            let separator = `<tr class='tr_separate'><td colspan='15' align='center'><b>${section.displayLevel} (${section.count}譜面)</b></td></tr>`;
             obj.append(separator);
             section.rows.forEach(row => obj.append(row));
         });
+}
+
+// 解禁方法をフォーマットする関数
+function formatUnlockMethod(infpack) {
+    if (!infpack) return '';
+
+    return infpack.replace(/BIT/g, 'BIT解禁')
+        .replace(/PK(\d+)/g, 'INFINITAS 楽曲パック vol.$1')
+        .replace(/ST(\d+)/g, 'スタートアップセレクション 楽曲パック vol.$1')
+        .replace(/PM(\d+)/g, "pop'n music セレクション 楽曲パック vol.$1")
+        .replace(/ju(\d+)/g, 'jubeat セレクション 楽曲パック vol.$1')
+        .replace(/SV(\d+)/g, 'SOUND VOLTEX セレクション 楽曲パック vol.$1')
+        .replace(/BPL(\d+)/g, 'BPL セレクション 楽曲パック vol.$1')
+        .replace(/TH(\d+)/g, '東方Project セレクション 楽曲パック vol.$1')
+        .replace(/UM(\d+)/g, 'ULTIMATE MOBILE セレクション 楽曲パック vol.$1')
+        .replace(/DJP/g, 'DJPOINT解禁');
 }
 
 function generateTextageSuffix(title, splv) {
