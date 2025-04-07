@@ -1,0 +1,167 @@
+<!DOCTYPE HTML>
+<html lang="ja">
+
+<head>
+<title>DBR EASY(新規提案有)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="alldbrtable" content="./dbralleplusnewheader.json">
+<link href="style/style.css" rel="stylesheet">
+<script src="style/jquery-2.0.2.min.js"></script>
+</head>
+
+<body>
+<center>
+  <strong><span style="font-size: 24pt;">DBR難易度表(イージー)(新規提案有)</span></strong><br>
+
+  <!-- ここに注意書きの枠を追加 -->
+  <div class="notice-box">
+    <ul>
+      <li>ゲージ増加量: NORMAL以下のゲージでGREAT以上を出した際の、1ノーツあたりのゲージ増加量です。
+        (<a href="https://zenn.dev/waisky/articles/b97a35fe042b51" target="_blank">参考</a>)
+      </li>
+      <li>ノーツ数: 全ノーツ数からスクラッチの数を引いた値です。スクラッチの数が設定されていない場合、全ノーツ数を括弧付きで表示しています。</li>
+      <li>レベル査定済みの全譜面に加え、新規提案されている譜面を黄背景で表示しています。レベルの相対比較にお使いください。</li>
+      <li>難易度表への新規提案、レベルの変更提案等は<a href="https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?usp=sharing" target="_blank">管理用スプレッドシート</a>で行っています。プレイした譜面を記録する程度の感覚で構いませんので、ぜひご協力をお願いします。</li>
+      <li>読み込みに時間がかかります。難易度表が表示されない場合、しばらくお待ちください。</li>
+    </ul>
+  </div>
+
+  <a href="index.html">TOPに戻る</a><br>
+</center>
+
+
+<div class="tableflame">
+<!-- テーブルを表示する場所 -->
+<table align="center" cellspacing="1" cellpadding="2" border="0" bgcolor="#000000" id="table_int"></table>
+</div>
+<script>
+// ドキュメントが読み込まれたときに実行される関数
+$(document).ready(function() {
+    $.getJSON($("meta[name=alldbrtable]").attr("content"), function(header) {
+        $.getJSON(header.data_url, function(info) {
+            makeDBRTable(info, header.symbol, header.level_order || null);
+        });
+    });
+});
+
+function calculateGaugeIncrease(x) {
+    let gaugeIncrease;
+
+    if (x < 350) {
+        gaugeIncrease = 80000 / ((x * 6) * 50);
+    } else {
+        gaugeIncrease = 80000 / ((x * 2 + 1400) * 50);
+    }
+
+    // 0.02% 刻みで「切り捨て」
+    let roundedValue = Math.floor(gaugeIncrease / 0.02) * 0.02;
+
+    return roundedValue.toFixed(2);
+}
+
+function makeDBRTable(info, mark, order) {
+    var obj = $("#table_int");
+    obj.html("").append("<tr height='20' style='color:white;background-color:#666666'>"
+        + "<td>レベル</td><td>ver</td><td>タイトル</td><td>BPM</td>"
+        + "<td>ノーツ数</td><td>SPLv</td><td>動画</td><td>TexTage</td><td>ゲージ増加量</td><td>コメント</td></tr>");
+    
+    let sections = {};
+    
+    info.forEach(data => {    
+        if (!data.level || data.level === "未査定") return; // 未査定のデータをスキップ
+        
+        let baseLevel = data.level || "未査定";
+        let isDeleted = data.acdelete ? 1 : 0;
+        let displayLevel = data.acdelete ? `†${mark}${baseLevel}` : `${mark}${baseLevel}`;
+        
+        if (!sections[displayLevel]) {
+            sections[displayLevel] = { count: 0, rows: [], displayLevel, isDeleted };
+        }
+        
+        let notesValue = data.notes * 2;
+        let notesDisplay = data.scratch ? (notesValue - (data.scratch * 2)) : `(${notesValue})`;
+        let gaugeIncrease = calculateGaugeIncrease(notesValue);
+        let isProposed = data.splv == "新規提案";
+        let rowClass = isProposed ? 'tr_proposed' : 'tr_normal';
+        let splvDisplay = isProposed ? "新規" : `☆${data.splv}`;
+        let row = $(`<tr class='${rowClass}'></tr>`)
+            .append(`<td width='1%' align='left'>${displayLevel}</td>`)
+            .append(`<td width='1%' align='left'>${data.ver}</td>`)
+            .append(`<td width='14%' align='left'><a>${data.title}</a></td>`)
+            .append(`<td width='1%' align='left'><a>${data.bpm}</a></td>`)
+            .append(`<td width='1%' align='left'><a>${notesDisplay}</a></td>`)
+            .append(`<td width='1%' align='left'><a>${splvDisplay}</a></td>`);
+
+        let videoCell = "<td width='1%' align='center'>";
+        let videoContent = "";
+
+        if (data.video) {
+            let videoIcon = data.video.includes("nicovideo.jp") ? "<img src='style/nico.gif' alt='ニコニコ動画' />" :
+                            data.video.includes("youtube.com") ? "<img src='style/youtube.gif' alt='YouTube' />" : "";
+            if (videoIcon) {
+                videoContent += `<a href='${data.video}' target='_blank'>${videoIcon}</a>`;
+            }
+        }
+
+        if (data.video2) {
+            let videoIcon2 = data.video2.includes("nicovideo.jp") ? "<img src='style/nico.gif' alt='ニコニコ動画' />" :
+                             data.video2.includes("youtube.com") ? "<img src='style/youtube.gif' alt='YouTube' />" : "";
+            if (videoIcon2) {
+                if (videoContent) videoContent += "<br>"; // 既に何かある場合は改行
+                videoContent += `<a href='${data.video2}' target='_blank'>${videoIcon2}</a>`;
+            }
+        }
+
+        videoCell += videoContent || "";
+        videoCell += "</td>";
+
+        row.append(videoCell);
+        
+        if (data.textageid) {
+            let suffix = generateTextageSuffix(data.title, data.splv);
+            let textageURL = `https://textage.cc/score/${data.ver}/${data.textageid}.html?${suffix}`;
+            row.append(`<td width='1%' align='center'><a href='${textageURL}' target='_blank'>TexTage</a></td>`);
+        } else {
+            row.append(`<td width='1%'></td>`);
+        }
+        
+        row.append(`<td width='3%' align='center'>${gaugeIncrease}%/note</td>`)
+        .append(`<td width='50%' align='left'>${data.comment}</td>`);
+        sections[displayLevel].rows.push(row);
+        sections[displayLevel].count++;
+    });
+    
+    Object.values(sections)
+        .sort((a, b) => a.isDeleted - b.isDeleted || a.displayLevel.localeCompare(b.displayLevel))
+        .forEach(section => {
+            let separator = `<tr class='tr_separate'><td colspan='10' align='center'><b>${section.displayLevel} (${section.count}譜面)</b></td></tr>`;
+            obj.append(separator);
+            section.rows.forEach(row => obj.append(row));
+        });
+}
+
+function generateTextageSuffix(title, splv) {
+    let titleChar = title.slice(-2, -1);
+    let titleCode = titleChar === "L" ? "X" : titleChar === "B" ? "P" : titleChar;
+    let levelCode;
+
+    if (splv == "新規提案") {
+        levelCode = "X";
+    } else {
+        let levelNum = Number(splv);
+        let levelCodeMap = { 10: "A", 11: "B", 12: "C" };
+        levelCode = levelCodeMap[levelNum] || splv; // 1桁の数値はそのまま
+    }
+
+
+    let randomDigits = shuffle("1234567");
+    return `B${titleCode}${levelCode}00R0${randomDigits}0${shuffle("1234567")}`;
+}
+
+function shuffle(str) {
+    return str.split('').sort(() => Math.random() - 0.5).join('');
+}
+</script>
+
+</body>
+</html>
