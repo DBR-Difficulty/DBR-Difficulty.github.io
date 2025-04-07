@@ -38,28 +38,8 @@ body.diff {
   background-color: #eeeeee;
 }
 
-.state1 {
-  background-color: #ffc0cb;
-}
-
-.state2 {
-  background-color: #add8e6;
-}
-
-.state3 {
-  background-color: #90ee90;
-}
-
-.state4 {
-  background-color: #ffff00;
-}
-
-.state5 {
-  background-color: #808080;
-}
-
-.state6 {
-  background-color: #ffa500;
+.tr_proposed {
+  background-color: #ffff00; /* 薄い黄色にする場合、00→cc */
 }
 
 .tableflame table {
@@ -87,6 +67,7 @@ body.diff {
 .tableflame tr.tr_normal:hover {
   background-color: #70f0f0;
 }
+
 
 .notice-box {
   border: 2px solid #666;
