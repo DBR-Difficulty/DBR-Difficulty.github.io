@@ -62,7 +62,7 @@ function calculateGaugeIncrease(x) {
 function makeDBRTable(info, mark, order) {
     var obj = $("#table_int");
     obj.html("").append("<tr height='20' style='color:white;background-color:#666666'>"
-        + "<td>レベル</td><td>ver</td><td>タイトル</td><td>BPM</td>"
+        + "<td>レベル</td><td>薦</td><td>ver</td><td>タイトル</td><td>BPM</td>"
         + "<td>ノーツ数</td><td>SPLv</td><td>動画</td><td>TexTage</td>"
         + "<td>ゲージ増加量</td><td>コメント</td><td>解禁方法</td></tr>"); // 解禁方法の列を追加
     
@@ -86,6 +86,7 @@ function makeDBRTable(info, mark, order) {
         
         let row = $("<tr class='tr_normal'></tr>")
             .append(`<td width='1%' align='left'>${displayLevel}</td>`)
+            .append(`<td width='1%' align='left'>${data.recommend}</td>`)
             .append(`<td width='1%' align='left'>${data.ver}</td>`)
             .append(`<td width='14%' align='left'><a>${data.title}</a></td>`)
             .append(`<td width='1%' align='left'><a>${data.bpm}</a></td>`)
@@ -136,7 +137,7 @@ function makeDBRTable(info, mark, order) {
     Object.values(sections)
         .sort((a, b) => a.displayLevel.localeCompare(b.displayLevel))
         .forEach(section => {
-            let separator = `<tr class='tr_separate'><td colspan='11' align='center'><b>${section.displayLevel} (${section.count}譜面)</b></td></tr>`;
+            let separator = `<tr class='tr_separate'><td colspan='12' align='center'><b>${section.displayLevel} (${section.count}譜面)</b></td></tr>`;
             obj.append(separator);
             section.rows.forEach(row => obj.append(row));
         });
