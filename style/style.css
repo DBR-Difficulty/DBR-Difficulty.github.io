@@ -15,7 +15,7 @@ body.diff {
 .tableflame {
   margin-left: auto;
   margin-right: auto;
-  padding: 0px 5px 0px 5px;
+  padding: 0px 1px 0px 1px;
   text-align: center;
   background-color: #222222;
   min-width: 900px;
@@ -24,7 +24,6 @@ body.diff {
 .tableflame a {
   color: #0000c0;
 }
-
 
 .tr_separate {
   height: 20px;
@@ -68,13 +67,12 @@ body.diff {
   background-color: #70f0f0;
 }
 
-
 .notice-box {
   border: 2px solid #666;
   background-color: #353535;
   color: white;
   padding: 10px;
-  margin: 10px auto;
+  margin: 10px auto 5px;
   width: 80%;
   text-align: left;
   border-radius: 5px;
@@ -98,5 +96,9 @@ body.diff {
 }
 
 .small-text {
-    font-size: 12px;
+  font-size: 12px;
+}
+
+.toplink-margin {
+  margin: 5px 0 5px 0;
 }
