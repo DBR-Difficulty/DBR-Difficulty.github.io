@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DBR難易度表向け拡張機能</title>
+  <style>
+    body {
+      font-family: "Noto Sans JP", sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      color: #333;
+      background-color: #fff;
+      padding: 20px;
+      max-width: auto;
+    }
+    h2 {
+      background-color: #f5f5f5;
+      padding: 8px 12px;
+      font-size: 1.2em;
+    }
+    .section-box {
+      background: #fafafa;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 16px;
+      margin: 24px 0;
+    }
+    .top-section-box {
+      background: #fafafa;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 16px;
+      margin: 10px 0 24px 0;
+    }
+    code {
+      background-color: #e8e8e8;
+      font-family: Consolas, Monaco, monospace;
+      padding: 2px 4px;
+      border-radius: 4px;
+    }
+    .notice {
+      background-color: #fff8e1;
+      border-left: 4px solid #ff9800;
+      padding: 6px 12px;
+      font-size: 0.95em;
+    }
+    .advanced {
+      background: #e3f2fd;
+      border-left: 5px solid #2196f3;
+      padding: 16px;
+      margin-top: 2em;
+    }
+
+    .notice-box {
+      border: 2px solid #666;
+      background-color: #353535;
+      color: white;
+      padding: 10px;
+      margin: 10px auto;
+      width: 80%;
+      text-align: left;
+      border-radius: 5px;
+    }
+
+    .notice-box ul {
+      list-style-type: square;
+      padding-left: 20px;
+    }
+
+    .notice-box li {
+      margin-bottom: 5px;
+    }
+
+    .notice-box a:visited {
+      color: #cc00cc;
+    }
+
+    .notice-box a {
+      color: #bce2e8;
+    }
+
+    .nonecolor-link {
+      color: inherit;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+<center>
+  <strong><span style="font-size: 36pt;">拡張機能</span></strong><br>
+
+  <div class="notice-box">
+    <ul>
+      <li>ダウンロードは<a href="https://github.com/DBR-Difficulty/DBRTableExtend" target="_blank">こちら</a> [Code]→[Download ZIP]でダウンロードしてください</li>
+      <li>導入は自己責任でお願いします</li>
+    </ul>
+  </div>
+  <a href="index.html">TOPに戻る</a>
+</center>  
+  <div class="top-section-box">
+    <h2>【概要】</h2>
+    <p>しっかりプレー内容を管理したい人向けの便利機能です<br>
+    クリアランプ、BP、スコアの入力列と、スコアランクを2種表示します</p>
+    <div style="max-width: 600px;">
+        <img src="picture/extend_table.png" alt="拡張部分" style="max-width:100%; height: auto;">
+        <div style="text-align: center; font-size: 0.9em; margin-top: 4px;">よって増えます</div>
+    </div>
+    <p>入力情報は即時ブラウザに保存されます<br>
+    スコアを入力した場合、実際に筐体で表示される「スコアランク」と、スクラッチを抜いた実質ノーツ数から計算した「実質ランク」の2つを表示します<br>
+    DBR難易度表(イージー)各種で共通して使用できます（逆にAC、INF用で保存内容を分けたりはできないのでご注意ください）</p>
+
+    <div style="max-width: 600px;">
+        <img src="picture/extend_table_button.png" alt="ボタン部分" style="max-width:100%; height: auto;">
+    </div>
+
+    <p>また保存内容全消去のボタンが左上に、インポート、エクスポートのボタンが「TOPに戻る」の右側に表示されるようになります<br>
+    json形式で保存内容のインポート、エクスポートが行えます<br>
+    バックアップの保存や、何らかの理由でデータの移行を行うときに使用してください</p>
+  </div>
+
+  <div class="section-box">
+    <h2>【導入】</h2>
+    <p>設定メニュー内の[拡張機能]を選択するか、URLに「chrome://extensions/」を入力します<br>
+    [デベロッパー モード]をONにし[パッケージ化されていない拡張機能を読み込む]でダウンロードした拡張機能を読み込んでください<p>
+    <p>Chrome Web Storeを介さない、いわゆる野良拡張です<br>
+    公式に推奨されている方法ではありませんので、導入する方は自己責任でお願いします</p>
+  </div>
+
+  <div class="section-box">
+    <h2>【その他】</h2>
+    <p>表も含めてですが、大部分は素人がChatGPTを突っついて作らせているので変なバグり方したらすみません</p>
+    
+    <p>現状Chrome向け拡張機能はPC版でしか使用できないようです<br>
+    クリアランプマネージャーのようにスマートフォンから使用することはできません アーケードゲームなのに……<br>
+    Kiwi Browserなど拡張機能をサポートするブラウザも存在するようですが、動作するかは不明です</p>
+    
+    <p><a href="./dbralle_misatei.html" target="_self">DBR難易度表(イージー)(未査定有)</a>は表メンテナンスや提案検討のために作成したページであり、<br>
+    性質上トップページでは隠し項目としていますが、<br>
+    この拡張機能を使用した場合は未査定曲に対してもランプ、BP、スコアが保存できますので、<br>
+    ほとんどの曲でプレー内容の保存ができるようになります<br>
+    クリアランプマネージャーのような使い方もできなくはありません 有効に使っていただければと思います</p>
+
+    <p>データはタイトルに対して持つようにしていますので、未査定曲がその後表入りしてもそのままお使いいただけます<br>
+    注意事項として、表登録時などのタイミングでタイトルに誤字修正があり、<br>
+    かつTextageのリンクが存在しなかった曲に関しては、データの復元ができません<br>
+    ブラウザのキャッシュクリアでもデータが消えてしまいますから、たまにエクスポートしてバックアップを取ることをおすすめします<br>
+    また性質上データが揃っておらず、特にスクラッチ数は基本表入りまで入ってないので実質ランクが役に立たなくなるのは、すいません</p>
+    
+    <p>ちなみに【導入】で挙げたChrome Web Storeにデベロッパー登録するには$5かかります</p>
+
+    <div style="max-width: 600px;">
+        <img src="picture/fivedoru.png" alt="有償だ！有償だ！有償有償有償だ！" style="max-width:100%; height: auto;">
+        <div style="text-align: center; font-size: 0.9em; margin-top: 4px;">有償だ！</div>
+    </div>
+
+    <p>もし$5が惜しくない方がいれば@DBR_Difficultyにだいたいそれぐらいのブツを渡してもらえれば登録します<br>
+    上げても審査落ちするかもしれませんが……<br>
+    あとはTampermonkeyとかを使えば他ブラウザでも使用できるかもしれませんが、わかりません</p>
+  </div>
+
+</body>
+</html>

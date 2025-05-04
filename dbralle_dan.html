@@ -150,7 +150,7 @@ function makeDBRTable(info, mark) {
             .append(`<td width='1%' align='left'>${data.ver}</td>`)
             .append(`<td width='14%' align='left'><a>${data.title}</a></td>`)
             .append(`<td width='1%' align='left'><a>${data.bpm}</a></td>`)
-            .append(`<td width='1%' align='left'><a>${notesDisplay}</a></td>`)
+            .append(`<td width='1%' align='left'><a data-notes-full='${notesValue}'>${notesDisplay}</a></td>`)
             .append(`<td width='1%' align='left'><a>☆${data.splv}</a></td>`);
 
         let videoCell = "<td width='1%' align='center'>";
