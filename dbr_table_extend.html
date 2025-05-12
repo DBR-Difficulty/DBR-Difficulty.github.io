@@ -117,7 +117,7 @@
     </div>
 
     <p>また保存内容全消去のボタンが左上に、インポート、エクスポートのボタンが「TOPに戻る」の右側に表示されるようになります<br>
-    json形式で保存内容のインポート、エクスポートが行えます<br>
+    JSON形式で保存内容のインポート、エクスポートが行えます<br>
     バックアップの保存や、何らかの理由でデータの移行をする場合に使用してください</p>
   </div>
 
@@ -129,6 +129,8 @@
         <img src="picture/webstore.png" alt="Google LLCお墨付き" style="max-width:100%; height: auto;">
     </div>
 
+    <p>今後もしアップデートがあった場合、Chrome ウェブストア経由でインストールした拡張機能は自動で更新してくれるそうです<br>
+    ありがたいですね</p>
     <p>公開当初に野良拡張として導入いただいた方は、特に機能変更等はないのでそのままお使いいただいても構いませんが、<br>
     再インストールする場合は設定メニュー内の[拡張機能]を選択するか、URLに「chrome://extensions/」を入力、<br>
     「DBRTableExtend」を削除していただき、[デベロッパー モード]を必要が無ければOFFにし、改めて上記リンクから導入してください<br>
@@ -139,13 +141,66 @@
   </div>
 
   <div class="section-box">
+    <h2>【Androidでの拡張機能使用】</h2>
+    <div class="notice">
+      <b>※自己責任でお願いします</b>
+    </div>
+    <p><a href="https://w.atwiki.jp/sumaho_browser/pages/33.html#id_e36d2ae6" target="_blank">スマホブラウザ@ウィキ / AndroidでChrome拡張機能の使えるブラウザ</a><br>
+    上記リンクの「Microsoft Edge Canary」部分を参照してください<br>
+    URL直打ちでもEdgeの拡張機能経由でも<a href="/files/DBRTableExtend.crx" download>こちらで用意した.crxファイル</a>でも構いませんが、<br>
+    何かしらの方法で.crxファイルを入手し「Extension install by crx」で追加してください</p>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: flex-start; max-width: 100%;">
+        <div style="max-width: 275px; text-align: center;">
+            <img src="picture/crxdownload.png" alt=".crxダウンロード" style="max-width:100%; height: auto;">
+            <div style="font-size: 0.9em; margin-top: 4px;">Chrome ウェブストアから.crxファイルをダウンロード</div>
+        </div>
+
+        <div style="max-width: 275px; text-align: center;">
+            <img src="picture/crxinstall.png" alt="crxでインストール" style="max-width:100%; height: auto;">
+            <div style="font-size: 0.9em; margin-top: 4px;">Extension install by crxでインストール</div>
+        </div>
+
+        <div style="max-width: 275px; text-align: center;">
+            <img src="picture/fuquntsumo.png" alt="じゃあDBR活動できるじゃない！" style="max-width:100%; height: auto;">
+            <div style="font-size: 0.9em; margin-top: 4px;">だいぶ表示幅が狭まりますが、使えます</div>
+        </div>
+    </div>
+
+    <p>PCとデータを同期したい場合、かなり面倒ですがインポート/エクスポート機能で.jsonファイルを受け渡ししてください<br>
+    エクスポートしたら自分宛のメールに添付するなり、discordで自分しか入っていないサーバーに上げるなり、お好みでどうぞ<br>
+    念のため次項【インポート/エクスポートの仕様について】を参照してからの作業を推奨します</p>
+  </div>
+
+  <div class="section-box">
+    <h2>【インポート/エクスポートの仕様について】</h2>
+    <p>この拡張機能の場合、最初の何も入力されていない状態では一切データが入っていません<br>
+    ○○○(A)_スコア：「xxxx」のように、入力した時に初めてその曲のデータが保存されます<br>
+    が、一度何か入力した後に入力値を削除した場合でも、その曲のデータが残ります（○○○(A)_bp:「」のようなイメージです）</p>
+
+    <p>エクスポートの場合、この未入力状態にしたデータも出力されます<br>
+    インポートの場合、未入力状態のデータが入っていればそれも反映されます</p>
+
+    <p>インポート時は.jsonファイルにデータが入っている列のみ上書きしますが、<br>
+    この未入力状態のデータでも上書きしてしまうので注意してください</p>
+
+    <div class="notice">
+      <p>つまり<b>「自己べを考慮せず上書きしてしまう」</b>というのがポイントなので、例えば……<br>
+    同期のためAndroidからエクスポート→PCにインポート、という流れの時、<br>
+    PC側で更新していた曲のデータがAndroid側に残っていた古いものに置き換わってしまう、といったパターンもあります<br>
+    （今後自己べを考慮したインポートに修正する可能性はありますが、未定です）
+    </div>
+  </div>
+
+  <div class="section-box">
     <h2>【その他】</h2>
     <p>表も含めてですが、大部分は素人がChatGPTを突っついて作らせているので変なバグり方したらすみません</p>
-    
+
     <p>現状Chrome向け拡張機能はPC版でしか使用できないようです<br>
     クリアランプマネージャーのようにスマートフォンから使用することはできません アーケードゲームなのに……<br>
-    Kiwi Browserなど拡張機能をサポートするブラウザも存在するようですが、動作するかは不明です</p>
-    
+    <s>Kiwi Browserなど拡張機能をサポートするブラウザも存在するようですが、動作するかは不明です</s><br>
+    <b>【Androidでの拡張機能使用】に記載した通り、Microsoft Edge Canaryを使用した動作確認を行いました</b></p>
+
     <p><a href="./dbralle_misatei.html" target="_self">DBR難易度表(イージー)(未査定有)</a>は表メンテナンスや提案検討のために作成したページであり、<br>
     性質上トップページでは隠し項目としていますが、<br>
     この拡張機能を使用した場合は未査定曲に対してもランプ、BP、スコアが保存できますので、<br>
