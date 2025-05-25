@@ -7,69 +7,75 @@
   <style>
     body {
       font-family: "Noto Sans JP", sans-serif;
-      font-size: 16px;
+      font-size: 1rem;
       line-height: 1.6;
       color: #333;
       background-color: #fff;
-      padding: 20px;
-      max-width: auto;
+      padding: 1.25rem;
+      max-width: 100%;
     }
+
     h2 {
       background-color: #f5f5f5;
-      padding: 8px 12px;
-      font-size: 1.2em;
+      padding: 0.5rem 0.75rem;
+      font-size: 1.4rem;
     }
+
     .section-box {
       background: #fafafa;
       border: 1px solid #ddd;
-      border-radius: 8px;
-      padding: 16px;
-      margin: 24px 0;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin: 1.5rem 0;
     }
+
     .top-section-box {
       background: #fafafa;
       border: 1px solid #ddd;
-      border-radius: 8px;
-      padding: 16px;
-      margin: 10px 0 24px 0;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin: 0.625rem 0 1.5rem 0;
     }
+
     code {
       background-color: #e8e8e8;
       font-family: Consolas, Monaco, monospace;
       padding: 2px 4px;
       border-radius: 4px;
     }
+
     .notice {
       background-color: #fff8e1;
-      border-left: 4px solid #ff9800;
-      padding: 6px 12px;
+      border-left: 0.25rem solid #ff9800;
+      padding: 0.5rem 0.75rem;
       font-size: 0.95em;
     }
+
     .advanced {
       background: #e3f2fd;
-      border-left: 5px solid #2196f3;
-      padding: 16px;
-      margin-top: 2em;
+      border-left: 0.3125rem solid #2196f3;
+      padding: 1rem;
+      margin-top: 2rem;
     }
 
     .notice-box {
-      border: 2px solid #666;
+      border: 0.125rem solid #666;
       background-color: #353535;
       color: white;
-      padding: 10px;
-      margin: 10px auto;
+      padding: 0.625rem;
+      margin: 0.625rem auto;
       width: 80%;
       text-align: left;
-      border-radius: 5px;
+      border-radius: 0.3125rem;
     }
 
     .notice-box ul {
       list-style-type: square;
-      padding-left: 20px;
+      padding-left: 1.25rem;
     }
 
     .notice-box li {
-      margin-bottom: 5px;
+      margin-bottom: 0.5rem;
     }
 
     .notice-box a:visited {
@@ -87,18 +93,37 @@
   </style>
 </head>
 <body>
-<center>
-  <strong><span style="font-size: 36pt;">コラム</span></strong><br>
+  <center>
+    <strong><span style="font-size: 3rem;">コラム</span></strong><br>
 
-  <div class="notice-box">
-    <ul>
-      <li>譜面に関して特に記載がない場合、DBRについての話です</li>
+    <div class="notice-box">
+      <ul>
+        <li>譜面に関して特に記載がない場合、DBRについての話です</li>
+      </ul>
+    </div>
+    <a href="index.html">TOPに戻る</a>
+  </center>
+  <div class="top-section-box">
+    <ul style="list-style: none; padding-left: 1em;">
+      <li><a href="#oldstyle-as">【旧作AS事情】</a></li>
+      <li><a href="#background">【DBR難易度表(イージー)の作成経緯】</a></li>
+      <li><a href="#dbr-dan">【DBR段位(仮)について】</a></li>
+      <li><a href="#db-etc">【DB○○、結局何の話？】</a></li>
+    </ul>
+    <p><b>マニア向け</b></p>
+    <ul style="list-style: none; padding-left: 1em;">
+      <li><a href="#start-from-here">【ここからスタートを活用する】</a></li>
+      <li><a href="#table-etc">【各種難易度表を参考にする】</a></li>
+      <li><a href="#becha-slide-6chord">【ベチャ押し、スライド押しについて+6個押しについて】</a></li>
+      <li><a href="#becha-2">【ベチャ押しについて②】</a></li>
+      <li><a href="#gauge-recover">【ゲージ回復量について】</a></li>
+      <li><a href="#gauge-recover-2">【ゲージ回復量について②】</a></li>
+      <li><a href="#gauge-shift">【ゲージシフトを考える】</a></li>
+      <li><a href="#oldstyle-gauge">【旧作ゲージ事情】</a></li>
     </ul>
   </div>
-  <a href="index.html">TOPに戻る</a>
-</center>  
-  <div class="top-section-box">
-    <h2>【旧作AS事情】</h2>
+  <div class="section-box">
+    <h2 id="oldstyle-as">【旧作AS事情】</h2>
     <p>オートスクラッチ設定時、スクラッチを完全非表示にできるようになったのはAC25、CS14からです<br>
     それまでスクラッチがある部分には必ず緑色のスクラッチノーツが降ってきていました<br>
     完全非表示できない時代の譜面も難易度表には反映していますが、かなり視認性の悪さ込みで考えてプレーする必要があります<br>
@@ -106,7 +131,7 @@
   </div>
 
   <div class="section-box">
-    <h2>【DBR難易度表(イージー)の作成経緯】</h2>
+    <h2 id="background">【DBR難易度表(イージー)の作成経緯】</h2>
     <p>2021年末ごろから、某所にてDBR難易度表を新しく作る計画がありました<br>
     当時公開状態で更新、整備されている難易度表がなかったため、DBR人口の増加に寄与しようという考えです<br>
     この時点でイージー基準で後述の難易度を拡張、整備する方針は決まっていました<p>
@@ -136,9 +161,9 @@
   </div>
 
   <div class="section-box">
-    <h2>【DBR段位(仮)について】</h2>
+    <h2 id="dbr-dan">【DBR段位(仮)について】</h2>
     <p>Twitterで2023年5月と2024年11月に公開されていた「DBR段位(仮)」は、<br>
-    【DBR難易度表(イージー)の作成経緯】にある難易度表計画の査定に参加した方が作成したものです<br>
+    <a href="#background">【DBR難易度表(イージー)の作成経緯】</a>にある難易度表計画の査定に参加した方が作成したものです<br>
 
     <div class="notice">
     <p>※PEN～CB頃にあった、EXPERTモードとオリジナルコースを利用したDBR段位とは別物です</p>
@@ -156,7 +181,7 @@
   </div>
 
   <div class="section-box">
-    <h2>【DB○○、結局何の話？】</h2>
+    <h2 id="db-etc">【DB○○、結局何の話？】</h2>
     <p>DB、DBM、DBR、DBSR、DBHR、DBRR、DBRM……<br>
     各種紛らわしい表記ですが、順番に見ていきましょう</p>
 
@@ -208,7 +233,7 @@
     それを完全に崩して地力譜面にしてしまえるのはDBHRにしかない大きな利点でした</p>
 
     <p>こちらも片側だけを指す略称は存在しません<br>
-    ちなみに仕様上「DB左H乱右S乱」のような同時使用はできませんでした</p>
+    ちなみにS乱を変化させるという仕様のため「DB左H乱右S乱」のような同時使用はできませんでした</p>
 
     <p><strong>DBRR</strong><br>
     DB+両側ローテーションランダムを表します ほぼ使われません<br>
@@ -252,10 +277,10 @@
     　こっちしかない時期もあったということですね</p>
   </div>
   
-  <strong><span style="font-size: 28pt;">マニア向け</span></strong><br>
+  <strong><span style="font-size: 2.33rem;">マニア向け</span></strong><br>
 
   <div class="section-box">
-    <h2>【ここからスタートを活用する】</h2>
+    <h2 id="start-from-here">【ここからスタートを活用する】</h2>
     <p>ここからスタート機能、デフォルトではレベル5以下の譜面にのみ表示されるようになっていますが、<br>
     これが大変便利です 冥(SPA)をすぐ捨てられるだけの機能ではありません 常時ONにする事をおすすめします</p>
     <p>具体的にはsnow storm(A)など、重い同時押しから始まる譜面は1打分でも大きな余裕ができます<br>
@@ -265,7 +290,7 @@
   </div>
 
   <div class="section-box">
-    <h2>【各種難易度表を参考にする】</h2>
+    <h2 id="table-etc">【各種難易度表を参考にする】</h2>
     <p>DBR難易度表にて全ての譜面を体系的にまとめられればそれに越したことはありませんが、<br>
     現実的にはこれだけの譜面量を全て網羅するのは難しいです</p>
     <p>しかしSP☆11、☆12に関しては全曲を対象としたノマゲ、ハード地力表や片手ハード難易度表があり、<br>
@@ -277,7 +302,7 @@
   </div>
 
   <div class="section-box">
-    <h2>【ベチャ押し、スライド押しについて+6個押しについて】</h2>
+    <h2 id="becha-slide-6chord">【ベチャ押し、スライド押しについて+6個押しについて】</h2>
     <p>指先だけを使った場合、このゲームにおける限界は片手5個押しまでです<br>
     6個押し以上は必然的にベチャかスライドを必要としますが、SP譜面でもそう出てくるものではありません……</p>
 
@@ -324,8 +349,8 @@
   </div>
 
   <div class="section-box">
-    <h2>【ベチャ押しについて②】</h2>
-    <p>前項【ベチャ押し、スライド押しについて+6個押しについて】の最後に挙げた<br>
+    <h2 id="becha-2">【ベチャ押しについて②】</h2>
+    <p>前項<a href="#becha-slide-6chord">【ベチャ押し、スライド押しについて+6個押しについて】</a>の最後に挙げた<br>
     ベチャ押しのコツとして手や指を伸ばす、反らすという部分について、意図が伝わりづらかったので補足します</p>
     運指としてのベチャ押しを解説している文章がほとんど見つからないので、せっかくですからなるべく詳しめに書きます<br>
     （筆者は<a href="https://iidx.org/dp/joint" target="_blank">iidx.org / Using Finger Joints</a>くらいしか知りません もしご存じの方がいれば教えてください）</p>
@@ -444,7 +469,7 @@
     前半で少し触れましたが、非常に誤爆を誘発しやすいからかと思います<br>
     SPでは親指を寝かせてもスクラッチ側2つしか鍵盤がありませんが、DPで同じ動きをすると下手したら5個ぐらい押されると思います</p>
 
-    <p>ところで前項にて筆者の左567は親スライドメインと書きましたが、場合によってはそんな親ベチャを使用する事があります<br>
+    <p>ところで<a href="#becha-slide-6chord">前項</a>最後で筆者の左567は親スライドメインと書きましたが、場合によってはそんな親ベチャを使用する事があります<br>
     567が一度に降るCN、素早く連続で降ってくる567同時押しなどです<br>
     見ての通り共通するのは精密さを要求されない動きですから、これしかないとなればやるしかありません<br>
     123⇔567で紹介した手首を捻る動作……どころではないぐらい大げさに手を傾け<br>
@@ -456,7 +481,7 @@
   </div>
 
   <div class="section-box">
-    <h2>【ゲージ回復量について】</h2>
+    <h2 id="gauge-recover">【ゲージ回復量について】</h2>
     <p>DBR難易度表にはゲージ回復量の欄がありますが、これはノマゲ以下でGREAT以上を1つ出した際の回復量を示しています（GOODはその半分）</p>
 
     <div class="notice">
@@ -482,7 +507,7 @@
   </div>
 
   <div class="section-box">
-    <h2>【ゲージ回復量について②】</h2>
+    <h2 id="gauge-recover-2">【ゲージ回復量について②】</h2>
     <p>ゲージ回復量の算出には総ノーツ数が使用されます<br>
     DBR譜面としての実質的なノーツ数はスクラッチを抜いた数ですから、<br>
     場合によっては似たようなレベルの譜面でもゲージ回復量が全然違うということもあり得ます</p>
@@ -501,7 +526,7 @@
   </div>
 
   <div class="section-box">
-    <h2>【ゲージシフトを考える】</h2>
+    <h2 id="gauge-shift">【ゲージシフトを考える】</h2>
     <p>SOUND VOLTEXにARSというシステムがあります<br>
     減少式ゲージ2種と通常ゲージ（ちょうどIIDXのエクハ、ハード、ノマゲのようなイメージ）が同時に走り、<br>
     失敗時に自動で下のゲージに切り替わるシステムです<br>
@@ -511,7 +536,7 @@
     某ゲームでGASと呼ばれる機能が実装されているので、そちらに馴染みがある方もいるかもしれません</p>
     
     <p>Pinky Crush現在、IIDXにこの類の機能は搭載されていませんが、<br>
-    【ゲージ回復量について】で触れたように、DBRは公式なクリアランプが点かないゲームのため、<br>
+    <a href="#gauge-recover">【ゲージ回復量について】</a>で触れたように、DBRは公式なクリアランプが点かないゲームのため、<br>
     アシストイージーで80%残った場合はイージー扱いとすれば一部再現することができます</p>
 
     <p>局所的なハズレであっという間に20%以上持っていかれる事がしばしばあるゲームですから、<br>
@@ -536,8 +561,8 @@
   </div>
 
   <div class="section-box">
-    <h2>【旧作ゲージ事情】</h2>
-    <p>DBR難易度表のゲージ回復量の計算式は【ゲージ回復量について】にて紹介したページのものを使用させていただいていますが、<br>
+    <h2 id="oldstyle-gauge">【旧作ゲージ事情】</h2>
+    <p>DBR難易度表のゲージ回復量の計算式は<a href="#gauge-recover">【ゲージ回復量について】</a>にて紹介したページのものを使用させていただいていますが、<br>
     その中に「GAME LEVELによる固定値」なるものが登場します</p>
 
     <p>GAME LEVELはAC18までとCS作品に存在する内部設定で、筐体ごとの設定値でゲージの増減量が変わるようになっていました<br>
