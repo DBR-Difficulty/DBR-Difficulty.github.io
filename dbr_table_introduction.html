@@ -7,69 +7,75 @@
   <style>
     body {
       font-family: "Noto Sans JP", sans-serif;
-      font-size: 16px;
+      font-size: 1rem;
       line-height: 1.6;
       color: #333;
       background-color: #fff;
-      padding: 20px;
-      max-width: auto;
+      padding: 1.25rem;
+      max-width: 100%;
     }
+
     h2 {
       background-color: #f5f5f5;
-      padding: 8px 12px;
-      font-size: 1.2em;
+      padding: 0.5rem 0.75rem;
+      font-size: 1.4em;
     }
+
     .section-box {
       background: #fafafa;
       border: 1px solid #ddd;
-      border-radius: 8px;
-      padding: 16px;
-      margin: 24px 0;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin: 1.5rem 0;
     }
+
     .top-section-box {
       background: #fafafa;
       border: 1px solid #ddd;
-      border-radius: 8px;
-      padding: 16px;
-      margin: 10px 0 24px 0;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin: 0.625rem 0 1.5rem 0;
     }
+
     code {
       background-color: #e8e8e8;
       font-family: Consolas, Monaco, monospace;
-      padding: 2px 4px;
-      border-radius: 4px;
+      padding: 0.125rem 0.25rem;
+      border-radius: 0.25rem;
     }
+
     .notice {
       background-color: #fff8e1;
-      border-left: 4px solid #ff9800;
-      padding: 6px 12px;
+      border-left: 0.25rem solid #ff9800;
+      padding: 0.375rem 0.75rem;
       font-size: 0.95em;
     }
+
     .advanced {
       background: #e3f2fd;
-      border-left: 5px solid #2196f3;
-      padding: 16px;
-      margin-top: 2em;
+      border-left: 0.3125rem solid #2196f3;
+      padding: 1rem;
+      margin-top: 2rem;
     }
 
     .notice-box {
-      border: 2px solid #666;
+      border: 0.125rem solid #666;
       background-color: #353535;
       color: white;
-      padding: 10px;
-      margin: 10px auto;
+      padding: 0.625rem;
+      margin: 0.625rem auto;
       width: 80%;
       text-align: left;
-      border-radius: 5px;
+      border-radius: 0.3125rem;
     }
 
     .notice-box ul {
       list-style-type: square;
-      padding-left: 20px;
+      padding-left: 1.25rem;
     }
 
     .notice-box li {
-      margin-bottom: 5px;
+      margin-bottom: 0.3125rem;
     }
 
     .notice-box a:visited {
@@ -87,12 +93,22 @@
   </style>
 </head>
 <body>
-<center>
-  <strong><span style="font-size: 36pt;">DBR難易度表について</span></strong><br>
-  <a href="index.html">TOPに戻る</a>
-</center>  
+  <center>
+    <strong><span style="font-size: 3rem;">DBR難易度表について</span></strong><br>
+    <a href="index.html">TOPに戻る</a>
+  </center>
   <div class="top-section-box">
-    <h2>【はじめに】</h2>
+    <ul style="list-style: none; padding-left: 1em;">
+      <li><a href="#introduction">【はじめに】</a></li>
+      <li><a href="#premise">【前提】</a></li>
+      <li><a href="#arcade">【アーケード作品用の表】</a></li>
+      <li><a href="#infinitas">【INFINITAS用の表】</a></li>
+      <li><a href="#suggest">【新規提案有の表】</a></li>
+      <li><a href="#extend">【拡張機能使用時の追加項目】</a></li>
+    </ul>
+  </div>
+  <div class="section-box">
+    <h2 id="introduction">【はじめに】</h2>
     <p><b>このサイトのDBR難易度表は、あらゆるDBRプレイヤーが参考にできるよう、可能な限り多くの譜面を収録することを目標としています。</b><br>
     難易度表の<a href="https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?usp=sharing" target="_blank">管理用スプレッドシート</a>に「新規提案」シートがあります。<br>
     「曲名+譜面難易度（H、Aなど）」と「レベル」だけでも記載していただければ、それだけ難易度表が充実していきます。<br>
@@ -104,7 +120,7 @@
   </div>
 
   <div class="section-box">
-    <h2>【前提】</h2>
+    <h2 id="premise">【前提】</h2>
     <p><b>DBR</b>（<b>BATTLE、両側RANDOM、AUTO SCRATCH</b>の状態）の難易度表です。</p>
 
     <p>現在、イージー基準の難易度表のみを運営しています。<br>
@@ -147,8 +163,8 @@
   </div>
 
   <div class="section-box">
-    <h2>【アーケード作品用の表】</h2>
-    <p>【前提】にある「おすすめ度」によって表示を分けた3種類が存在します。</p>
+    <h2 id="arcade">【アーケード作品用の表】</h2>
+    <p><a href="#premise">【前提】</a>にある「おすすめ度」によって表示を分けた3種類が存在します。</p>
     <ul>
       <li><a href="dbralle_normal.html">DBR難易度表(イージー)</a>：メインの難易度表です。☆、○の譜面が表示されます。</li>
       <li><a href="dbralle_recommended.html">DBR難易度表(イージー)(おすすめ)</a>：☆の譜面が表示されます。</li>
@@ -160,8 +176,8 @@
     </div>
 
     <ul>
-      <li>レベル：譜面のレベルです。詳細は【前提】をご参照ください。</li>
-      <li>薦：譜面のおすすめ度です。(おすすめ)表の場合、☆のみを表示しているため省略されます。詳細は【前提】をご参照ください。</li>
+      <li>レベル：譜面のレベルです。詳細は<a href="#premise">【前提】</a>をご参照ください。</li>
+      <li>薦：譜面のおすすめ度です。(おすすめ)表の場合、☆のみを表示しているため省略されます。詳細は<a href="#premise">【前提】</a>をご参照ください。</li>
       <li>ver：楽曲のAC初収録バージョンです。substreamは「s」で、CSおよびINF限定の曲は「0」としています。</li>
       <li>タイトル：曲名+(難易度)です。</li>
       <li>BPM：譜面のBPMです。ソフランがある場合、表記は「最小値-最大値」となります。</li>
@@ -182,7 +198,7 @@
   </div>
 
   <div class="section-box">
-    <h2>【INFINITAS用の表】</h2>
+    <h2 id="infinitas">【INFINITAS用の表】</h2>
     <p>ACに比べてリトライが容易であり、選曲時間の制限もないため「おすすめ度」による表示分けは行っていません。（希望があれば作成します）<br>
     INFINITASでプレーできる譜面のみ表示します。そのため「†☆」の区分けもありません。</p>
     <ul>
@@ -193,7 +209,7 @@
         <img src="picture/dbrtable_inf.png" alt="INF版難易度表" style="max-width:100%; height: auto;">
     </div>
 
-    <p>表示内容はAC用の表と同じですが、以下の項目を追加しています。</p>
+    <p>表示内容は<a href="#arcade">AC用の表</a>と同じですが、以下の項目を追加しています。</p>
 
     <ul>
       <li>解禁方法：楽曲の解禁方法を記載しています。デフォルト解禁の場合、空欄になっています。</li>
@@ -201,7 +217,7 @@
   </div>
 
   <div class="section-box">
-    <h2>【新規提案有の表】</h2>
+    <h2 id="suggest">【新規提案有の表】</h2>
     <p>全譜面に加え、<a href="https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?usp=sharing" target="_blank">管理用スプレッドシート</a>の「新規提案」シートに記載された曲も追加で表示します。<br>
     難易度査定に協力していただける方、とにかく譜面数が欲しい方におすすめです。<br>
     アーケード用、INFINITAS用の両方が存在します。</p>
@@ -220,7 +236,7 @@
   </div>
 
   <div class="section-box">
-    <h2>【拡張機能使用時の追加項目】</h2>
+    <h2 id="extend">【拡張機能使用時の追加項目】</h2>
     <p>難易度表を拡張し、ブラウザにプレー記録を保存できるようになります。<br>
     詳細は<a href="dbr_table_extend.html">拡張機能のページ</a>をご参照ください。</p>
 
