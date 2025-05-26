@@ -103,6 +103,14 @@
     const diffClass = classes.find(c => Object.keys(difficultyMap).includes(c));
     if (!diffClass) return;
 
+    const levelElem = dl.querySelector('dd.level');
+    if (!levelElem) return;
+    const levelClass = [...levelElem.classList].find(cls => /^l\d+$/.test(cls));
+    if (!levelClass) return;
+
+    const levelNumber = parseInt(levelClass.replace('l', ''), 10);
+    if (levelNumber < 7 || levelNumber > 12) return;  // Lv7～12以外はスキップ
+
     const diffChar = difficultyMap[diffClass];
 
     const musicNameElem = dl.querySelector('dd.musicName');
@@ -128,9 +136,25 @@
 
   const blob = new Blob([jsonStr], { type: 'application/json' });
   const blobUrl = URL.createObjectURL(blob);
+
+  // DJNAME（titleから抽出、禁止文字を除去、空なら'unknown'）
+  const titleMatch = document.title.match(/^DJ\s+(.+?)\s+\|/);
+  let djName = titleMatch ? titleMatch[1].trim().replace(/[\\/:*?"<>|]/g, '') : '';
+  if (!djName) djName = 'unknown';
+
+  // 日付（yyyymmdd）
+  const now = new Date();
+  const yyyymmdd = now.getFullYear().toString()
+    + String(now.getMonth() + 1).padStart(2, '0')
+    + String(now.getDate()).padStart(2, '0');
+
+  // ファイル名作成
+  const fileName = `lamp_data_${djName}_${yyyymmdd}.json`;
+
+  // ダウンロード処理
   const a = document.createElement('a');
   a.href = blobUrl;
-  a.download = 'lamp_data.json';
+  a.download = fileName;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);

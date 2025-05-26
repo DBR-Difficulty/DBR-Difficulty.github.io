@@ -7,69 +7,89 @@
   <style>
     body {
       font-family: "Noto Sans JP", sans-serif;
-      font-size: 16px;
+      font-size: 1rem;
       line-height: 1.6;
       color: #333;
       background-color: #fff;
-      padding: 20px;
-      max-width: auto;
+      padding: 1.25rem;
+      max-width: 100%;
     }
+
     h2 {
       background-color: #f5f5f5;
-      padding: 8px 12px;
+      padding: 0.5rem 0.75rem;
+      font-size: 1.4em;
+    }
+
+    h3 {
+      background-color: #fafafa;
+      margin-top: 1rem;
+      margin-bottom: 0;
       font-size: 1.2em;
     }
+
+    h4 {
+      background-color: transparent;
+      margin-top: 0.5rem;
+      margin-bottom: 0.5rem;
+      font-size: 1.05em;
+    }
+
     .section-box {
       background: #fafafa;
       border: 1px solid #ddd;
-      border-radius: 8px;
-      padding: 16px;
-      margin: 24px 0;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin: 1.5rem 0;
     }
+
     .top-section-box {
       background: #fafafa;
       border: 1px solid #ddd;
-      border-radius: 8px;
-      padding: 16px;
-      margin: 10px 0 24px 0;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin: 0.625rem 0 1.5rem 0;
     }
+
     code {
       background-color: #e8e8e8;
       font-family: Consolas, Monaco, monospace;
-      padding: 2px 4px;
-      border-radius: 4px;
+      padding: 0.125rem 0.25rem;
+      border-radius: 0.25rem;
     }
+
     .notice {
       background-color: #fff8e1;
-      border-left: 4px solid #ff9800;
-      padding: 6px 12px;
+      border-left: 0.25rem solid #ff9800;
+      padding: 0.375rem 0.75rem;
       font-size: 0.95em;
     }
+
     .advanced {
       background: #e3f2fd;
-      border-left: 5px solid #2196f3;
-      padding: 16px;
-      margin-top: 2em;
+      border-left: 0.3125rem solid #2196f3;
+      padding: 1rem;
+      margin-top: 2rem;
     }
 
     .notice-box {
-      border: 2px solid #666;
+      border: 0.125rem solid #666;
       background-color: #353535;
       color: white;
-      padding: 10px;
-      margin: 10px auto;
+      padding: 0.625rem;
+      margin: 0.625rem auto;
       width: 80%;
       text-align: left;
-      border-radius: 5px;
+      border-radius: 0.3125rem;
     }
 
     .notice-box ul {
       list-style-type: square;
-      padding-left: 20px;
+      padding-left: 1.25rem;
     }
 
     .notice-box li {
-      margin-bottom: 5px;
+      margin-bottom: 0.3125rem;
     }
 
     .notice-box a:visited {
@@ -84,28 +104,65 @@
       color: inherit;
       text-decoration: none;
     }
+
+    .subtext {
+      padding-left: 0.5em;
+    }
+
+    .btn_bookmarklet {
+      display: inline-block;
+      padding: 0.5rem 0.875rem;
+      background: #007bff;
+      color: #fff;
+      border-radius: 0.375rem;
+      font-weight: bold;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    #bookmarklet {
+      background: #f4f4f4;
+      padding: 0.5rem;
+      border-radius: 0.25rem;
+      overflow-x: auto;
+      font-family: monospace;
+      white-space: pre;
+      border: 1px solid #ccc;
+    }
   </style>
 </head>
 <body>
-<center>
-  <strong><span style="font-size: 36pt;">拡張機能</span></strong><br>
+  <center>
+    <strong><span style="font-size: 3rem;">拡張機能</span></strong><br>
 
-  <div class="notice-box">
-    <ul>
-      <li>PC版Google Chrome向け拡張機能です</li>
-      <li>インストールは<a href="https://chromewebstore.google.com/detail/dbrtableextend/dmjbmmiigiiojijpflffmojdkdoepbga" target="_blank">こちら</a> 詳しくは【導入】を参照してください</li>
-      <li>導入は自己責任でお願いします</li>
+    <div class="notice-box">
+      <ul>
+        <li>PC版Google Chrome向け拡張機能です</li>
+        <li>インストールは<b><a href="https://chromewebstore.google.com/detail/dbrtableextend/dmjbmmiigiiojijpflffmojdkdoepbga" target="_blank">こちら</a></b> 詳しくは<a href="#introduction">【導入】</a>を参照してください</li>
+        <li>導入は自己責任でお願いします</li>
+      </ul>
+    </div>
+    <a href="index.html">TOPに戻る</a>
+  </center>
+  <div class="top-section-box">
+    <ul style="list-style: none; padding-left: 1em;">
+      <li><a href="#summary">【概要】</a></li>
+      <li><a href="#introduction">【導入】</a></li>
+      <li><a href="#android">【Androidでの拡張機能使用】</a></li>
+      <li><a href="#import-export">【インポート/エクスポートの仕様について】</a></li>
+      <li><a href="#lampmanager">【クリアランプマネージャーのランプ状況をインポートする】</a></li>
+      <li><a href="#others">【その他】</a></li>
     </ul>
   </div>
-  <a href="index.html">TOPに戻る</a>
-</center>  
-  <div class="top-section-box">
-    <h2>【概要】</h2>
+  <div class="section-box">
+    <h2 id="summary">【概要】</h2>
     <p>しっかりプレー内容を管理したい人向けの便利機能です<br>
     クリアランプ、BP、スコアの入力列と、スコアランクを2種表示します</p>
     <div style="max-width: 600px;">
         <img src="picture/extend_table.png" alt="拡張部分" style="max-width:100%; height: auto;">
-        <div style="text-align: center; font-size: 0.9em; margin-top: 4px;">よって増えます</div>
+        <div style="text-align: center; font-size: 0.9em; margin-top: 0.25rem;">よって増えます</div>
     </div>
     <p>入力情報は即時ブラウザに保存されます<br>
     スコアを入力した場合、実際に筐体で表示される「スコアランク」と、スクラッチを抜いた実質ノーツ数から計算した「実質ランク」の2つを表示します<br>
@@ -122,7 +179,7 @@
   </div>
 
   <div class="section-box">
-    <h2>【導入】</h2>
+    <h2 id="introduction">【導入】</h2>
     <p>[Chrome に追加]をクリック後、[拡張機能を追加]をクリックしてください</p>
 
     <div style="max-width: 600px;">
@@ -131,8 +188,31 @@
 
     <p>今後もしアップデートがあった場合、Chrome ウェブストア経由でインストールした拡張機能は自動で更新してくれるそうです<br>
     ありがたいですね</p>
-    <p>公開当初に野良拡張として導入いただいた方は、特に機能変更等はないのでそのままお使いいただいても構いませんが、<br>
-    再インストールする場合は設定メニュー内の[拡張機能]を選択するか、URLに「chrome://extensions/」を入力、<br>
+
+    <div class="notice">
+    現在のバージョンは<b>v1.1.0</b>です<br>
+    更新内容はChrome ウェブストアの概要欄をご参照ください
+    </div>
+
+    <p>Chrome側で自動更新が行われる想定ですが、更新タイミング前であったり更新に失敗した場合用に、<br>
+    バージョン確認の手順と強制バージョンアップ方法をご紹介します</p>
+
+    <ol>
+      <li>設定メニュー内の[拡張機能]を選択するか、URLに<code>chrome://extensions/</code>を入力してください</li>
+      <li>「DBRTableExtend」の[詳細]をクリックしてください<br>
+      （1.で<code>chrome://extensions/?id=dmjbmmiigiiojijpflffmojdkdoepbga</code>と入力した場合、直接詳細ページに遷移します）</li>
+      <li>「バージョン」が上記と異なっている場合、右上にある[デベロッパー モード]をONにしてください</li>
+      <li>上部に[更新]ボタンが出現するのでクリックしてください</li>
+      <li>バージョン情報が新しくなっていることを確認してください</li>
+      <li>作業後、特に必要でなければ[デベロッパー モード]をOFFにしてください</li>
+    </ol>
+
+    <div style="max-width: 600px;">
+        <img src="picture/version_check.png" alt="バージョン確認箇所" style="max-width:100%; height: auto;">
+        <div style="text-align: center; font-size: 0.9em; margin-top: 0.25rem;">[詳細]のバージョン表示部分</div>
+    </div>
+    <p>公開当初に野良拡張として導入いただいた方は、アップデートをする場合に再インストールが必要です<br>
+    再インストールする場合は設定メニュー内の[拡張機能]を選択するか、URLに<code>chrome://extensions/</code>を入力、<br>
     「DBRTableExtend」を削除していただき、[デベロッパー モード]を必要が無ければOFFにし、改めて上記リンクから導入してください<br>
     （ちなみに削除せずインストールすると列が倍表示されますが、最後に入力した方に同期されるので、意味がありません）</p>
     <div class="notice">
@@ -141,9 +221,11 @@
   </div>
 
   <div class="section-box">
-    <h2>【Androidでの拡張機能使用】</h2>
+    <h2 id="android">【Androidでの拡張機能使用】</h2>
     <div class="notice">
-      <b>※自己責任でお願いします</b>
+      <b>※自己責任でお願いします</b><br>
+      アップデートを行う場合、再インストールが必要です<br>
+      こちらも念のため<b>エクスポートを行ってからの作業</b>を推奨します
     </div>
     <p><a href="https://w.atwiki.jp/sumaho_browser/pages/33.html#id_e36d2ae6" target="_blank">スマホブラウザ@ウィキ / AndroidでChrome拡張機能の使えるブラウザ</a><br>
     上記リンクの「Microsoft Edge Canary」部分を参照してください<br>
@@ -153,71 +235,127 @@
     <div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: flex-start; max-width: 100%;">
         <div style="max-width: 275px; text-align: center;">
             <img src="picture/crxdownload.png" alt=".crxダウンロード" style="max-width:100%; height: auto;">
-            <div style="font-size: 0.9em; margin-top: 4px;">Chrome ウェブストアから.crxファイルをダウンロード</div>
+            <div style="font-size: 0.9em; margin-top: 0.25rem;">Chrome ウェブストアから.crxファイルをダウンロード</div>
         </div>
 
         <div style="max-width: 275px; text-align: center;">
             <img src="picture/crxinstall.png" alt="crxでインストール" style="max-width:100%; height: auto;">
-            <div style="font-size: 0.9em; margin-top: 4px;">Extension install by crxでインストール</div>
+            <div style="font-size: 0.9em; margin-top: 0.25rem;">Extension install by crxでインストール</div>
         </div>
 
         <div style="max-width: 275px; text-align: center;">
             <img src="picture/fuquntsumo.png" alt="じゃあDBR活動できるじゃない！" style="max-width:100%; height: auto;">
-            <div style="font-size: 0.9em; margin-top: 4px;">だいぶ表示幅が狭まりますが、使えます</div>
+            <div style="font-size: 0.9em; margin-top: 0.25rem;">だいぶ表示幅が狭まりますが、使えます</div>
         </div>
     </div>
 
     <p>PCとデータを同期したい場合、かなり面倒ですがインポート/エクスポート機能で.jsonファイルを受け渡ししてください<br>
     エクスポートしたら自分宛のメールに添付するなり、Discordで自分しか入っていないサーバーに上げるなり、お好みでどうぞ<br>
-    念のため次項【インポート/エクスポートの仕様について】を参照してからの作業を推奨します</p>
+    念のため次項<a href="#import-export">【インポート/エクスポートの仕様について】</a>を参照してからの作業を推奨します</p>
   </div>
 
   <div class="section-box">
-    <h2>【インポート/エクスポートの仕様について】</h2>
+    <h2 id="import-export">【インポート/エクスポートの仕様について】</h2>
     <p>この拡張機能の場合、最初の何も入力されていない状態では一切データが入っていません<br>
     ○○○(A)_スコア：「xxxx」のように、入力した時に初めてその曲のデータが保存されます<br>
     が、一度何か入力した後に入力値を削除した場合でも、その曲のデータが残ります（○○○(A)_bp:「」のようなイメージです）</p>
 
     <p>エクスポートの場合、この未入力状態にしたデータも出力されます<br>
-    インポートの場合、未入力状態のデータが入っていればそれも反映されます</p>
-
     <p>インポート時は.jsonファイルにデータが入っている列のみ上書きしますが、<br>
-    この未入力状態のデータでも上書きしてしまうので注意してください</p>
+    <s>この未入力状態のデータでも上書きしてしまうので注意してください</s></p>
 
     <div class="notice">
-      <p>つまり<b>「自己べを考慮せず上書きしてしまう」</b>というのがポイントなので、例えば……<br>
-    同期のためAndroidからエクスポート→PCにインポート、という流れの時、<br>
-    PC側で更新していた曲のデータがAndroid側に残っていた古いものに置き換わってしまう、といったパターンもあります<br>
-    （今後自己べを考慮したインポートに修正する可能性はありますが、未定です）
+      <p><b>（v1.1.0から）自己ベストを考慮したインポートを行うように修正しました！</b><br>
+      インポートする.jsonファイルと保存されたデータを比較して、より良い結果の場合のみ更新されます<br>
+      エクスポート側に未入力データや古いランプ・BP・スコアが保存されていても大丈夫です</p>
+
+      <p>例えば、同期のためAndroidからエクスポート→PCにインポートを行う場合、<br>
+      PC側で更新していた記録の方が良いものであれば、置き換わりません</p>
     </div>
   </div>
 
   <div class="section-box">
-    <h2>【その他】</h2>
+    <h2 id="lampmanager">【クリアランプマネージャーのランプ状況をインポートする】</h2>
+     <p><b><a href="https://beatmania-clearlamp.com/" target="_blank">beatmaniaIIDXクリアランプマネージャー</a></b>で記録しているランプ状況を、この拡張機能でインポート可能なjsonファイルとしてダウンロードします<br>
+     取得にはブックマークレットを使用します 公式CSVが提供されてから意外と月日が経っている今日この頃、馴染みの薄い方も多いかもしれません</p>
+
+    <h3>【事前準備】</h3>
+    <h4>【PCの方】</h4>
+      <a href="javascript:(function(){var s=document.createElement('script');s.type='text/javascript';s.charset='utf-8';s.src='https://dbr-difficulty.github.io/files/convert-lampdata.js';document.head.appendChild(s);})();"
+        class="btn_bookmarklet"
+        onclick="return false;">
+       DBRランプ状況取得
+      </a>
+    <p class="subtext">このボタンをお気に入りバーにドラッグ&ドロップしてください</p>
+
+    <h4>【スマートフォンの方、上記方法でうまく行かない方】</h4>
+    <div style="margin: 1em 0;">
+      <pre id="bookmarklet">javascript:(function(){var s=document.createElement('script');s.type='text/javascript';s.charset='utf-8';s.src='https://dbr-difficulty.github.io/files/convert-lampdata.js';document.head.appendChild(s);})();</pre>
+      <button id="copyButton" class="btn_bookmarklet">
+        ブックマークレットをコピー
+      </button>
+    </div>
+    <ol>
+      <li>[ブックマークレットをコピー]を押すと、ブックマークレットのコードがコピーされます</li>
+      <li>このページでもどこでもよいので、ブックマークを新規登録してください</li>
+      <li>そのブックマークのURL欄に、コピーしたコードを貼り付けてください</li>
+    </ol>
+    <p class="subtext">ブックマークの名前は変えなくてもよいですが、後で使用用途がわかりやすい名前にしておくのをおすすめします</p>
+
+    <h3>【使用方法】</h3>
+    <p class="subtext">クリアランプマネージャーを開き、<br>
+    「/djdata/{自分のID}/sp/」のページで使用してください（SP表示を優先している方は「/djdata/{自分のID}」でもOK）</p>
+
+    <p class="subtext"><b>必ず「SPモード」になっていることを確認してから</b>、登録したブックマークを開いてください<br>
+    正常に実行されると「lamp_data_{DJNAME}_YYYYMMDD.json」が自動でダウンロードされます<br>
+    ダウンロードされた.jsonファイルを、DBR難易度表でインポートしてください</p>
+
+    <p>☆6以下（現状シートがありません、データ量の関係で提案された曲のみ登録していく予定です）とNO PLAYは出力されません<br>
+    それ以外で出力されていない曲、未査定表にもデータがない曲があれば<a href="https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?usp=sharing" target="_blank">管理用スプレッドシート</a>の「修正依頼」シートにご報告をお願いします</p>
+
+    <div class="notice">
+      <p>※このブックマークレットに関するご質問・ご要望は管理人Twitter（@DBR_Difficulty）にお願いします<br>
+      非公式、無関係の機能ですので、<b>クリアランプマネージャー様へのお問い合わせは厳に慎んでください</b></p>
+
+      アップデートを行う場合、再インストールが必要です<br>
+      こちらも念のため<b>エクスポートを行ってからの作業</b>を推奨します
+    </div>
+  </div>
+
+  <div class="section-box">
+    <h2 id="others">【その他】</h2>
     <p>表も含めてですが、大部分は素人がChatGPTを突っついて作らせているので変なバグり方したらすみません</p>
 
     <p>現状Chrome向け拡張機能はPC版でしか使用できないようです<br>
     クリアランプマネージャーのようにスマートフォンから使用することはできません アーケードゲームなのに……<br>
     <s>Kiwi Browserなど拡張機能をサポートするブラウザも存在するようですが、動作するかは不明です</s><br>
-    <b>【Androidでの拡張機能使用】に記載した通り、Microsoft Edge Canaryを使用した動作確認を行いました</b></p>
+    <b><a href="#android">【Androidでの拡張機能使用】</a>に記載した通り、Microsoft Edge Canaryを使用した動作確認を行いました</b></p>
 
     <p><a href="./dbralle_misatei.html" target="_self">DBR難易度表(イージー)(未査定有)</a>は表メンテナンスや提案検討のために作成したページであり、<br>
     性質上トップページでは隠し項目としていますが、<br>
     この拡張機能を使用した場合は未査定曲に対してもランプ、BP、スコアが保存できますので、<br>
-    ほとんどの曲でプレー内容の保存ができるようになります<br>
-    クリアランプマネージャーのような使い方もできなくはありません 有効に使っていただければと思います</p>
+    ☆7以上のほとんどの曲でプレー内容の保存ができるようになります（データ量の都合上、☆6以下は提案があった曲のみ反映します）</p>
+    クリアランプマネージャーのような使い方もできなくはありません 有効に使っていただければと思います<br>
+    →<a href="#lampmanager">あちらからインポートできる</a>ようにしました お好みで使い分けてください</p>
 
     <p>データはタイトルに対して持つようにしていますので、未査定曲がその後表入りしてもそのままお使いいただけます<br>
-    <b>注意事項として、表登録時などのタイミングでタイトルに誤字修正があり、<br>
-    かつTextageのリンクが存在しなかった曲に関しては、データの復元ができません</b><br>
-    ブラウザのキャッシュクリアでもデータが消えてしまいますから、たまにエクスポートしてバックアップを取ることをおすすめします<br>
-    また性質上INF有無などのデータは揃っておらず、特にスクラッチ数はほぼ表入りまで空なので実質ランクが役に立たなくなるのは、すいません</p>
+    <b>注意事項として、データ保存後にタイトルへの誤字修正があり、<br>
+    かつ最後にプレーデータを更新したタイミングまでにTextageのリンクが存在しなかった曲に関しては、データが復元されません</b><br>
+    ※内部的にはデータが残っていますので、記録したはずなのに……と思った方は、<br>
+    お手数ですがエクスポートした.jsonファイル内のデータを参照して復旧してください</p>
+
+    <p>また、ブラウザのキャッシュクリアを行った場合にデータが消えてしまいます<br>
+    （一応削除時に「Cookieと他サイトデータ」のような項目を選ばなければ消えませんが……）<br>
+    その他不慮の事故等も考え、時折エクスポートしてバックアップを取ることをおすすめします</p>
+
+    <p>未査定曲は性質上INF有無などのデータが揃っておらず、特にスクラッチ数はほぼ表入りまで空なので実質ランクが役に立たなくなるのは、すいません<br>
+    （修正依頼シートに情報提供いただくのは歓迎です）</p>
 
     <p>ちなみにChrome Web Storeにデベロッパー登録するには$5かかります</p>
 
     <div style="max-width: 600px;">
         <img src="picture/fivedoru.png" alt="有償だ！有償だ！有償有償有償だ！" style="max-width:100%; height: auto;">
-        <div style="text-align: center; font-size: 0.9em; margin-top: 4px;">有償だ！</div>
+        <div style="text-align: center; font-size: 0.9em; margin-top: 0.25rem;">有償だ！</div>
     </div>
 
     <p><s>もし$5が惜しくない方がいれば@DBR_Difficultyにだいたいそれぐらいのブツを渡してもらえれば登録します<br>
@@ -228,5 +366,15 @@
     <p>あとはTampermonkeyとかに対応させれば他ブラウザでも使用できるかもしれませんが、わかりません<br>
     物好きな方は<a href="https://github.com/DBR-Difficulty/DBRTableExtend" target="_blank">中身</a>を入手して弄ってみてください</p>
   </div>
+  <script>
+    document.getElementById('copyButton').addEventListener('click', function () {
+      const text = document.getElementById('bookmarklet').innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        alert('ブックマークレットをコピーしました！');
+      }).catch(err => {
+        alert('コピーに失敗しました: ' + err);
+      });
+    });
+  </script>
 </body>
 </html>
