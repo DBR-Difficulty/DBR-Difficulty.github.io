@@ -92,7 +92,8 @@
     'Burning Heat!(Full Option Mix)': 'Burning Heat! (Full Option Mix)',
     'City Never Sleeps (IIDX EDITION)': 'City Never Sleeps (IIDX Edition)',
     'Colors(radio edit)': 'Colors (radio edit)',
-    'Colors-Y&Co.Eurobeat Remix-': 'Colors -Y&Co. Eurobeat Remix-'
+    'Colors-Y&Co.Eurobeat Remix-': 'Colors -Y&Co. Eurobeat Remix-',
+    'DEATH†ZIGOQ〜怒りの高速爆走野郎〜': 'DEATH†ZIGOQ ～怒りの高速爆走野郎～'
     // 必要に応じてここに追加
     // 'クリアランプマネージャー側表記': 'DBR難易度表側表記',
   };
