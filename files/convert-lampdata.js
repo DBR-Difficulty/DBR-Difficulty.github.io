@@ -90,6 +90,7 @@
     'Vibing! Shake It!': 'Vibing! Shake it!',
     'TA・DA☆YO・SHI': 'TA・DA ☆ YO・SHI',
     'Burning Heat!(Full Option Mix)': 'Burning Heat! (Full Option Mix)'
+    'City Never Sleeps (IIDX EDITION)': 'City Never Sleeps (IIDX Edition)',
     // 必要に応じてここに追加
     // 'クリアランプマネージャー側表記': 'DBR難易度表側表記',
   };
