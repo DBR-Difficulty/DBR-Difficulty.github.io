@@ -89,7 +89,7 @@
     "I Was The One(80's EUROBEAT STYLE)": "I Was The One (80's EUROBEAT STYLE)",
     'Vibing! Shake It!': 'Vibing! Shake it!',
     'TA・DA☆YO・SHI': 'TA・DA ☆ YO・SHI',
-
+    'Burning Heat!(Full Option Mix)': 'Burning Heat! (Full Option Mix)'
     // 必要に応じてここに追加
     // 'クリアランプマネージャー側表記': 'DBR難易度表側表記',
   };
