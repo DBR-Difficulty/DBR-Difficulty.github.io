@@ -172,18 +172,18 @@ body.diff {
 
 /* バージョン */
 .col-ver {
-  min-width: 2ch;
-  max-width: 2ch;
+  min-width: 3ch;
+  max-width: 3ch;
   width: 1%;
   text-align: left;
   white-space: nowrap;
 }
 
-/* SPLv */
-.col-splv {
-  min-width: 4ch;
-  max-width: 6ch;
-  width: 1%;
+/* 曲名 */
+.col-title {
+  min-width: 25ch;
+  max-width: 50ch;
+  width: 20%;
   text-align: left;
 }
 
@@ -192,14 +192,6 @@ body.diff {
   min-width: 4ch;
   max-width: 4ch;
   width: 1%;
-  text-align: left;
-}
-
-/* 曲名 */
-.col-title {
-  min-width: 25ch;
-  max-width: 50ch;
-  width: 30%;
   text-align: left;
 }
 
@@ -216,6 +208,15 @@ body.diff {
 .col-notesfull {
   min-width: 4ch;
   max-width: 4ch;
+  width: 1%;
+  text-align: left;
+}
+
+
+/* SPLv */
+.col-splv {
+  min-width: 4ch;
+  max-width: 6ch;
   width: 1%;
   text-align: left;
 }
