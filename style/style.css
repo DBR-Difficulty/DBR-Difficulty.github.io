@@ -98,3 +98,41 @@ body.diff {
 .toplink-margin {
   margin: 5px 0 5px 0;
 }
+
+#loading {
+    font-size: clamp(1.2rem, 2vw, 2rem);
+    font-weight: bold;
+    text-align: center;
+    margin: 2rem;
+    color: #333;
+    background-color: #f9f9f9;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    display: inline-block;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+}
+
+.spinner {
+    margin: 0 auto 1rem auto;
+    width: clamp(30px, 10vw, 60px);
+    height: clamp(30px, 10vw, 60px);
+    border: clamp(3px, 1vw, 6px) solid #ccc;
+    border-top-color: #333;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.loading-text {
+    margin-top: 0.5rem;
+}
