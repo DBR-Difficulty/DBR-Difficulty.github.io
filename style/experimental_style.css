@@ -195,10 +195,11 @@ body.diff {
   text-align: left;
 }
 
-/* タイトル */
+/* 曲名 */
 .col-title {
-  min-width: 40ch;
+  min-width: 25ch;
   max-width: 50ch;
+  width: 30%;
   text-align: left;
 }
 
