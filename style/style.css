@@ -136,3 +136,144 @@ body.diff {
 .loading-text {
     margin-top: 0.5rem;
 }
+
+#table_int {
+  table-layout: auto;  /* ← fixed をやめる */
+  width: 100%;
+}
+
+#table_int td {
+  word-break: break-word;
+}
+
+/* レベル */
+.col-level {
+  min-width: 7ch;
+  max-width: 7ch;
+  width: 1%;
+  text-align: left;
+}
+
+/* 査定中 */
+.col-pending {
+  min-width: 6ch;
+  max-width: 6ch;
+  width: 1%;
+  text-align: left;
+}
+
+/* おすすめ度 */
+.col-recommend {
+  min-width: 1ch;
+  max-width: 1ch;
+  width: 1%;
+  text-align: center;
+}
+
+/* バージョン */
+.col-ver {
+  min-width: 3ch;
+  max-width: 3ch;
+  width: 1%;
+  text-align: left;
+  white-space: nowrap;
+}
+
+/* 曲名 */
+.col-title {
+  min-width: 25ch;
+  max-width: 50ch;
+  width: 20%;
+  text-align: left;
+}
+
+/* BPM */
+.col-bpm {
+  min-width: 4ch;
+  max-width: 4ch;
+  width: 1%;
+  text-align: left;
+}
+
+/* ノーツ数 */
+.col-notes {
+  min-width: 4ch;
+  max-width: 4ch;
+  width: 1%;
+  text-align: left;
+  word-break: break-all;
+}
+
+/* 皿含ノーツ数 */
+.col-notesfull {
+  min-width: 4ch;
+  max-width: 4ch;
+  width: 1%;
+  text-align: left;
+}
+
+
+/* SPLv */
+.col-splv {
+  min-width: 4ch;
+  max-width: 6ch;
+  width: 1%;
+  text-align: left;
+}
+
+/* 動画列 */
+.col-video {
+  min-width: 2ch;
+  max-width: 3ch;
+  width: 1%;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* TexTage列 */
+.col-textage {
+  min-width: 7ch;
+  max-width: 7ch;
+  width: 1%;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* ゲージ増加量列 */
+.col-gauge {
+  min-width: 11ch;
+  max-width: 11ch;
+  width: 1%;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* コメント列 */
+.col-comment {
+  min-width: 10ch;
+  width: 60%;
+  text-align: left;
+}
+
+/* 備考（査定者コメント）列 */
+.col-remarks {
+  min-width: 10ch;
+  max-width: 70ch;
+  width: 60%;
+  text-align: left;
+}
+
+/* INF有 */
+.col-inf {
+  min-width: 3ch;
+  max-width: 3ch;
+  text-align: center;
+}
+
+/* 解禁方法 */
+.col-unlock {
+  min-width: 20ch;
+  max-width: 60ch;
+  width: 100%;
+  text-align: left;
+}

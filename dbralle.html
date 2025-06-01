@@ -1,161 +1,214 @@
 <!DOCTYPE HTML>
 <html lang="ja">
+    <head>
+        <title>DBR EASY(全譜面)</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="alldbrtable" content="./dbralleheader.json">
+        <link href="style/experimental_style.css" rel="stylesheet"> <!-- 大幅に変わるのでcssキャッシュ対策 その内style.cssに戻す -->
+        <script src="style/jquery-2.0.2.min.js"></script>
+    </head>
 
-<head>
-<title>DBR EASY(全譜面)</title>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<meta name="alldbrtable" content="./dbralleheader.json">
-<link href="style/style.css" rel="stylesheet">
-<script src="style/jquery-2.0.2.min.js"></script>
-</head>
+    <body>
+        <center>
+            <strong><span style="font-size: 2rem;">DBR難易度表(イージー)(全譜面)</span></strong><br>
 
-<body>
-<center>
-  <strong><span style="font-size: 24pt;">DBR難易度表(イージー)(全譜面)</span></strong><br>
+            <!-- ここに注意書きの枠を追加 -->
+            <div class="notice-box">
+                <ul>
+                    <li>ゲージ増加量: NORMAL以下のゲージでGREAT以上を出した際の、1ノーツあたりのゲージ増加量です。
+                        (<a href="https://zenn.dev/waisky/articles/b97a35fe042b51" target="_blank">参考</a>)
+                    </li>
+                    <li>ノーツ数: 全ノーツ数からスクラッチの数を引いた値です。スクラッチの数が設定されていない場合、全ノーツ数を括弧付きで表示しています。</li>
+                    <li>レベル査定済みの全譜面を表示しています。(<a href="./dbralle_normal.html" target="_self">評価の高い譜面のみを表示した難易度表</a>もあります。)</li>
+                    <li>難易度表への新規提案、レベルの変更提案等は<a href="https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?usp=sharing" target="_blank">管理用スプレッドシート</a>で行っています。プレイした譜面を記録する程度の感覚で構いませんので、ぜひご協力をお願いします。</li>
+                    <li>読み込みに時間がかかります。難易度表が表示されない場合、しばらくお待ちください。</li>
+                </ul>
+            </div>
 
-  <!-- ここに注意書きの枠を追加 -->
-  <div class="notice-box">
-    <ul>
-      <li>ゲージ増加量: NORMAL以下のゲージでGREAT以上を出した際の、1ノーツあたりのゲージ増加量です。
-        (<a href="https://zenn.dev/waisky/articles/b97a35fe042b51" target="_blank">参考</a>)
-      </li>
-      <li>ノーツ数: 全ノーツ数からスクラッチの数を引いた値です。スクラッチの数が設定されていない場合、全ノーツ数を括弧付きで表示しています。</li>
-      <li>レベル査定済みの全譜面を表示しています。(<a href="./dbralle_normal.html" target="_self">評価の高い譜面のみを表示した難易度表</a>もあります。)</li>
-      <li>難易度表への新規提案、レベルの変更提案等は<a href="https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?usp=sharing" target="_blank">管理用スプレッドシート</a>で行っています。プレイした譜面を記録する程度の感覚で構いませんので、ぜひご協力をお願いします。</li>
-      <li>読み込みに時間がかかります。難易度表が表示されない場合、しばらくお待ちください。</li>
-    </ul>
-  </div>
+            <div class="toplink-margin"><a href="index.html">TOPに戻る</a></div>
+        </center>
 
-  <div class="toplink-margin"><a href="index.html">TOPに戻る</a></div>
-</center>
+        <div id="loading">
+            <div class="spinner"></div>
+            <div class="loading-text">Now Loading…</div>
+        </div>
 
+        <div class="tableflame">
+            <!-- テーブルを表示する場所 -->
+            <table align="center" cellspacing="1" cellpadding="2" border="0" bgcolor="#000000" id="table_int"></table>
+        </div>
 
-<div class="tableflame">
-<!-- テーブルを表示する場所 -->
-<table align="center" cellspacing="1" cellpadding="2" border="0" bgcolor="#000000" id="table_int"></table>
-</div>
-<script>
-// ドキュメントが読み込まれたときに実行される関数
-$(document).ready(function() {
-    $.getJSON($("meta[name=alldbrtable]").attr("content"), function(header) {
-        $.getJSON(header.data_url, function(info) {
-            makeDBRTable(info, header.symbol, header.level_order || null);
-        });
-    });
-});
+        <script>
+            // ドキュメントが読み込まれたときに実行される関数
+            $(document).ready(function() {
+                $("#loading").show(); // ローディング表示
 
-function calculateGaugeIncrease(x) {
-    let gaugeIncrease;
+                $.getJSON($("meta[name=alldbrtable]").attr("content"), function(header) {
+                    const dataUrl = header.data_url;
 
-    if (x < 350) {
-        gaugeIncrease = 80000 / ((x * 6) * 50);
-    } else {
-        gaugeIncrease = 80000 / ((x * 2 + 1400) * 50);
-    }
+                    // 見出しテキストを取得
+                    const titleText = $("span[style*='font-size']").first().text().trim();  // DBR難易度表(イージー)(未査定有)
 
-    // 0.02% 刻みで「切り捨て」
-    let roundedValue = Math.floor(gaugeIncrease / 0.02) * 0.02;
+                    // 現在のHTMLファイル名を取得して、バックアップURLを組み立て
+                    const currentFileName = location.pathname.split("/").pop();
+                    const backupUrl = `./dbralle_experimental.html`;
+                    const backupLinkText = `${titleText}(バックアップ)`;
 
-    return roundedValue.toFixed(2);
-}
+                    // 難易度表JSON取得本体
+                    $.getJSON(dataUrl, function(info) {
+                        makeDBRTable(info, header.symbol, header.level_order || null);
+                        $("#loading").remove(); // ローディング終了
+                    }).fail(function () {
+                        $("#loading").html(
+                            "難易度表データの読み込みに失敗しました。<br>" +
+                            "サーバーエラーの可能性があります。<br>" +
+                            "ページを更新しても状況が変わらない場合は、<br>" +
+                            "以下のバックアップページをご利用ください。<br>" +
+                            `<a href="${backupUrl}" target="_self">${backupLinkText}</a>`
+                        );
+                        console.error("JSONの読み込みに失敗しました:", dataUrl);
+                    });
+                });
+            });
 
-function makeDBRTable(info, mark, order) {
-    var obj = $("#table_int");
-    obj.html("").append("<tr height='20' style='color:white;background-color:#666666'>"
-        + "<td>レベル</td><td>薦</td><td>ver</td><td>タイトル</td><td>BPM</td>"
-        + "<td>ノーツ数</td><td>SPLv</td><td>動画</td><td>TexTage</td><td>ゲージ増加量</td><td>コメント</td></tr>");
-    
-    let sections = {};
-    
-    info.forEach(data => {    
-        if (!data.level || data.level === "未査定") return; // 未査定のデータをスキップ
-        
-        let baseLevel = data.level || "未査定";
-        let isDeleted = data.acdelete ? 1 : 0;
-        let displayLevel = data.acdelete ? `†${mark}${baseLevel}` : `${mark}${baseLevel}`;
-        
-        if (!sections[displayLevel]) {
-            sections[displayLevel] = { count: 0, rows: [], displayLevel, isDeleted };
-        }
-        
-        let notesValue = data.notes * 2;
-        let notesDisplay = data.scratch ? (notesValue - (data.scratch * 2)) : `(${notesValue})`;
-        let gaugeIncrease = calculateGaugeIncrease(notesValue);
-        
-        let row = $("<tr class='tr_normal'></tr>")
-            .append(`<td width='1%' align='left'>${displayLevel}</td>`)
-            .append(`<td width='1%' align='left'>${data.recommend}</td>`)
-            .append(`<td width='1%' align='left'>${data.ver}</td>`)
-            .append(`<td width='14%' align='left'><a>${data.title}</a></td>`)
-            .append(`<td width='1%' align='left'><a>${data.bpm}</a></td>`)
-            .append(`<td width='1%' align='left'><a data-notes-full='${notesValue}'>${notesDisplay}</a></td>`)
-            .append(`<td width='1%' align='left'><a>☆${data.splv}</a></td>`);
+            function calculateGaugeIncrease(x) {
+                let gaugeIncrease;
 
-        let videoCell = "<td width='1%' align='center'>";
-        let videoContent = "";
+                if (x < 350) {
+                    gaugeIncrease = 80000 / ((x * 6) * 50);
+                } else {
+                    gaugeIncrease = 80000 / ((x * 2 + 1400) * 50);
+                }
 
-        if (data.video) {
-            let videoIcon = data.video.includes("nicovideo.jp") ? "<img src='style/nico.gif' alt='ニコニコ動画' />" :
-                            data.video.includes("youtube.com") ? "<img src='style/youtube.gif' alt='YouTube' />" : "";
-            if (videoIcon) {
-                videoContent += `<a href='${data.video}' target='_blank'>${videoIcon}</a>`;
+                // 0.02% 刻みで「切り捨て」
+                let roundedValue = Math.floor(gaugeIncrease / 0.02) * 0.02;
+
+                return roundedValue.toFixed(2);
             }
-        }
 
-        if (data.video2) {
-            let videoIcon2 = data.video2.includes("nicovideo.jp") ? "<img src='style/nico.gif' alt='ニコニコ動画' />" :
-                             data.video2.includes("youtube.com") ? "<img src='style/youtube.gif' alt='YouTube' />" : "";
-            if (videoIcon2) {
-                if (videoContent) videoContent += "<br>"; // 既に何かある場合は改行
-                videoContent += `<a href='${data.video2}' target='_blank'>${videoIcon2}</a>`;
+            function makeDBRTable(info, mark, order) {
+                const obj = $("#table_int");
+                obj.empty(); // 一応中身クリア
+
+                // ヘッダー行はjQueryで追加（列幅を自動計算しやすく）
+                obj.append(
+                    $("<tr height='20' style='color:white;background-color:#666666'></tr>").append(
+                    "<td>レベル</td><td>薦</td><td>ver</td><td>タイトル</td><td>BPM</td>" +
+                    "<td>ノーツ数</td><td>SPLv</td><td>動画</td><td>TexTage</td><td>ゲージ増加量</td><td>コメント</td>"
+                    )
+                );
+
+                let sections = {};
+
+                info.forEach(data => {
+                    if (!data.level || data.level === "未査定") return; // 未査定のデータをスキップ
+
+                    let baseLevel = data.level || "未査定";
+                    let isDeleted = data.acdelete ? 1 : 0;
+                    let displayLevel = data.acdelete ? `†${mark}${baseLevel}` : `${mark}${baseLevel}`;
+
+                    if (!sections[displayLevel]) {
+                        sections[displayLevel] = { count: 0, rows: [], displayLevel, isDeleted };
+                    }
+
+                    let notesValue = data.notes * 2;
+                    let notesDisplay = data.scratch ? (notesValue - (data.scratch * 2)) : `(${notesValue})`;
+                    let gaugeIncrease = calculateGaugeIncrease(notesValue);
+
+                    let row = `<tr class='tr_normal'>
+                    <td class='col-level'>${displayLevel}</td>
+                    <td class='col-recommend'>${data.recommend}</td>
+                    <td class='col-ver'>${data.ver}</td>
+                    <td class='col-title'><a>${data.title}</a></td>
+                    <td class='col-bpm'><a>${data.bpm}</a></td>
+                    <td class='col-notes'><a data-notes-full='${notesValue}'>${notesDisplay}</a></td>
+                    <td class='col-splv'><a>☆${data.splv}</a></td>`;
+
+                    // 動画列
+                    let videoContent = "";
+
+                    if (data.video) {
+                        let icon = "", alt = "";
+
+                        if (data.video.includes("nicovideo.jp")) {
+                            icon = "nico.gif";
+                            alt = "ニコニコ動画";
+                        } else if (data.video.includes("youtube.com")) {
+                            icon = "youtube.gif";
+                            alt = "YouTube";
+                        }
+
+                        if (icon) {
+                            videoContent += `<a href='${data.video}' target='_blank'><img src='style/${icon}' alt='${alt}' /></a>`;
+                        }
+                    }
+
+                    if (data.video2) {
+                        let icon2 = "", alt2 = "";
+
+                        if (data.video2.includes("nicovideo.jp")) {
+                            icon2 = "nico.gif";
+                            alt2 = "ニコニコ動画";
+                        } else if (data.video2.includes("youtube.com")) {
+                            icon2 = "youtube.gif";
+                            alt2 = "YouTube";
+                        }
+
+                        if (icon2) {
+                            if (videoContent) videoContent += "<br>"; // 既に何かある場合は改行
+                            videoContent += `<a href='${data.video2}' target='_blank'><img src='style/${icon2}' alt='${alt2}' /></a>`;
+                        }
+                    }
+
+                    row += `<td class='col-video'>${videoContent}</td>`;
+
+                    // TexTage列
+                    if (data.textageid) {
+                        let suffix = generateTextageSuffix(data.title, data.splv);
+                        let url = `https://textage.cc/score/${data.ver}/${data.textageid}.html?${suffix}`;
+                        row += `<td class='col-textage'><a href='${url}' target='_blank'>TexTage</a></td>`;
+                    } else {
+                        row += `<td class='col-textage'></td>`;
+                    }
+
+                    // 残りの列（コメントなど）
+                    row += `<td class='col-gauge'>${gaugeIncrease}%/note</td>
+                    <td class='col-comment'>${data.comment || ''}</td>
+                    </tr>`;
+
+                    sections[displayLevel].rows.push(row);
+                    sections[displayLevel].count++;
+                });
+
+                // 表本体構築（innerHTML一括）
+                let htmlContent = "";
+
+                Object.values(sections)
+                    .sort((a, b) => a.isDeleted - b.isDeleted || a.displayLevel.localeCompare(b.displayLevel))
+                    .forEach(section => {
+                        htmlContent += `<tr class='tr_separate'><td colspan='11' align='center'><b>${section.displayLevel} (${section.count}譜面)</b></td></tr>`;
+                        htmlContent += section.rows.join("");
+                    });
+
+                obj.append(htmlContent);
             }
-        }
 
-        videoCell += videoContent || "";
-        videoCell += "</td>";
+            function generateTextageSuffix(title, splv) {
+                let titleChar = title.slice(-2, -1);
+                let titleCode = titleChar === "L" ? "X" : titleChar === "B" ? "P" : titleChar;
 
-        row.append(videoCell);
-        
-        if (data.textageid) {
-            let suffix = generateTextageSuffix(data.title, data.splv);
-            let textageURL = `https://textage.cc/score/${data.ver}/${data.textageid}.html?${suffix}`;
-            row.append(`<td width='1%' align='center'><a href='${textageURL}' target='_blank'>TexTage</a></td>`);
-        } else {
-            row.append(`<td width='1%'></td>`);
-        }
-        
-        row.append(`<td width='3%' align='center'>${gaugeIncrease}%/note</td>`)
-        .append(`<td width='50%' align='left'>${data.comment}</td>`);
-        sections[displayLevel].rows.push(row);
-        sections[displayLevel].count++;
-    });
-    
-    Object.values(sections)
-        .sort((a, b) => a.isDeleted - b.isDeleted || a.displayLevel.localeCompare(b.displayLevel))
-        .forEach(section => {
-            let separator = `<tr class='tr_separate'><td colspan='11' align='center'><b>${section.displayLevel} (${section.count}譜面)</b></td></tr>`;
-            obj.append(separator);
-            section.rows.forEach(row => obj.append(row));
-        });
-}
+                // SPLvを数値に変換
+                let levelNum = Number(splv);
+                let levelCodeMap = { 10: "A", 11: "B", 12: "C" };
+                let levelCode = levelCodeMap[levelNum] || splv; // 1桁の数値はそのまま
 
-function generateTextageSuffix(title, splv) {
-    let titleChar = title.slice(-2, -1);
-    let titleCode = titleChar === "L" ? "X" : titleChar === "B" ? "P" : titleChar;
+                let randomDigits = shuffle("1234567");
+                return `B${titleCode}${levelCode}00R0${randomDigits}0${shuffle("1234567")}`;
+            }
 
-    // SPLvを数値に変換
-    let levelNum = Number(splv);
-    let levelCodeMap = { 10: "A", 11: "B", 12: "C" };
-    let levelCode = levelCodeMap[levelNum] || splv; // 1桁の数値はそのまま
-
-    let randomDigits = shuffle("1234567");
-    return `B${titleCode}${levelCode}00R0${randomDigits}0${shuffle("1234567")}`;
-}
-
-function shuffle(str) {
-    return str.split('').sort(() => Math.random() - 0.5).join('');
-}
-</script>
-
-</body>
+            function shuffle(str) {
+                return str.split('').sort(() => Math.random() - 0.5).join('');
+            }
+        </script>
+    </body>
 </html>

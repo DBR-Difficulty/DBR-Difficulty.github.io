@@ -1,27 +1,38 @@
 <!DOCTYPE HTML>
 <html lang="ja">
     <head>
-        <title>DBR EASY(おすすめ)</title>
+        <title>DBR段位(仮)</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <meta name="alldbrtable" content="./dbralleheader.json">
-        <link href="style/experimental_style.css" rel="stylesheet"> <!-- 大幅に変わるのでcssキャッシュ対策 その内style.cssに戻す -->
+        <meta name="alldbrtable" content="./dbralleheader_experimental.json"> <!-- 固定json読み込み用 -->
+        <link href="style/experimental_style.css" rel="stylesheet">
         <script src="style/jquery-2.0.2.min.js"></script>
     </head>
 
     <body>
         <center>
-            <strong><span style="font-size: 2rem;">DBR難易度表(イージー)(おすすめ)</span></strong><br>
+            <strong><span style="font-size: 2rem;">DBR段位(仮)(<span class="page-date">読み込み中</span>)</span></strong><br>
 
             <!-- ここに注意書きの枠を追加 -->
             <div class="notice-box">
                 <ul>
+                    <li>GASでスプレッドシートから自動生成せずサイトに生成後のjsonを置いて読み込んでいます</li>
+                    <li>実験用です <b>ＥＸＰＥＲＩＭＥＮＴＡＬ</b> ご留意ください</li>
+                    <li>最新の表状況は反映されません TOPから目的の難易度表に飛んでください</li><br>
+
+                    <li>DBR段位(仮) ４曲中３曲以上Assist Easyで合格☺<br>
+
+                    <span class="small-text">You must "ASSISTED EASY" clear at least 3 out of 4 songs to pass the course!</span>
+                    </li>
+                    <li>コース内で難易度差がある場合や練習効果が薄い曲がある場合は教えてください。<br>
+                        <span class="small-text">Please let me know if there are differences in difficulty within the course or if the practice is not effective.</span>
+                    </li><br>
+
+                    <li><a href="https://x.com/DBR_MEN/status/1852700632035332317" target="_blank">2024/11時点の段位内容</a>を参照しています。</li>
                     <li>ゲージ増加量: NORMAL以下のゲージでGREAT以上を出した際の、1ノーツあたりのゲージ増加量です。
                         (<a href="https://zenn.dev/waisky/articles/b97a35fe042b51" target="_blank">参考</a>)
                     </li>
                     <li>ノーツ数: 全ノーツ数からスクラッチの数を引いた値です。スクラッチの数が設定されていない場合、全ノーツ数を括弧付きで表示しています。</li>
-                    <li>レベル査定済みの中で評価のとても高い譜面を表示しています。(<a href="./dbralle_normal.html" target="_self">少しおすすめ範囲を広げた難易度表</a>もあります。曲数が欲しい方はこちらへ)</li>
-                    <li>難易度表への新規提案、レベルの変更提案等は<a href="https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?usp=sharing" target="_blank">管理用スプレッドシート</a>で行っています。プレイした譜面を記録する程度の感覚で構いませんので、ぜひご協力をお願いします。</li>
-                    <li>読み込みに時間がかかります。難易度表が表示されない場合、しばらくお待ちください。</li>
+                    <li>読み込みに時間がかかります。内容が表示されない場合、しばらくお待ちください。</li>
                 </ul>
             </div>
 
@@ -43,34 +54,99 @@
             $(document).ready(function() {
                 $("#loading").show(); // ローディング表示
 
+                // まずヘッダーファイル（dbralleheader_experimental.json）を読み込む
                 $.getJSON($("meta[name=alldbrtable]").attr("content"), function(header) {
                     const dataUrl = header.data_url;
 
-                    // 見出しテキストを取得
-                    const titleText = $("span[style*='font-size']").first().text().trim();  // DBR難易度表(イージー)(未査定有)
+                    // JSONファイルの更新日を取得してページに反映
+                    fetch(dataUrl, { method: "HEAD" })
+                        .then(response => {
+                            const lastModified = response.headers.get("Last-Modified");
+                            if (lastModified) {
+                                const date = new Date(lastModified);
+                                const y = date.getFullYear();
+                                const m = String(date.getMonth() + 1).padStart(2, '0');
+                                const d = String(date.getDate()).padStart(2, '0');
+                                const yyyymmdd = `${y}${m}${d}`;
 
-                    // 現在のHTMLファイル名を取得して、バックアップURLを組み立て
-                    const currentFileName = location.pathname.split("/").pop();
-                    const baseName = currentFileName.replace(/^dbralle_/, "").replace(/\.html$/, "");
-                    const backupUrl = `./dbralle_${baseName}_experimental.html`;
-                    const backupLinkText = `${titleText}(バックアップ)`;
+                                // <title> の更新
+                                document.title = `${titleText}(${yyyymmdd})`;
 
-                    // 難易度表JSON取得本体
+                                // 本文中の日付を書き換える（.page-date 全部）
+                                $(".page-date").text(yyyymmdd);
+                            }
+                        })
+                        .catch(err => {
+                            console.error("更新日の取得に失敗:", err);
+                        });
+
+                    // 実データの読み込み
+                    // ローカルJSONに固定
                     $.getJSON(dataUrl, function(info) {
                         makeDBRTable(info, header.symbol, header.level_order || null);
                         $("#loading").remove(); // ローディング終了
-                    }).fail(function () {
+                    }).fail(function() {
                         $("#loading").html(
                             "難易度表データの読み込みに失敗しました。<br>" +
-                            "サーバーエラーの可能性があります。<br>" +
-                            "ページを更新しても状況が変わらない場合は、<br>" +
-                            "以下のバックアップページをご利用ください。<br>" +
-                            `<a href="${backupUrl}" target="_self">${backupLinkText}</a>`
+                            "サーバーエラーの可能性があります。"
                         );
                         console.error("JSONの読み込みに失敗しました:", dataUrl);
                     });
                 });
             });
+
+            function parseCourseName(comment) {
+                const match = comment.match(/DBR段位 #(\d+(?:\.5)?[WM.5S↑]?)(?:-(\d+(?:\.5)?))?(?:-(\d+(?:\.5)?))?(?:\s+#(\d+))?/);
+                if (!match) return null;
+
+                let base = match[1];  // "xx" / "xx.5" / "xxW" など
+                let firstLevel = match[2] ? match[2] : null;  // `-x` / `-x.5`
+                let secondLevel = match[3] ? match[3] : null; // `-x-x`
+                let songOrder = match[4] ? parseInt(match[4], 10) : 0; // 半角スペース後の `#x`
+
+                // `course` を `xx-x-x` まで含める
+                let course = secondLevel !== null 
+                    ? `${base}-${firstLevel}-${secondLevel}`
+                    : firstLevel !== null 
+                    ? `${base}-${firstLevel}`
+                    : base;
+
+                return { course, songOrder };
+            }
+
+            function sortCourses(a, b) {
+                const order = { "W": 1, "M": 2, "S": 3, ".5": 4, "↑": 5 };
+
+                // 正規表現でコース名とレベルを抽出
+                const aParts = a.match(/^(\d+(?:\.5)?)([WM.5S↑]?)(?:-(\d+))?(?:-(\d+))?/);
+                const bParts = b.match(/^(\d+(?:\.5)?)([WM.5S↑]?)(?:-(\d+))?(?:-(\d+))?/);
+
+                if (!aParts || !bParts) return a.localeCompare(b); // 安全策
+
+                let [ , aBase, aSuffix, aFirstLevel, aSecondLevel ] = aParts;
+                let [ , bBase, bSuffix, bFirstLevel, bSecondLevel ] = bParts;
+
+                aBase = parseFloat(aBase); // `xx.5` を数値化
+                bBase = parseFloat(bBase);
+
+                // 数値部分で比較 (整数 → .5)
+                if (aBase !== bBase) return aBase - bBase;
+
+                // `W` → `M` → `S` → `.5` → `↑` の順にソート
+                let aOrder = order[aSuffix] || 0;
+                let bOrder = order[bSuffix] || 0;
+                if (aOrder !== bOrder) return aOrder - bOrder;
+
+                // `-x` や `-x-x` のレベルで比較
+                let firstLevelA = parseInt(aFirstLevel, 10) || 0;
+                let firstLevelB = parseInt(bFirstLevel, 10) || 0;
+                if (firstLevelA !== firstLevelB) return firstLevelA - firstLevelB;
+
+                // `-x-x` の部分も考慮して、第二レベルで比較
+                let secondLevelA = parseInt(aSecondLevel, 10) || 0;
+                let secondLevelB = parseInt(bSecondLevel, 10) || 0;
+                return secondLevelA - secondLevelB;
+            }
 
             function calculateGaugeIncrease(x) {
                 let gaugeIncrease;
@@ -87,7 +163,7 @@
                 return roundedValue.toFixed(2);
             }
 
-            function makeDBRTable(info, mark, order) {
+            function makeDBRTable(info, mark) {
                 const obj = $("#table_int");
                 obj.empty(); // 一応中身クリア
 
@@ -102,15 +178,16 @@
                 let sections = {};
 
                 info.forEach(data => {
-                    if (!data.level || data.level === "未査定") return; // 未査定のデータをスキップ
-                    if (!data.recommend || data.recommend !== "☆") return; // 強くオススメでない曲のデータをスキップ
-
                     let baseLevel = data.level || "未査定";
                     let isDeleted = data.acdelete ? 1 : 0;
                     let displayLevel = data.acdelete ? `†${mark}${baseLevel}` : `${mark}${baseLevel}`;
+                    let courseInfo = parseCourseName(data.comment);
+                    if (!courseInfo) return;
 
-                    if (!sections[displayLevel]) {
-                        sections[displayLevel] = { count: 0, rows: [], displayLevel, isDeleted };
+                    let { course, songOrder } = courseInfo;
+
+                    if (!sections[course]) {
+                        sections[course] = { rows: [], course };
                     }
 
                     let notesValue = data.notes * 2;
@@ -177,18 +254,22 @@
                     <td class='col-comment'>${data.comment || ''}</td>
                     </tr>`;
 
-                    sections[displayLevel].rows.push(row);
-                    sections[displayLevel].count++;
+                    sections[course].rows.push({ row, songOrder });
                 });
 
                 // 表本体構築（innerHTML一括）
                 let htmlContent = "";
 
+                // `course` を xx-x の順番でソートし、その後 `songOrder` で並べる
                 Object.values(sections)
-                    .sort((a, b) => a.isDeleted - b.isDeleted || a.displayLevel.localeCompare(b.displayLevel))
+                    .sort((a, b) => sortCourses(a.course, b.course))
                     .forEach(section => {
-                        htmlContent += `<tr class='tr_separate'><td colspan='10' align='center'><b>${section.displayLevel} (${section.count}譜面)</b></td></tr>`;
-                        htmlContent += section.rows.join("");
+                        // section名に#を追加して表示
+                        htmlContent += `<tr class='tr_separate'><td colspan='10' align='center'><b>#${section.course}</b></td></tr>`;
+                        htmlContent += section.rows
+                        .sort((a, b) => a.songOrder - b.songOrder)
+                        .map(r => r.row)
+                        .join("");
                     });
 
                 obj.append(htmlContent);
