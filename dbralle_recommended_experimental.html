@@ -3,25 +3,21 @@
     <head>
         <title>DBR EASY(おすすめ)</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <meta name="alldbrtable" content="./dbralleheader.json">
-        <link href="style/experimental_style.css" rel="stylesheet"> <!-- 大幅に変わるのでcssキャッシュ対策 その内style.cssに戻す -->
+        <meta name="alldbrtable" content="./dbralleheader_experimental.json"> <!-- 固定json読み込み用 -->
+        <link href="style/experimental_style.css" rel="stylesheet">
         <script src="style/jquery-2.0.2.min.js"></script>
     </head>
 
     <body>
         <center>
-            <strong><span style="font-size: 2rem;">DBR難易度表(イージー)(おすすめ)</span></strong><br>
+            <strong><span style="font-size: 2rem;">DBR難易度表(イージー)(おすすめ)(<span class="page-date">読み込み中</span>)</span></strong><br>
 
             <!-- ここに注意書きの枠を追加 -->
             <div class="notice-box">
                 <ul>
-                    <li>ゲージ増加量: NORMAL以下のゲージでGREAT以上を出した際の、1ノーツあたりのゲージ増加量です。
-                        (<a href="https://zenn.dev/waisky/articles/b97a35fe042b51" target="_blank">参考</a>)
-                    </li>
-                    <li>ノーツ数: 全ノーツ数からスクラッチの数を引いた値です。スクラッチの数が設定されていない場合、全ノーツ数を括弧付きで表示しています。</li>
-                    <li>レベル査定済みの中で評価のとても高い譜面を表示しています。(<a href="./dbralle_normal.html" target="_self">少しおすすめ範囲を広げた難易度表</a>もあります。曲数が欲しい方はこちらへ)</li>
-                    <li>難易度表への新規提案、レベルの変更提案等は<a href="https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?usp=sharing" target="_blank">管理用スプレッドシート</a>で行っています。プレイした譜面を記録する程度の感覚で構いませんので、ぜひご協力をお願いします。</li>
-                    <li>読み込みに時間がかかります。難易度表が表示されない場合、しばらくお待ちください。</li>
+                    <li>GASでスプレッドシートから自動生成せずサイトに生成後のjsonを置いて読み込んでいます</li>
+                    <li>実験用です <b>ＥＸＰＥＲＩＭＥＮＴＡＬ</b> ご留意ください</li>
+                    <li>最新の表状況は反映されません TOPから目的の難易度表に飛んでください</li>
                 </ul>
             </div>
 
@@ -43,29 +39,41 @@
             $(document).ready(function() {
                 $("#loading").show(); // ローディング表示
 
-                $.getJSON($("meta[name=alldbrtable]").attr("content"), function(header) {
+                // まずヘッダーファイル（dbralleheader_experimental.json）を読み込む
+                $.getJSON($("meta[name=alldbrtable]").attr("content"), function (header) {
                     const dataUrl = header.data_url;
 
-                    // 見出しテキストを取得
-                    const titleText = $("span[style*='font-size']").first().text().trim();  // DBR難易度表(イージー)(未査定有)
+                    // JSONファイルの更新日を取得してページに反映
+                    fetch(dataUrl, { method: "HEAD" })
+                        .then(response => {
+                            const lastModified = response.headers.get("Last-Modified");
+                            if (lastModified) {
+                                const date = new Date(lastModified);
+                                const y = date.getFullYear();
+                                const m = String(date.getMonth() + 1).padStart(2, '0');
+                                const d = String(date.getDate()).padStart(2, '0');
+                                const yyyymmdd = `${y}${m}${d}`;
 
-                    // 現在のHTMLファイル名を取得して、バックアップURLを組み立て
-                    const currentFileName = location.pathname.split("/").pop();
-                    const baseName = currentFileName.replace(/^dbralle_/, "").replace(/\.html$/, "");
-                    const backupUrl = `./dbralle_${baseName}_experimental.html`;
-                    const backupLinkText = `${titleText}(バックアップ)`;
+                                // <title> の更新
+                                document.title = `${titleText}(${yyyymmdd})`;
 
-                    // 難易度表JSON取得本体
+                                // 本文中の日付を書き換える（.page-date 全部）
+                                $(".page-date").text(yyyymmdd);
+                            }
+                        })
+                        .catch(err => {
+                            console.error("更新日の取得に失敗:", err);
+                        });
+
+                    // 実データの読み込み
+                    // ローカルJSONに固定
                     $.getJSON(dataUrl, function(info) {
                         makeDBRTable(info, header.symbol, header.level_order || null);
                         $("#loading").remove(); // ローディング終了
-                    }).fail(function () {
+                    }).fail(function() {
                         $("#loading").html(
                             "難易度表データの読み込みに失敗しました。<br>" +
-                            "サーバーエラーの可能性があります。<br>" +
-                            "ページを更新しても状況が変わらない場合は、<br>" +
-                            "以下のバックアップページをご利用ください。<br>" +
-                            `<a href="${backupUrl}" target="_self">${backupLinkText}</a>`
+                            "サーバーエラーの可能性があります。"
                         );
                         console.error("JSONの読み込みに失敗しました:", dataUrl);
                     });
