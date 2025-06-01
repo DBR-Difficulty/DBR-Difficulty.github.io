@@ -59,9 +59,6 @@
                 $.getJSON($("meta[name=alldbrtable]").attr("content"), function(header) {
                     const dataUrl = header.data_url;
 
-                    // 見出しテキストを取得
-                    const titleText = $("span[style*='font-size']").first().text().trim();
-
                     // JSONファイルの更新日を取得してページに反映
                     fetch(dataUrl, { method: "HEAD" })
                         .then(response => {
@@ -70,7 +67,7 @@
                                 const yyyymmdd = header.last_updated;
 
                                 // <title> の更新
-                                document.title = `${titleText}(${yyyymmdd})`;
+                                document.title = `${document.title}(${yyyymmdd})`;
 
                                 // 本文中の日付を書き換える（.page-date 全部）
                                 $(".page-date").text(yyyymmdd);
