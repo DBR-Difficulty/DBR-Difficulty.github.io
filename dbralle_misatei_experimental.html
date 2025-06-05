@@ -68,12 +68,11 @@
                         makeDBRTable(info, header.symbol, header.level_order || null);
                         $("#loading").remove(); // ローディング終了
 
-                        setupModal(["level", "title", "bpm", "comment"]); // 表描画後にモーダルを設定
                         setupModal([
                             "level", "recommend", "ver", "title", "bpm",
                             "notes", "splv", "video", "textage",
                             "gauge", "comment", "inf", "unlock"
-                            ]);
+                            ]); // 表描画後にモーダルを設定
                     }).fail(function() {
                         $("#loading").html(
                             "難易度表データの読み込みに失敗しました。<br>" +
