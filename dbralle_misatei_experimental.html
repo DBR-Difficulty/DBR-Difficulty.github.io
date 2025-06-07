@@ -70,6 +70,7 @@
 
                         setupModal([
                             "level", "recommend", "ver", "title", "bpm",
+                            "lamp", "bp", "score", "score-rank", "real-rank",  // 拡張機能用
                             "notes", "splv", "video", "textage",
                             "gauge", "comment", "inf", "unlock"
                             ]); // 表描画後にモーダルを設定
@@ -105,7 +106,7 @@
                 // ヘッダー行はjQueryで追加（列幅を自動計算しやすく）
                 obj.append(
                     $("<tr height='20' style='color:white;background-color:#666666'></tr>").append(
-                    "<td>レベル</td><td>査定中</td><td>薦</td><td>ver</td><td>タイトル</td><td>BPM</td>" +
+                    "<td>レベル</td><td>薦</td><td>ver</td><td>タイトル</td><td>BPM</td>" +
                     "<td>ノーツ数</td><td>皿含</td><td>SPLv</td><td>動画</td><td>TexTage</td>" +
                     "<td>ゲージ増加量</td><td>コメント</td><td>査定者コメント等</td><td>INF有</td><td>解禁方法</td>"
                     )
@@ -132,7 +133,6 @@
 
                     let row = `<tr class='tr_normal'>
                     <td class='col-level'>${displayLevel}</td>
-                    <td class='col-pending'>${data.pending ?? ''}</td>
                     <td class='col-recommend'>${data.recommend}</td>
                     <td class='col-ver'>${data.ver}</td>
                     <td class='col-title'><a>${data.title}</a></td>
@@ -206,7 +206,7 @@
                 Object.values(sections)
                     .sort((a, b) => a.isDeleted - b.isDeleted || a.displayLevel.localeCompare(b.displayLevel))
                     .forEach(section => {
-                        htmlContent += `<tr class='tr_separate'><td colspan='17' align='center'><b>${section.displayLevel} (${section.count}譜面)</b></td></tr>`;
+                        htmlContent += `<tr class='tr_separate'><td colspan='16' align='center'><b>${section.displayLevel} (${section.count}譜面)</b></td></tr>`;
                         htmlContent += section.rows.join("");
                     });
 

@@ -1,5 +1,9 @@
 // GASでスプレッドシートに書き込むウェブアプリのURL
-const GAS_URL = "https://script.google.com/macros/s/AKfycbxGy3xZqnQ-4WSn2mRvCrPeFrv1FKPuK1RFdlLo3MonodTF9pgUoRsYLJ2fTKv3uj0tQw/exec";
+// テスト用
+//const GAS_URL = "https://script.google.com/macros/s/AKfycbwsTN1BieANX7L1PQk_y6vs1RVQ6XkvNf6PwemEy5hrRM_uIDzO7aoGZCIV66pFX5VXPg/exec";
+
+// 本番シート
+const GAS_URL = "https://script.google.com/macros/s/AKfycbwAqEgEmymWS0Ztge7CKinjSiEPW8gYvCnA_qk1qxjk-gLo1xjT4dBhrGkISHZeTKZR/exec";
 
 function setupModal(columnsToShow) {
     // モーダルの基本構造が存在しない場合は追加
@@ -32,7 +36,13 @@ function setupModal(columnsToShow) {
         comment: "コメント",
         remarks: "備考",
         inf: "INFINITAS収録有無",
-        unlock: "INFINITAS解禁方法"
+        unlock: "INFINITAS解禁方法",
+        // 拡張機能用
+        lamp: "クリア状況",
+        bp: "最小BP",
+        score: "ベストスコア",
+        "score-rank": "スコアランク(スコアレート)",
+        "real-rank": "実質スコアランク(スコアレート)"
     };
 
     function extractHref(html) {
@@ -56,16 +66,16 @@ function setupModal(columnsToShow) {
     }
 
     function adjustModalHeight() {
-    const marginRem = 4; // 上下合わせて 4rem の余白を確保（2remずつ）
-    const rootFontSize = parseFloat(getComputedStyle(document.documentElement).fontSize); // 通常は 16px
-    const marginPx = marginRem * rootFontSize;
+        const marginRem = 4; // 上下合わせて 4rem の余白を確保（2remずつ）
+        const rootFontSize = parseFloat(getComputedStyle(document.documentElement).fontSize); // 通常は 16px
+        const marginPx = marginRem * rootFontSize;
 
-    const safeHeight = document.documentElement.clientHeight - marginPx;
-    $("#infoModal .modal-content").css({
-        "max-height": `${safeHeight}px`,
-        "height": "auto" // 高さはコンテンツに応じて縮むように
-    });
-}
+        const safeHeight = document.documentElement.clientHeight - marginPx;
+        $("#infoModal .modal-content").css({
+            "max-height": `${safeHeight}px`,
+            "height": "auto" // 高さはコンテンツに応じて縮むように
+        });
+    }
 
     $(window).on("resize", function () {
         if ($("#infoModal").is(":visible")) {
@@ -86,15 +96,30 @@ function setupModal(columnsToShow) {
     });
 
     // 表の行のレベル列にクリックイベントを登録
-    $(document).off("click", ".col-level").on("click", ".col-level", function () {
+    $(document).off("click", ".col-level, .col-recommend, .col-ver, .col-title")
+           .on("click", ".col-level, .col-recommend, .col-ver, .col-title", function () {
         const $row = $(this).closest("tr");
 
         const modalData = {};
         columnsToShow.forEach(key => {
-            const value = $row.find(`.col-${key}`);
-            modalData[`${key}HTML`] = value.length ? value.html() : null;
-            modalData[key] = value.length ? value.text().trim() : null; // HTMLを除去
-        });
+        const $cell = $row.find(`.col-${key}`);
+
+        // スコアとBPは input の value を読む
+        if (key === "score" || key === "bp") {
+            const $input = $cell.find("input");
+            const val = $input.length ? $input.val().trim() : "";
+            modalData[key] = val;
+            modalData[`${key}HTML`] = val;
+        }
+
+        // その他は text と html 両方
+        else {
+            const text = $cell.length ? $cell.text().trim() : "";
+            const html = $cell.length ? $cell.html() : "";
+            modalData[key] = text;
+            modalData[`${key}HTML`] = html;
+        }
+    });
 
         let html = `<h2>${modalData.title || "譜面情報"}</h2>`;
 
@@ -215,16 +240,37 @@ function setupModal(columnsToShow) {
                 }
 
                 html += `<div style="margin-bottom: 0.2rem;"><b>${label}:</b> ${verText}</div>`;
-            } else if (key === "inf") {
-                // modalData.inf に基づいた表示内容を設定
-                let infText = '';
-                if (modalData[key] === "○") {
-                    infText = "収録済み";
+
+            } else if (key === "lamp") {
+                // modalData.lamp に基づいた表示内容を設定
+                let lampText = '';
+                if (modalData[key] === "FC") {
+                    lampText = "FULL COMBO";
+                } else if (modalData[key] === "EXH") {
+                    lampText = "EX-HARD CLEAR";
+                } else if (modalData[key] === "H") {
+                    lampText = "HARD CLEAR";
+                } else if (modalData[key] === "C") {
+                    lampText = "CLEAR";
+                } else if (modalData[key] === "E") {
+                    lampText = "EASY CLEAR";
+                } else if (modalData[key] === "AE") {
+                    lampText = "A-EASY CLEAR";
+                } else if (modalData[key] === "F") {
+                    lampText = "FAILED";
                 } else {
-                    infText = "未収録";
+                    return;
                 }
 
-                html += `<div style="margin-bottom: 0.2rem;"><b>${label}:</b> ${infText}</div>`;
+                html += `<div style="margin-bottom: 0.2rem;"><b>${label}:</b> ${lampText}</div>`;
+
+            } else if ((key === "score-rank" || key === "real-rank") && modalData[key] && modalData[`${key}HTML`]) {
+                if (modalData[key] === "") return;
+ 
+                // スコアランクの<br>タグを半角スペースに置き換え
+                let sanitizedText = modalData[`${key}HTML`].replace(/<br\s*\/?>/gi, ' ');
+
+                html += `<div style="margin-bottom: 0.2rem;"><b>${label}:</b> ${sanitizedText}</div>`;
 
             } else if (key === "unlock" && modalData["inf"]) {
                 // 'inf'がある場合のみ、'unlock' を表示
@@ -710,9 +756,13 @@ function sendNewProposalToSheet(proposalData, submitButton, loadingElement) {
         if (data.result === "success") {
             alert(`新規提案シートに遷移します。\n反映された内容をご確認ください。`);
             // OKを押した後にスプレッドシートに直接遷移
-            window.location.href = "https://docs.google.com/spreadsheets/d/1wK7m7JO83Dc2v-TqGkWd7DqSNVThvPauzq5QpC8W1_0/edit?gid=1709558806#gid=1709558806";
+            // テスト用
+            // window.location.href = "https://docs.google.com/spreadsheets/d/1wK7m7JO83Dc2v-TqGkWd7DqSNVThvPauzq5QpC8W1_0/edit?gid=1709558806#gid=1709558806";
+            
+            // 本番シート
+            window.location.href = "https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?gid=1709558806#gid=1709558806";
         } else {
-            alert(`エラー: ${data.message}`);
+            alert(`${data.message}`);
 
             // ボタンを再度有効化
             submitButton.prop("disabled", false);
@@ -742,8 +792,8 @@ function sendChangeProposalToSheet(proposalData, submitButton, loadingElement) {
         proposalData["提案理由"]
     ];
 
-    // proposalType（新規提案 or 変更提案）を追加
-    rowData.push("change");  // "new" や "change" を追加
+    // proposalType（変更提案）を追加
+    rowData.push("change");
 
     // 配列をJSONに変換し、URLエンコード
     const encodedData = encodeURIComponent(JSON.stringify({
@@ -772,9 +822,13 @@ function sendChangeProposalToSheet(proposalData, submitButton, loadingElement) {
             alert(`変更提案シートに遷移します。\n反映された内容をご確認ください。`);
 
             // OKを押した後にスプレッドシートに直接遷移
-            window.location.href = "https://docs.google.com/spreadsheets/d/1wK7m7JO83Dc2v-TqGkWd7DqSNVThvPauzq5QpC8W1_0/edit?gid=1267054778#gid=1267054778";
+            // テスト用
+            // window.location.href = "https://docs.google.com/spreadsheets/d/1wK7m7JO83Dc2v-TqGkWd7DqSNVThvPauzq5QpC8W1_0/edit?gid=1267054778#gid=1267054778";
+            
+            // 本番シート
+            window.location.href = "https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?gid=1267054778#gid=1267054778";
         } else {
-            alert(`エラー: ${data.message}`);
+            alert(`${data.message}`);
 
             // ボタンを再度有効化
             submitButton.prop("disabled", false);
@@ -833,9 +887,13 @@ function sendRecommendProposalToSheet(proposalData, submitButton, loadingElement
         if (data.result === "success") {
             alert(`おすすめ提案シートに遷移します。\n反映された内容をご確認ください。`);
             // OKを押した後にスプレッドシートに直接遷移
-            window.location.href = "https://docs.google.com/spreadsheets/d/1wK7m7JO83Dc2v-TqGkWd7DqSNVThvPauzq5QpC8W1_0/edit?pli=1&gid=1779953087#gid=1779953087";
+            // テスト用
+            // window.location.href = "https://docs.google.com/spreadsheets/d/1wK7m7JO83Dc2v-TqGkWd7DqSNVThvPauzq5QpC8W1_0/edit?pli=1&gid=1779953087#gid=1779953087";
+            
+            // 本番シート
+            window.location.href = "https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?gid=1779953087#gid=1779953087";
         } else {
-            alert(`エラー: ${data.message}`);
+            alert(`${data.message}`);
 
             // ボタンを再度有効化
             submitButton.prop("disabled", false);
