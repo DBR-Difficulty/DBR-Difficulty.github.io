@@ -459,14 +459,14 @@ function setupModal(columnsToShow) {
                     </small>
                     <br>
                     <label>TexTageID（任意）: 
-                        <input type="text" name="textage_id" value="${textageID || ''}"/ style="margin-top: 1rem;" inputmode="numeric">
+                        <input type="text" name="textage_id" value="${textageID || ''}"/ style="margin-top: 1rem;" inputmode="url">
                     </label><br>
                     <small>
                         ※<b>TexTageで対象の譜面画像を表示した際のURL</b><br>
                         https://textage.cc/score/バージョン/<b>（ここを記載してください）</b>.html
                     </small><br>
                     <label>動画URL（任意）: 
-                        <input type="text" name="video_url" value="${videoURL || ''}"/ style="margin-top: 1rem;" inputmode="numeric">
+                        <input type="text" name="video_url" value="${videoURL || ''}"/ style="margin-top: 1rem;" inputmode="url">
                     </label><br>
                     <small>
                         <b>※提案者ご自身の動画か掲載許可を得た動画URLでお願いします</b><br>
