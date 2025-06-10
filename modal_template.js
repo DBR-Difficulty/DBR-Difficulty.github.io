@@ -102,24 +102,41 @@ function setupModal(columnsToShow) {
 
         const modalData = {};
         columnsToShow.forEach(key => {
-        const $cell = $row.find(`.col-${key}`);
+            const $cell = $row.find(`.col-${key}`);
 
-        // スコアとBPは input の value を読む
-        if (key === "score" || key === "bp") {
-            const $input = $cell.find("input");
-            const val = $input.length ? $input.val().trim() : "";
-            modalData[key] = val;
-            modalData[`${key}HTML`] = val;
-        }
+            // スコアとBPは input の value を読む
+            if (key === "score" || key === "bp") {
+                const $input = $cell.find("input");
+                const val = $input.length ? $input.val().trim() : "";
+                modalData[key] = val;
+                modalData[`${key}HTML`] = val;
+            }
 
-        // その他は text と html 両方
-        else {
-            const text = $cell.length ? $cell.text().trim() : "";
-            const html = $cell.length ? $cell.html() : "";
-            modalData[key] = text;
-            modalData[`${key}HTML`] = html;
-        }
-    });
+            // その他は text と html 両方
+            else {
+                const text = $cell.length ? $cell.text().trim() : "";
+                const html = $cell.length ? $cell.html() : "";
+                modalData[key] = text;
+                modalData[`${key}HTML`] = html;
+            }
+
+            // ページ種別に応じて固定値を設定
+            if (modalData.inf == null || modalData.inf === "") {
+                const isInfPage = document.body.dataset.page === "inf" || location.pathname.includes("inf");
+                if (isInfPage) {
+                    modalData.inf = "○";
+                    modalData["infHTML"] = "○";
+                }
+            }
+
+            if (modalData.recommend == null || modalData.recommend === "") {
+                const isRecommendPage = document.body.dataset.page === "recommend" || location.pathname.includes("recommend");
+                if (isRecommendPage) {
+                    modalData.recommend = "☆";
+                    modalData["recommendHTML"] = "☆";
+                }
+            }
+        });
 
         let html = `<h2>${modalData.title || "譜面情報"}</h2>`;
 
@@ -235,7 +252,7 @@ function setupModal(columnsToShow) {
                         verText = "CS or INFINITAS 専用曲";
                         break;
                     default:
-                        verText = modalData[key];  // 想定外の値が来た場合はそのまま表示
+                        verText = "不明";
                         break;
                 }
 
