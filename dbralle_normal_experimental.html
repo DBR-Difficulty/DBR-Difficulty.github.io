@@ -6,6 +6,7 @@
         <meta name="alldbrtable" content="./dbralleheader_experimental.json"> <!-- 固定json読み込み用 -->
         <link href="style/experimental_style.css" rel="stylesheet">
         <script src="style/jquery-2.0.2.min.js"></script>
+        <script src="modal_template.js"></script>
     </head>
 
     <body>
@@ -66,6 +67,13 @@
                     $.getJSON(dataUrl, function(info) {
                         makeDBRTable(info, header.symbol, header.level_order || null);
                         $("#loading").remove(); // ローディング終了
+
+                        setupModal([
+                            "level", "recommend", "ver", "title", "bpm",
+                            "lamp", "bp", "score", "score-rank", "real-rank",  // 拡張機能用
+                            "notes", "splv", "video", "textage",
+                            "gauge", "comment"
+                            ]); // 表描画後にモーダルを設定
                     }).fail(function() {
                         $("#loading").html(
                             "難易度表データの読み込みに失敗しました。<br>" +

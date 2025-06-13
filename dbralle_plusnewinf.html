@@ -4,11 +4,12 @@
         <title>DBR EASY(INFINITAS)(新規提案有)</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="alldbrtable" content="./dbralleplusnewheader.json">
-        <link href="style/experimental_style.css" rel="stylesheet"> <!-- 大幅に変わるのでcssキャッシュ対策 その内style.cssに戻す -->
+        <link href="style/modal_style.css" rel="stylesheet"> <!-- 大幅に変わるのでcssキャッシュ対策 その内style.cssに戻す -->
         <script src="style/jquery-2.0.2.min.js"></script>
+        <script src="modal_template.js"></script>
     </head>
 
-    <body>
+    <body data-page="inf">
         <center>
             <strong><span style="font-size: 2rem;">DBR難易度表(イージー)(INF収録)(新規提案有)</span></strong><br>
 
@@ -21,7 +22,8 @@
                     <li>ノーツ数: 全ノーツ数からスクラッチの数を引いた値です。スクラッチの数が設定されていない場合、全ノーツ数を括弧付きで表示しています。</li>
                     <li>レベル査定済みの全譜面から、INFINITASに収録された譜面のみを表示しています。加えて、新規提案されている譜面を黄背景で表示しています。レベルの相対比較にお使いください。</li>
                     <li>最新の収録状況を反映していない可能性があります。(<a href="./dbralle_plusnew.html" target="_self">AC版の表</a>はこちら)</li>
-                    <li>難易度表への新規提案、レベルの変更提案等は<a href="https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?usp=sharing" target="_blank">管理用スプレッドシート</a>で行っています。プレイした譜面を記録する程度の感覚で構いませんので、ぜひご協力をお願いします。</li>
+                    <li>難易度表への新規提案、レベルの変更提案等は<a href="https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?usp=sharing" target="_blank">管理用スプレッドシート</a>で行っています。プレイした譜面を記録する程度の感覚で構いませんので、ぜひご協力をお願いします。<br>
+                        表のレベル～タイトルの範囲をクリックすると、譜面の詳細情報が表示されるモーダルが出現します。こちらからも変更・おすすめ提案が可能です。</li>
                     <li>読み込みに時間がかかります。難易度表が表示されない場合、しばらくお待ちください。</li>
                 </ul>
             </div>
@@ -48,6 +50,13 @@
                     $.getJSON(header.data_url, function(info) {
                         makeDBRTable(info, header.symbol, header.level_order || null);
                         $("#loading").remove(); // ローディング終了
+
+                        setupModal([
+                            "level", "recommend", "ver", "title", "bpm",
+                            "lamp", "bp", "score", "score-rank", "real-rank",  // 拡張機能用
+                            "notes", "splv", "video", "textage",
+                            "gauge", "comment", "inf", "unlock"
+                            ]); // 表描画後にモーダルを設定
                     }).fail(function () {
                         $("#loading").html(
                             "難易度表データの読み込みに失敗しました。<br>" +
