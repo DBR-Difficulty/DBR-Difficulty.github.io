@@ -4,8 +4,9 @@
         <title>DBR EASY(未査定有)</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="alldbrtable" content="./dbralleheader.json">
-        <link href="style/experimental_style.css" rel="stylesheet"> <!-- 大幅に変わるのでcssキャッシュ対策 その内style.cssに戻す -->
+        <link href="style/modal_style.css" rel="stylesheet"> <!-- 大幅に変わるのでcssキャッシュ対策 その内style.cssに戻す -->
         <script src="style/jquery-2.0.2.min.js"></script>
+        <script src="modal_template.js"></script>
     </head>
 
     <body>
@@ -19,8 +20,9 @@
                         (<a href="https://zenn.dev/waisky/articles/b97a35fe042b51" target="_blank">参考</a>)
                     </li>
                     <li>ノーツ数: 全ノーツ数からスクラッチの数を引いた値です。スクラッチの数が設定されていない場合、全ノーツ数を括弧付きで表示しています。</li>
-                    <li>レベル未査定の譜面、隠し項目も合わせて表示しています。提案検討や表メンテナンス用のページです。(<a href="./dbralle.html" target="_self">通常の表</a>はこちら)</li>
-                    <li>難易度表への新規提案、レベルの変更提案等は<a href="https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?usp=sharing" target="_blank">管理用スプレッドシート</a>で行っています。プレイした譜面を記録する程度の感覚で構いませんので、ぜひご協力をお願いします。</li>
+                    <li>レベル未査定の譜面、隠し項目も合わせて表示しています。新規提案の検討や、拡張機能使用時にご活用ください。(<a href="./dbralle.html" target="_self">通常の表</a>はこちら)</li>
+                    <li>難易度表への新規提案、レベルの変更提案等は<a href="https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?usp=sharing" target="_blank">管理用スプレッドシート</a>で行っています。プレイした譜面を記録する程度の感覚で構いませんので、ぜひご協力をお願いします。<br>
+                        表のレベル～タイトルの範囲をクリックすると、譜面の詳細情報が表示されるモーダルが出現します。こちらからも新規・変更・おすすめ提案が可能です。</li>
                     <li>読み込みに時間がかかります。難易度表が表示されない場合、しばらくお待ちください。</li>
                 </ul>
             </div>
@@ -59,6 +61,13 @@
                     $.getJSON(dataUrl, function(info) {
                         makeDBRTable(info, header.symbol, header.level_order || null);
                         $("#loading").remove(); // ローディング終了
+
+                        setupModal([
+                            "level", "recommend", "ver", "title", "bpm",
+                            "lamp", "bp", "score", "score-rank", "real-rank",  // 拡張機能用
+                            "notes", "splv", "video", "textage",
+                            "gauge", "comment", "inf", "unlock"
+                            ]); // 表描画後にモーダルを設定
                     }).fail(function () {
                         $("#loading").html(
                             "難易度表データの読み込みに失敗しました。<br>" +
@@ -94,9 +103,9 @@
                 // ヘッダー行はjQueryで追加（列幅を自動計算しやすく）
                 obj.append(
                     $("<tr height='20' style='color:white;background-color:#666666'></tr>").append(
-                    "<td>レベル</td><td>査定中</td><td>薦</td><td>ver</td><td>タイトル</td><td>BPM</td>" +
+                    "<td>レベル</td><td>薦</td><td>ver</td><td>タイトル</td><td>BPM</td>" +
                     "<td>ノーツ数</td><td>皿含</td><td>SPLv</td><td>動画</td><td>TexTage</td>" +
-                    "<td>ゲージ増加量</td><td>コメント</td><td>査定者コメント等</td><td>INF有</td><td>解禁方法</td>"
+                    "<td>ゲージ増加量</td><td>コメント</td><td>INF有</td><td>解禁方法</td>"
                     )
                 );
 
@@ -116,12 +125,8 @@
                     const gaugeIncrease = calculateGaugeIncrease(notesValue);
                     const unlockMethod = formatUnlockMethod(data.infpack); // 解禁方法をフォーマット
 
-                    // 備考列を作成（comment1 と comment2 を結合）
-                    const remarks = [data.comment1, data.comment2].filter(Boolean).join(" ");
-
                     let row = `<tr class='tr_normal'>
                     <td class='col-level'>${displayLevel}</td>
-                    <td class='col-pending'>${data.pending ?? ''}</td>
                     <td class='col-recommend'>${data.recommend}</td>
                     <td class='col-ver'>${data.ver}</td>
                     <td class='col-title'><a>${data.title}</a></td>
@@ -180,7 +185,6 @@
                     // 残りの列（コメントなど）
                     row += `<td class='col-gauge'>${gaugeIncrease}%/note</td>
                     <td class='col-comment'>${data.comment || ''}</td>
-                    <td class='col-remarks'>${remarks}</td>
                     <td class='col-inf'>${data.inf || ''}</td>
                     <td class='col-unlock'>${unlockMethod}</td>
                     </tr>`; // 備考・解禁方法の列を追加
@@ -195,7 +199,7 @@
                 Object.values(sections)
                     .sort((a, b) => a.isDeleted - b.isDeleted || a.displayLevel.localeCompare(b.displayLevel))
                     .forEach(section => {
-                        htmlContent += `<tr class='tr_separate'><td colspan='17' align='center'><b>${section.displayLevel} (${section.count}譜面)</b></td></tr>`;
+                        htmlContent += `<tr class='tr_separate'><td colspan='15' align='center'><b>${section.displayLevel} (${section.count}譜面)</b></td></tr>`;
                         htmlContent += section.rows.join("");
                     });
 

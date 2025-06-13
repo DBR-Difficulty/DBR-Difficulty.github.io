@@ -527,7 +527,7 @@ function setupModal(columnsToShow) {
                 `;
             }
 
-            formHtml += `<button type="submit">送信（仮）</button></form>`;
+            formHtml += `<button type="submit">提案を送信</button></form>`;
             $("#modalActions").append(formHtml);
 
             // INF有無選択によりINF解禁区分の表示切替

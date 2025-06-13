@@ -4,11 +4,12 @@
         <title>DBR段位(仮)(INFINITAS)</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="alldbrtable" content="./dbralleheader.json">
-        <link href="style/experimental_style.css" rel="stylesheet"> <!-- 大幅に変わるのでcssキャッシュ対策 その内style.cssに戻す -->
+        <link href="style/modal_style.css" rel="stylesheet"> <!-- 大幅に変わるのでcssキャッシュ対策 その内style.cssに戻す -->
         <script src="style/jquery-2.0.2.min.js"></script>
+        <script src="modal_template.js"></script>
     </head>
 
-    <body>
+    <body data-page="inf">
         <center>
             <strong><span style="font-size: 2rem;">DBR段位(仮)(INF収録)</span></strong><br>
 
@@ -67,6 +68,13 @@
                     $.getJSON(dataUrl, function(info) {
                         makeDBRTable(info, header.symbol, header.level_order || null);
                         $("#loading").remove(); // ローディング終了
+
+                        setupModal([
+                            "level", "recommend", "ver", "title", "bpm",
+                            "lamp", "bp", "score", "score-rank", "real-rank",  // 拡張機能用
+                            "notes", "splv", "video", "textage",
+                            "gauge", "comment", "inf", "unlock"
+                            ]); // 表描画後にモーダルを設定
                     }).fail(function () {
                         $("#loading").html(
                             "難易度表データの読み込みに失敗しました。<br>" +
