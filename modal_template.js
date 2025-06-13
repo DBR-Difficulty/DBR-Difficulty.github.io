@@ -363,9 +363,20 @@ function setupModal(columnsToShow) {
 
         // 提案ボタン生成
         const isUnrated = modalData.level === "☆未査定" || modalData.level === "†☆未査定";
+        const isUnderReview = modalData.splv === "新規";
         const actions = [];
 
-        if (isUnrated) {
+        if (isUnderReview) {
+            actions.push(`
+                <hr><div style="margin-top: 1rem; line-height: 1.6;">
+                    <b>現在新規提案中の譜面です。<br>
+                    <a href="https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?gid=1709558806#gid=1709558806" target="_blank" rel="noopener" style="color: #0073e6; text-decoration: underline;">
+                        レベル、おすすめ度に違和感がある方は、<br>
+                        新規提案シートの「異議申し立て」列（P列以降）に記載してください。</b>
+                    </a>
+                </div>
+            `);
+        } else if (isUnrated) {
             actions.push(`<button class="proposal-btn" data-type="new">新規提案</button>`);
         } else {
             actions.push(`<button class="proposal-btn" data-type="change">変更提案</button>`);

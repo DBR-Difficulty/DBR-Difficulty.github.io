@@ -121,7 +121,8 @@
     "走馬灯-The Last Song-": "走馬灯 -The Last Song-",
     "ULTiMΛTE": "ＵＬＴｉＭΛＴＥ",
     "never...": "never…",
-    "fffff": "ƒƒƒƒƒ"
+    "fffff": "ƒƒƒƒƒ",
+    "Nothing But Theory": "Nothing but Theory"
 
     // 必要に応じてここに追加
     // 'クリアランプマネージャー側表記': 'DBR難易度表側表記',
