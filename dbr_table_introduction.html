@@ -108,6 +108,7 @@
       <li><a href="#modal-new">【モーダル：新規提案】</a></li>
       <li><a href="#modal-change">【モーダル：変更提案】</a></li>
       <li><a href="#modal-recommend">【モーダル：おすすめ提案】</a></li>
+      <li><a href="#excel">【難易度表をExcelで出力】</a></li>
       <li><a href="#extend">【拡張機能使用時の追加項目】</a></li>
     </ul>
   </div>
@@ -133,11 +134,14 @@
 
     <p><b>☆12.70まで</b>の譜面は、非公式難易度表を参考にできるよう近似した難易度値になっています。<br>
     しかし、DBRには<b>正規譜面という概念が存在しない</b>こと、基準値がイージーとノマゲで違うこと、何より<b>全く別の表である</b>ことをご留意ください。<br>
-    詐称、逆詐称の概念は<b>DBR難易度表内での相対評価</b>に留めてください。（近づけるために☆xx.xxの全譜面を丸ごと上げたい、下げたいなどは応相談）<br>
-    現在難易度表内の最低レベルは☆11.00となっていますが、これより下の譜面を提案しても問題ありません。<br>
-    その場合、レベル設定時には非公式難易度の値となるべく近似させてください。</p>
+    詐称、逆詐称の概念は<b>DBR難易度表内での相対評価</b>に留めてください。（近づけるために☆xx.xxの全譜面を丸ごと上げたい、下げたいなどは応相談）</p>
+
+    <p>現在難易度表内の最低レベルは☆11.00となっていますが、これより下の譜面を提案しても問題ありません。<br>
+    その場合、レベル設定時には非公式難易度の値となるべく近似させてください。<br>
+    非公式難易度表の実質的な下限である☆6.00未満の譜面を提案する場合、<br>
+    公式の難易度と比較し、小数第2位までの表記で妥当だと思われる値を入力してください。</p>
     
-    <p>それ以降のレベルについては、非公式難易度表とは<b>無関係</b>に、譜面群内でのレベル差に応じてレベル付けされています。<br>
+    <p><b>☆12.71以降</b>のレベルについては、非公式難易度表とは<b>無関係</b>に、譜面群内でのレベル差に応じてレベル付けされています。<br>
     （目安として、現状の☆12.89～が概ね☆11最上位帯です）<br>
     ☆12.80がイージーできる人であっても、非公式難易度表で12.7の譜面が全てイージーできるとは限りません。</p>    
 
@@ -179,6 +183,10 @@
         <img src="picture/dbrtable_ac.png" alt="AC版難易度表" style="max-width:100%; height: auto;">
     </div>
 
+    <p>[難易度表をExcelで出力]ボタンをクリックすると、Excelファイルで現在表示中の難易度表が出力できます。<br>
+      詳細は<a href="#excel">【難易度表をExcelで出力】</a>をご参照ください。<br>
+      以下、難易度表内の項目です。</p>
+
     <ul>
       <li>レベル：譜面のレベルです。詳細は<a href="#premise">【前提】</a>をご参照ください。</li>
       <li>薦：譜面のおすすめ度です。(おすすめ)表の場合、「☆」のみを表示しているため省略されます。詳細は<a href="#premise">【前提】</a>をご参照ください。</li>
@@ -187,7 +195,7 @@
       <li>BPM：譜面のBPMです。ソフランがある場合、表記は「最小値-最大値」となります。</li>
       <li>ノーツ数：譜面の全ノーツ数からスクラッチの数を引いた、実質ノーツ数です。スクラッチ数のデータが未登録の場合、全ノーツ数を括弧付きで表示します。</li>
       <li>SPLv：譜面のSPにおけるレベルです。</li>
-      <li>動画：譜面確認用のプレイ動画です。掲載にご協力いただける方は、<a href="https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?usp=sharing" target="_blank">管理用スプレッドシート</a>の<a href="https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?gid=1133259776#gid=1133259776" target="_blank">「修正依頼」シート</a>に記載いただくか、@DBR_Difficulty宛にDMをお送りください。</li>
+      <li>動画：譜面確認用のプレイ動画です。掲載にご協力いただける方は、<a href="https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?usp=sharing" target="_blank">管理用スプレッドシート</a>の<a href="https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?gid=1133259776#gid=1133259776" target="_blank">「修正依頼」シート</a>に記載いただくか、<a href="https://twitter.com/DBR_Difficulty" target="_blank">＠DBR_Difficulty</a>宛にDMをお送りください。</li>
       <li>TexTage：譜面確認用のTexTageリンクです。表読み込み時に乱数生成しているため、画面のリロードまで同じ譜面は同じ配置のURLになります。</li>
       <li>ゲージ増加量：NORMAL以下のゲージでGREAT以上を出した際の、1ノーツあたりのゲージ増加量です。（<a href="https://zenn.dev/waisky/articles/b97a35fe042b51" target="_blank">参考</a>）</li>
       <li>コメント：譜面のおすすめコメント、譜面傾向、解説、攻略情報などが記載されます。</li>
@@ -393,6 +401,23 @@
 
     <p>送信後、<a href="https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?gid=1779953087#gid=1779953087" target="_blank">おすすめ提案シート</a>に遷移します。<br>
     送信したおすすめ提案が正しく反映されていることを確認してください。</p>
+  </div>
+
+  <div class="section-box">
+    <h2 id="excel">【難易度表をExcelで出力】</h2>
+    <p>難易度表の内容をExcelファイルとして出力します。<a href="#infinitas">INFINITAS用</a>、<a href="#misatei">未査定有</a>などを含め、どの難易度表ページでも出力可能です。<br>
+      BPM順でのソート、新規・変更提案用のメモ書きや、最小BPやクリアランプでの絞り込み(<a href="dbr_table_extend.html">拡張機能</a>使用時)など、ご自由にお使いください。</p>
+
+    <div style="max-width: 600px;">
+        <img src="picture/excel.png" alt="Excel出力" style="max-width:100%; height: auto;">
+    </div>
+
+    <div style="max-width: 600px;">
+        <img src="picture/excel_extend.png" alt="Excel出力" style="max-width:100%; height: auto;">
+        <div style="text-align: center; font-size: 0.9em; margin-top: 0.25rem;"><a href="dbr_table_extend.html">拡張機能</a>使用時の追加列にも対応</div>
+    </div>
+
+    <p>拡張機能と併用する場合は、表更新時の最新化が二度手間になってしまうため、プレイ履歴の管理は拡張機能側で行うことを強く推奨します。<br></p>
   </div>
 
   <div class="section-box">
