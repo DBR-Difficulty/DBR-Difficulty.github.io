@@ -251,7 +251,7 @@ body.diff {
 /* コメント列 */
 .col-comment {
   min-width: 10ch;
-  width: 60%;
+  width: 50%;
   text-align: left;
 }
 
@@ -259,7 +259,7 @@ body.diff {
 .col-remarks {
   min-width: 10ch;
   max-width: 70ch;
-  width: 60%;
+  width: 50%;
   text-align: left;
 }
 
@@ -425,6 +425,13 @@ button:disabled {
     color: #888; /* グレー文字 */
     cursor: not-allowed; /* カーソルを無効化表示 */
     border: 1px solid #ccc; /* 境界線も薄いグレーに */
+}
+
+#export-excel-btn {
+    margin-left: 6px;
+    padding: 4px 8px;
+    font-size: 90%;
+    cursor: pointer;
 }
 
 @media (max-width: 480px) {

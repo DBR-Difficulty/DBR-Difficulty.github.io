@@ -4,7 +4,7 @@
         <title>DBR EASY</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="alldbrtable" content="./dbralleheader.json">
-        <link href="style/modal_style.css" rel="stylesheet"> <!-- 大幅に変わるのでcssキャッシュ対策 その内style.cssに戻す -->
+        <link href="style/style.css" rel="stylesheet">
         <script src="style/jquery-2.0.2.min.js"></script>
         <script src="modal_template.js"></script>
     </head>
@@ -28,7 +28,16 @@
                 </ul>
             </div>
 
-            <div class="toplink-margin"><a href="index.html">TOPに戻る</a></div>
+            <div class="toplink-margin">
+                <a href="index.html">TOPに戻る</a>
+                <button id="export-excel-btn" disabled>難易度表をExcelで出力</button>
+            </div>
+
+            <!-- ExcelJS CDN（最新版）-->
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
+
+            <!-- 共通JS -->
+            <script src="export_excel.js"></script>
         </center>
 
         <div id="loading">
@@ -62,6 +71,7 @@
                     $.getJSON(dataUrl, function(info) {
                         makeDBRTable(info, header.symbol, header.level_order || null);
                         $("#loading").remove(); // ローディング終了
+                        document.getElementById("export-excel-btn").disabled = false; // Excel出力可能
 
                         setupModal([
                             "level", "recommend", "ver", "title", "bpm",
