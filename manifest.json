@@ -1,0 +1,24 @@
+{
+  "name": "DBR難易度表",
+  "short_name": "DBR表",
+  "description": "beatmania IIDX DBR難易度表",
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "theme_color": "#0097a7",
+  "background_color": "#0097a7",
+  "display": "standalone",
+  "start_url": "/index.html",
+  "orientation": "portrait"
+}
