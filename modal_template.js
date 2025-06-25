@@ -53,7 +53,7 @@ function setupModal(columnsToShow) {
 
     function extractTextageID(html) {
         const url = extractHref(html);
-        const match = url.match(/score\/\d+\/([^.]+)\.html/);
+        const match = url.match(/score\/[^/]+\/([^.]+)\.html/);
         return match ? match[1] : "";
     }
 
