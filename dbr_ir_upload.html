@@ -237,9 +237,6 @@
 
       loginBtn.onclick = () => {
         signInWithPopup(auth, provider)
-          .then((result) => {
-            console.log("ログイン成功:", result.user);
-          })
           .catch((e) => {
             alert("ログインに失敗しました: " + e.message);
           });
@@ -247,9 +244,6 @@
 
       logoutBtn.onclick = () => {
         signOut(auth)
-          .then(() => {
-            console.log("ログアウトしました");
-          })
           .catch((e) => {
             alert("ログアウトに失敗しました: " + e.message);
           });
