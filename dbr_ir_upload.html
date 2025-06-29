@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png" />
+    <meta name="msapplication-TileImage" content="/mstile-150x150.png" />
+    <link rel="manifest" href="/manifest.json" />
+
+    <meta charset="UTF-8" />
+    <title>DBR IR プレイデータアップロード</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="style/style.css" rel="stylesheet">
+    <script src="style/jquery-2.0.2.min.js"></script>
+  </head>
+  <style>
+    body {
+      font-family: "Noto Sans JP", sans-serif;
+      font-size: 1rem;
+      line-height: 1.6;
+      color: #333;
+      background-color: #fff;
+      padding: 1.25rem;
+      max-width: 100%;
+    }
+
+    .top-section-box {
+      background: #fafafa;
+      border: 1px solid #ddd;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin: 0.625rem 0 1.5rem 0;
+    }
+
+    .notice-box {
+      border: 0.125rem solid #666;
+      background-color: #353535;
+      color: white;
+      padding: 0.625rem;
+      margin: 0.625rem auto;
+      width: 80%;
+      text-align: left;
+      border-radius: 0.3125rem;
+    }
+
+    .notice-box ul {
+      list-style-type: square;
+      padding-left: 1.25rem;
+    }
+
+    .notice-box li {
+      margin-bottom: 0.3125rem;
+    }
+
+    .notice-box a:visited {
+      color: #cc00cc;
+    }
+
+    .notice-box a {
+      color: #bce2e8;
+    }
+
+    button {
+        background-color: #f5f5f5;  /* 淡い灰色背景 */
+        color: #000;  /* 黒文字 */
+        border: 1px solid #888;  /* 灰色の縁取り */
+        border-radius: 0.375rem;
+        padding: 0.5rem 1rem;
+        margin-top: 1rem;
+        font-weight: bold;
+        text-decoration: none;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    /* ボタンが無効化された時のスタイル（その他のボタン） */
+    button:disabled {
+        background-color: #dcdcdc; /* グレー背景 */
+        color: #888; /* グレー文字 */
+        cursor: not-allowed; /* カーソルを無効化表示 */
+        border: 1px solid #ccc; /* 境界線も薄いグレーに */
+    }
+
+    .button {
+        background-color: #f5f5f5;
+        color: #000;
+        border: 1px solid #888;
+        border-radius: 0.375rem;
+        padding: 0.5rem 1rem;
+        margin-bottom: 1rem;
+        font-weight: bold;
+        text-decoration: none;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        display: inline-block;
+    }
+
+    /* チェックボックスを大きくする */
+    input[type="checkbox"] {
+        transform: scale(1.5);  /* チェックボックスを1.5倍に拡大 */
+        margin-right: 0.5rem;
+        margin-top: 0.75rem;
+    }
+
+    /* チェックボックスのラベルも大きく */
+    label {
+        font-size: 1.2rem;      /* ラベルの文字サイズを大きく */
+        line-height: 1.5rem;    /* 行間を広げて読みやすく */
+        cursor: pointer;       /* クリック可能にする */
+    }
+
+    .label-disabled {
+      color: #888;          /* グレーっぽく */
+      border-color: #ccc;   /* 薄い境界線 */
+      cursor: not-allowed;
+      background-color: #dcdcdc;
+      pointer-events: none; /* クリック無効 */
+    }
+
+    .subtext {
+      font-size: 0.9rem;
+      color: #555;
+      margin: 0.5rem;
+    }
+  </style>
+  <body>
+    <center>
+        <strong><span style="font-size: 2rem;">DBR IR プレイデータアップロード</span></strong><br>
+
+        <!-- ここに注意書きの枠を追加 -->
+        <div class="notice-box">
+          <ul>
+            <li>DBR IRにプレイデータを登録します 拡張機能でエクスポートしたJSONファイルをアップロードしてください</li>
+            <li>Googleアカウントでログインしてください</li>
+            <li>一度アップロードすると12時間の間は再登録することができません ご注意ください</li>
+            <li><a href="./dbralle_misatei_experimental.html" target="_self">仮設閲覧用リンク</a></li>
+          </ul>
+        </div>
+
+        <div class="toplink-margin">
+          <a href="index.html">TOPに戻る</a>
+        </div>
+
+
+        <div id="loading" style="display: none;">
+          <div class="spinner"></div>
+          <div class="loading-text">プレイデータをアップロードしています。<br>しばらくお待ちください……</div>
+        </div>
+
+        <div class="top-section-box">
+          <div id="authSection">
+            <button id="loginBtn">Googleアカウントでログイン</button>
+            <button id="logoutBtn" style="display:none;">ログアウト</button>
+            <p id="userInfo">ログアウト中</p>
+          </div>
+        </div>
+
+    </center>
+    <div class="top-section-box">
+      <label>表示するユーザー名: <input type="text" id="displayName" /></label><br />
+      <label><input type="checkbox" id="anonymousCheck" /> 匿名希望</label><br />
+      <button id="saveProfileBtn" disabled>プロフィール保存</button><br /><br />
+      <!-- 隠し file input -->
+      <input type="file" id="jsonFileInput" accept=".json" style="display: none;">
+      <!-- 擬似ボタン -->
+      <label for="jsonFileInput" class="button">JSONファイルを選択</label>
+      <!-- ファイル名表示（任意） -->
+      <span id="fileName" class="subtext"></span>
+
+      <button id="uploadBtn" disabled>送信</button>
+    </div>
+
+    <!-- 追加: 自分のデータを全削除するボタンと処理 -->
+    <div class="top-section-box">
+      <button id="deleteAllBtn" disabled>自分のスコアデータをすべて削除</button>
+      <p class="subtext" id="deleteStatus"></p>
+    </div>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+
+      import {
+        getFirestore,
+        doc,
+        getDoc,
+        setDoc,
+        collection,
+        query,
+        where,
+        getDocs,
+        deleteDoc
+      } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+
+      import {
+        getAuth,
+        GoogleAuthProvider,
+        signInWithPopup,
+        signOut,
+        onAuthStateChanged
+      } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyDb8r_zN89WKh69HPWstxGKLR-E-spQl8U",
+        authDomain: "dbr-ir.firebaseapp.com",
+        projectId: "dbr-ir",
+        storageBucket: "dbr-ir.firebasestorage.app",
+        messagingSenderId: "464886830974",
+        appId: "1:464886830974:web:f90d3605f62673136f052f",
+        measurementId: "G-THHFG18D5G"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+      const auth = getAuth(app);
+      const provider = new GoogleAuthProvider();
+
+      const loginBtn = document.getElementById("loginBtn");
+      const logoutBtn = document.getElementById("logoutBtn");
+      const userInfo = document.getElementById("userInfo");
+
+      const displayNameInput = document.getElementById("displayName");
+      const anonymousCheck = document.getElementById("anonymousCheck");
+      const saveProfileBtn = document.getElementById("saveProfileBtn");
+
+      const fileInput = document.getElementById("jsonFileInput");
+      const uploadBtn = document.getElementById("uploadBtn");
+      
+      const deleteBtn = document.getElementById("deleteAllBtn");
+      const deleteStatus = document.getElementById("deleteStatus");
+
+      const loadingDiv = document.getElementById("loading");
+
+      let currentUserUid = null;
+
+      loginBtn.onclick = () => {
+        signInWithPopup(auth, provider)
+          .then((result) => {
+            console.log("ログイン成功:", result.user);
+          })
+          .catch((e) => {
+            alert("ログインに失敗しました: " + e.message);
+          });
+      };
+
+      logoutBtn.onclick = () => {
+        signOut(auth)
+          .then(() => {
+            console.log("ログアウトしました");
+          })
+          .catch((e) => {
+            alert("ログアウトに失敗しました: " + e.message);
+          });
+      };
+
+      // ボタン要素を変数でまとめて取得（スクリプト上部あたりに追加推奨）
+      const buttonsToDisableDuringProcess = [
+        loginBtn,
+        logoutBtn,
+        saveProfileBtn,
+        uploadBtn,
+        deleteBtn,
+        displayNameInput,
+        anonymousCheck,
+        fileInput
+      ];
+
+      // ローディング表示を制御する関数を作成（既存の loadingDiv を活用）
+      // setLoadingをメッセージ指定可能に変更
+      function setLoading(show, message = "処理中です。しばらくお待ちください……") {
+        loadingDiv.style.display = show ? "block" : "none";
+        // メッセージ表示部分（class="loading-text"のdiv）
+        const loadingTextDiv = loadingDiv.querySelector(".loading-text");
+        if (show) {
+          loadingTextDiv.innerHTML = message;
+        }
+        buttonsToDisableDuringProcess.forEach(btn => {
+          btn.disabled = show;
+        });
+
+        // labelの疑似ボタンも連動して見た目を変える処理
+        const fileLabel = document.querySelector('label[for="jsonFileInput"]');
+        if (show) {
+          fileLabel.classList.add("label-disabled");
+        } else {
+          fileLabel.classList.remove("label-disabled");
+        }
+      }
+
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          currentUserUid = user.uid;
+          loginBtn.style.display = "none";
+          logoutBtn.style.display = "inline";
+          userInfo.textContent = `ログイン中: ${user.email}`;
+
+          saveProfileBtn.disabled = false;
+          uploadBtn.disabled = false;
+
+          const userDocRef = doc(db, "users", currentUserUid);
+          const userDocSnap = await getDoc(userDocRef);
+          if (userDocSnap.exists()) {
+            const profileData = userDocSnap.data();
+            displayNameInput.value = profileData.displayName || user.displayName || user.email || "";
+            anonymousCheck.checked = profileData.anonymous || false;
+          } else {
+            displayNameInput.value = user.displayName || user.email || "";
+            anonymousCheck.checked = false;
+            await setDoc(userDocRef, {
+              displayName: displayNameInput.value,
+              anonymous: false
+            });
+          }
+
+          // 疑似ファイル選択ボタンの有効/無効切り替え
+          const fileLabel = document.querySelector('label[for="jsonFileInput"]');
+          fileLabel.classList.remove("label-disabled");
+        } else {
+          currentUserUid = null;
+          loginBtn.style.display = "inline";
+          logoutBtn.style.display = "none";
+          userInfo.textContent = "ログアウト中";
+
+          displayNameInput.value = "";
+          anonymousCheck.checked = false;
+          saveProfileBtn.disabled = true;
+          uploadBtn.disabled = true;
+
+          // 疑似ファイル選択ボタンの有効/無効切り替え
+          const fileLabel = document.querySelector('label[for="jsonFileInput"]');
+          fileLabel.classList.add("label-disabled");
+        }
+      });
+
+      saveProfileBtn.onclick = async () => {
+        if (!currentUserUid) {
+          alert("ログインしてください");
+          return;
+        }
+        const displayName = displayNameInput.value.trim();
+        const anonymous = anonymousCheck.checked;
+        if (displayName.length === 0 && !anonymous) {
+          alert("匿名希望か、表示名を入力してください");
+          return;
+        }
+        try {
+          await setDoc(doc(db, "users", currentUserUid), {
+            displayName,
+            anonymous
+          }, { merge: true });
+          alert("プロフィールを保存しました");
+        } catch (e) {
+          alert("保存に失敗しました: " + e.message);
+        }
+      };
+
+      function generateDocId(userUid, textageKey, difficulty) {
+        return `${userUid}_${textageKey}_${difficulty}`.replace(/[.#$[\]/]/g, "_");
+      }
+
+      document.getElementById("jsonFileInput").addEventListener("change", function() {
+        const fileName = this.files[0]?.name || "ファイルが選択されていません";
+        document.getElementById("fileName").textContent = fileName;
+      });
+
+      uploadBtn.addEventListener("click", async () => {
+        if (!currentUserUid) {
+          alert("ログインしてください");
+          return;
+        }
+
+        const file = fileInput.files[0];
+        if (!file) {
+          alert("JSONファイルを選択してください");
+          return;
+        }
+
+        setLoading(true, "プレイデータをアップロードしています。<br>しばらくお待ちください……");
+
+        try {
+          const text = await file.text();
+          const data = JSON.parse(text);
+
+          const userDocSnap = await getDoc(doc(db, "users", currentUserUid));
+          if (!userDocSnap.exists()) {
+            alert("ユーザープロファイルが見つかりません。プロフィールを保存してください");
+            return;
+          }
+
+          const profile = userDocSnap.data();
+          const usernameToUse = profile.anonymous ? "匿名" : (profile.displayName || "");
+          if (!usernameToUse) {
+            alert("ユーザー名が設定されていません。プロフィールを保存してください");
+            return;
+          }
+
+          // 既存スコアを一括取得し、Mapに展開
+          const existingSnap = await getDocs(query(
+            collection(db, "scores"),
+            where("userUid", "==", currentUserUid)
+          ));
+          const existingMap = {};
+          existingSnap.forEach(docSnap => {
+            const d = docSnap.data();
+            existingMap[`${d.textageKey}_${d.difficulty}`] = d;
+          });
+
+          const { lamp, bp, score, textageKey } = data;
+          const now = Date.now();
+          const twelveHours = 12 * 60 * 60 * 1000; // 43,200,000 ms
+          const allTitles = new Set([
+            ...Object.keys(lamp || {}).map(k => k.replace(/^lamp_/, '')),
+            ...Object.keys(bp || {}).map(k => k.replace(/^bp_/, '')),
+            ...Object.keys(score || {}).map(k => k.replace(/^score_/, ''))
+          ]);
+
+          let count = 0;
+          let skipped = 0;
+
+          for (const title of allTitles) {
+            const textage = textageKey?.[title];
+            const diffMatch = title.match(/\((.)\)$/);
+            if (!textage || !diffMatch) continue;
+
+            const difficulty = diffMatch[1];
+            const key = `${textage}_${difficulty}`;
+            const docRef = doc(db, "scores", generateDocId(currentUserUid, textage, difficulty));
+            const rawBp = bp?.[`bp_${title}`];
+            const rawScore = score?.[`score_${title}`];
+
+            const newData = {
+              userUid: currentUserUid,
+              textageKey: textage,
+              title,
+              difficulty,
+              lamp: lamp?.[`lamp_${title}`] ?? null,
+              bp: rawBp === "" || rawBp == null ? -1 : parseInt(rawBp),
+              score: rawScore === "" || rawScore == null ? -1 : parseInt(rawScore),
+              timestamp: now
+            };
+
+            const existing = existingMap[key];
+
+            if (existing) {
+              const lastUpdated = existing.timestamp || 0;
+              if (now - lastUpdated < twelveHours) {
+                skipped++;
+                continue; // ← 12時間未満なのでスキップ
+              }
+            }
+
+            const shouldUpdate = !existing || (
+              existing.lamp !== newData.lamp ||
+              existing.bp !== newData.bp ||
+              existing.score !== newData.score ||
+              existing.title !== newData.title ||
+              existing.difficulty !== newData.difficulty ||
+              existing.textageKey !== newData.textageKey
+            );
+
+            if (shouldUpdate) {
+              await setDoc(docRef, newData);
+              count++;
+            }
+          }
+
+          const summary = [
+            `${count}件の譜面データをアップロードしました。`,
+            skipped > 0 ? `（${skipped}件は12時間以内の再登録のため、スキップされました）` : ""
+          ].join(" ");
+
+          alert(summary);
+          fileInput.value = "";
+          document.getElementById("fileName").textContent = ""; // 表示名もクリア
+        } catch (e) {
+          alert("アップロード中にエラーが発生しました: " + e.message);
+          console.error(e);
+        } finally {
+          setLoading(false);
+        }
+      });
+
+      deleteBtn.addEventListener("click", async () => {
+        if (!currentUserUid) return alert("ログインしてください");
+        if (!confirm("本当にすべてのスコアデータを削除しますか？\nこの操作は元に戻せません。")) return;
+        if (!confirm("後悔しませんね？")) return;
+
+        setLoading(true, "スコアデータを削除しています。<br>しばらくお待ちください……");
+        deleteStatus.textContent = "削除中...";
+
+        try {
+          const q = query(collection(db, "scores"), where("userUid", "==", currentUserUid));
+          const snapshot = await getDocs(q);
+          if (snapshot.empty) {
+            deleteStatus.textContent = "削除対象のデータはありません。";
+            return;
+          }
+          const deleteOps = snapshot.docs.map(docSnap => deleteDoc(docSnap.ref));
+          await Promise.all(deleteOps);
+          deleteStatus.textContent = `${deleteOps.length}件のデータを削除しました。`;
+        } catch (e) {
+          console.error(e);
+          deleteStatus.textContent = "削除中にエラーが発生しました。";
+        } finally {
+          setLoading(false);
+        }
+      });
+    </script>
+  </body>
+</html>
