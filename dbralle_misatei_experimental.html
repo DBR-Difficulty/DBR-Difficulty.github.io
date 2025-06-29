@@ -88,7 +88,7 @@
                         setupModal([
                             "level", "recommend", "ver", "title", "bpm",
                             "lamp", "bp", "score", "score-rank", "real-rank",  // 拡張機能用
-                            "notes", "splv", "video", "textage",
+                            "notes", "ir", "splv", "video", "textage",
                             "gauge", "comment", "inf", "unlock"
                             ]); // 表描画後にモーダルを設定
                     }).fail(function() {
@@ -124,7 +124,7 @@
                 obj.append(
                     $("<tr height='20' style='color:white;background-color:#666666'></tr>").append(
                     "<td>レベル</td><td>薦</td><td>ver</td><td>タイトル</td><td>BPM</td>" +
-                    "<td>ノーツ数</td><td>皿含</td><td>SPLv</td><td>動画</td><td>TexTage</td>" +
+                    "<td>ノーツ数</td><td>皿含</td><td>IR</td><td>SPLv</td><td>動画</td><td>TexTage</td>" +
                     "<td>ゲージ増加量</td><td>コメント</td><td>INF有</td><td>解禁方法</td>"
                     )
                 );
@@ -153,6 +153,9 @@
                     <td class='col-bpm'><a>${data.bpm}</a></td>
                     <td class='col-notes'><a data-notes-full='${notesValue}'>${notesDisplay}</a></td>
                     <td class='col-notesfull'><a>${notesValue}</a></td>
+                    <td class='col-ir'>
+                        <a href="dbr_ir_ranking.html?title=${encodeURIComponent(data.title)}&notesValue=${notesValue}&notesDisplay=${encodeURIComponent(notesDisplay)}&displayLevel=${encodeURIComponent(displayLevel)}" target="_blank">■</a>
+                    </td>
                     <td class='col-splv'><a>☆${data.splv}</a></td>`;
 
                     // 動画列

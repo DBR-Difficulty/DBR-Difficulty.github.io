@@ -29,6 +29,7 @@ function setupModal(columnsToShow) {
         title: "タイトル",
         bpm: "BPM",
         notes: "ノーツ数",
+        ir: "IR",
         splv: "SPLv",
         video: "動画",
         textage: "TexTage",
@@ -321,6 +322,19 @@ function setupModal(columnsToShow) {
                     // <a> タグに margin-right を追加
                     sanitizedText = sanitizedText.replace(/<a /gi, '<a style="margin-right: 0.125rem;" ');
                 }
+
+                html += `<div style="margin-bottom: 0.2rem;"><b>${label}:</b> ${sanitizedText}</div>`;
+
+            } else if (key === "ir" && modalData[`${key}HTML`]) {
+                let sanitizedText = modalData[`${key}HTML`].replace(/<a[^>]*>([^<]+)<\/a>/gi, (match) => {
+                    // <a> タグの属性（href, targetなど）を保持
+                    const linkAttributes = match.match(/<a[^>]*>/i)[0]; // <a> タグ全体を取得
+                    // リンクテキストを {modalData.title} DBR に変更
+                    const newLinkText = `${modalData.title} DBR`;
+
+                    // 新しいリンクタグを返す
+                    return linkAttributes.replace(/<a[^>]*>/, `<a ${linkAttributes.slice(2)}`) + newLinkText + '</a>';
+                });
 
                 html += `<div style="margin-bottom: 0.2rem;"><b>${label}:</b> ${sanitizedText}</div>`;
 

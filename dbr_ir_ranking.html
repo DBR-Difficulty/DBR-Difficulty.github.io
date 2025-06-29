@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png" />
+  <meta name="msapplication-TileImage" content="/mstile-150x150.png" />
+  <link rel="manifest" href="/manifest.json" />
+
+  <meta charset="UTF-8"/>
+  <title>DBR IR</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <link href="style/style.css" rel="stylesheet">
+  <script src="style/jquery-2.0.2.min.js"></script>
+  <style>
+    .sortable {
+      cursor: pointer;
+      text-decoration: underline;
+      position: relative;
+      padding-left: 1em;
+      padding-right: 1em;
+    }
+
+    .sortable::after {
+      content: "";
+    }
+
+    .sortable::after {
+      content: "▲"; /* デフォルトの矢印。JSで切り替えるなら "▲▼" は不要 */
+      font-size: 0.7em;
+      position: absolute;
+      right: 0.2em;
+      top: 0.5em;
+      color: transparent; /* 初期状態では透明 */
+      transition: color 0.2s ease;
+    }
+
+    /* 昇順（▲）を表示 */
+    .sortable.asc::after {
+      color: #888;
+      content: "▲";
+    }
+
+    /* 降順（▼）を表示 */
+    .sortable.desc::after {
+      color: #888;
+      content: "▼";
+    }
+
+    .sortable:hover {
+      color: blue;
+    }
+
+    body {
+      font-family: "Noto Sans JP", sans-serif;
+      font-size: 1rem;
+      line-height: 1.6;
+      color: #333;
+      background-color: #fff;
+      padding: 1.25rem;
+      max-width: 100%;
+    }
+
+    .tr_header {
+      background-color: #eeeeee;
+      color: #000000;
+      font-size: 1rem;
+    }
+
+    .delete-btn {
+      font-size: 0.9rem;
+      padding: 0.2em 0.4em;
+      cursor: pointer;
+    }
+
+    /* テーブル全体を relative にする */
+    #scoreTable {
+      position: relative;
+    }
+
+    /* ボタンを浮かせて右端に配置 */
+    .delete-btn-wrapper {
+      position: absolute;
+      right: -7.5rem;
+      transform: translateY(-100%);
+      z-index: 2;
+    }
+
+    .delete-btn {
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    .update-date {
+      min-width: 9ch;
+    }
+  </style>
+</head>
+<body>
+  <strong><span id="page-title" style="font-size: 2rem;"></span></strong>
+  <span id="notes-disp"></span>
+  <table border="1" id="scoreTable">
+    <thead>
+      <tr class="tr_header">
+        <th>#</th>
+        <th>ユーザー名</th>
+        <th id="sort-lamp" class="sortable">ランプ</th>
+        <th id="sort-bp" class="sortable">BP</th>
+        <th id="sort-score" class="sortable">スコア</th>
+        <th>スコアランク</th>
+        <th>実質ランク</th>
+        <th class="update-date">最終更新日</th>
+      </tr>
+    </thead>
+    <tbody><tr><td colspan="8">読み込み中…</td></tr></tbody>
+  </table>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      query,
+      where,
+      getDocs,
+      getDoc,
+      doc,
+      orderBy,
+      deleteDoc
+    } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+
+    import {
+      getAuth,
+      onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDb8r_zN89WKh69HPWstxGKLR-E-spQl8U",
+      authDomain: "dbr-ir.firebaseapp.com",
+      projectId: "dbr-ir",
+      storageBucket: "dbr-ir.firebasestorage.app",
+      messagingSenderId: "464886830974",
+      appId: "1:464886830974:web:f90d3605f62673136f052f",
+      measurementId: "G-THHFG18D5G"
+    };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const auth = getAuth();
+
+  let currentUserUid = null;
+
+  onAuthStateChanged(auth, async (user) => {
+    currentUserUid = user?.uid || null;
+    await loadAndRender();
+  });
+
+  const params = new URLSearchParams(location.search);
+  const title = params.get("title");
+  const notesValueParam = Number(params.get("notesValue") || 0);
+  const notesDisplayParamRaw = params.get("notesDisplay") || "";
+  const notesDisplayParam = Number(notesDisplayParamRaw.replace(/[^\d]/g, ""));
+  const displayLevelParam = params.get("displayLevel") || "";
+
+  let notesDisplay = "不明", scratchDisplay = "不明";
+  if (isNaN(notesDisplayParamRaw) && !notesDisplayParam <= 0) {
+    notesDisplay = notesValueParam;
+  } else if (!isNaN(notesDisplayParamRaw) && !notesDisplayParam <= 0) {
+    notesDisplay = notesDisplayParam;
+    scratchDisplay = notesValueParam - notesDisplayParam;
+  } else if (!notesDisplayParam <= 0) {
+    scratchDisplay = notesValueParam - notesDisplayParam;
+  }
+
+  document.title = `${title} DBR IR`;
+  document.getElementById("page-title").textContent = `${displayLevelParam} ${title} `;
+  document.getElementById("notes-disp").textContent =
+    `Notes: ${notesDisplay} Scratch: ${scratchDisplay}`;
+
+  const tbody = document.querySelector("#scoreTable tbody");
+  let rows = [];
+
+  async function loadAndRender() {
+    try {
+      const q = query(
+        collection(db, "scores"),
+        where("title", "==", title),
+        orderBy("timestamp", "desc")
+      );
+      const snapshot = await getDocs(q);
+
+      if (snapshot.empty) {
+        tbody.innerHTML = "<tr><td colspan='8'>データが見つかりません</td></tr>";
+        return;
+      }
+
+      const userCache = {};
+      rows = await Promise.all(snapshot.docs.map(async docSnap => {
+        const data = docSnap.data();
+        const uid = data.userUid;
+        const docId = docSnap.id;
+        if (!userCache[uid]) {
+          try {
+            const userSnap = await getDoc(doc(db, "users", uid));
+            userCache[uid] = userSnap.exists() ?
+              (userSnap.data().anonymous ? "匿名希望" : (userSnap.data().displayName || "未設定"))
+              : "不明ユーザー";
+          } catch {
+            userCache[uid] = "取得失敗";
+          }
+        }
+        return { ...data, displayName: userCache[uid], docId };
+      }));
+
+      // ★ ソートして表示（renderTable は sortBy 内で呼ばれている）
+      sortBy("score");  // ← ここが重要
+    } catch (e) {
+      console.error(e);
+      tbody.innerHTML = "<tr><td colspan='8'>取得に失敗しました</td></tr>";
+    }
+  }
+
+  const lampSortOrder = { F: 0, E: 1, AE: 2, C: 3, H: 4, EXH: 5, FC: 6 };
+
+  const lampCodeToText = (code) => ({
+    FC: "FULL COMBO", EXH: "EX-HARD CLEAR", H: "HARD CLEAR", C: "CLEAR",
+    E: "EASY CLEAR", AE: "A-EASY CLEAR", F: "FAILED"
+  }[code] || code || "");
+
+  const lampColorMap = {
+    "NO PLAY": "transparent", F: "#666", AE: "#b66", E: "#3c3", C: "#6cf",
+    H: "#fff", EXH: "#ff0", FC: "#fa0"
+  };
+
+  const setLampCellStyle = (cell, value) => {
+    if (value === "NO PLAY") {
+      cell.style.background = "transparent";
+      cell.style.color = "transparent";
+    } else {
+      cell.style.background = lampColorMap[value] || "transparent";
+      cell.style.color = (["H", "EXH", "FC"].includes(value)) ? "black" : "white";
+    }
+  };
+
+    // スコアランク計算
+    function getRankWithDiff(score, maxScore) {
+      if (score < 0) return "F";
+
+      const scoreThresholds = [
+        { rank: "MAX", threshold: maxScore },
+        { rank: "AAA", threshold: (maxScore * 8) / 9 },
+        { rank: "AA",  threshold: (maxScore * 7) / 9 },
+        { rank: "A",   threshold: (maxScore * 6) / 9 },
+        { rank: "B",   threshold: (maxScore * 5) / 9 },
+        { rank: "C",   threshold: (maxScore * 4) / 9 },
+        { rank: "D",   threshold: (maxScore * 3) / 9 },
+        { rank: "E",   threshold: (maxScore * 2) / 9 },
+        { rank: "F",   threshold: 0 }
+      ];
+
+      if (score > maxScore) {
+        const diff = score - maxScore;
+        return `!? (MAX+${diff})`;
+      }
+
+      for (let i = 0; i < scoreThresholds.length; i++) {
+        const { rank, threshold } = scoreThresholds[i];
+        const thresholdCeil = Math.ceil(threshold);
+
+        if (score >= thresholdCeil) {
+          const currentDiff = score - thresholdCeil;
+
+          if (i > 0) {
+            const nextThresholdCeil = Math.ceil(scoreThresholds[i - 1].threshold);
+            const toNextRank = nextThresholdCeil - score;
+
+            if (Math.abs(toNextRank) <= Math.abs(currentDiff)) {
+              const nextRank = scoreThresholds[i - 1].rank;
+              return `${rank} (${nextRank}-${toNextRank})`;
+            }
+          }
+          return `${rank} (${rank}+${currentDiff})`;
+        }
+      }
+      return "F";
+    }
+
+    function getScoreRate(score, maxScore) {
+      if (!maxScore || maxScore <= 0 || isNaN(score)) return "";
+      const rate = (score / maxScore) * 100;
+      const floored = Math.floor(rate * 100) / 100;
+      return `(${floored.toFixed(2)}%)`;
+    }
+
+    // renderTable 修正部分
+    function renderTable(data) {
+      tbody.innerHTML = "";
+      data.forEach((d, index) => {
+        const score = d.score === -1 ? null : d.score;
+
+        const scoreRank = score !== null && notesValueParam > 0
+          ? getRankWithDiff(score, notesValueParam * 2) + getScoreRate(score, notesValueParam * 2)
+          : "";
+        const realScoreRank = score !== null && notesDisplayParam > 0
+          ? getRankWithDiff(score, notesDisplayParam * 2) + getScoreRate(score, notesDisplayParam * 2)
+          : "";
+
+        const isOwnData = currentUserUid && d.userUid === currentUserUid;
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${index + 1}</td>
+          <td>${d.displayName}</td>
+          <td class="lamp-cell">${lampCodeToText(d.lamp)}</td>
+          <td>${d.bp === -1 ? "" : d.bp}</td>
+          <td>${score !== null ? score : ""}</td>
+          <td>${scoreRank}</td>
+          <td>${realScoreRank}</td>
+          <td>${new Date(d.timestamp).toLocaleDateString("ja-JP")}</td>
+        `;
+        tr.style.position = "relative";
+
+        tbody.appendChild(tr);
+
+        // ランプ色付け
+        setLampCellStyle(tr.querySelector(".lamp-cell"), d.lamp);
+
+        // 自分のデータのみ削除ボタンを別で追加
+        if (isOwnData) {
+          const wrapper = document.createElement("div");
+          wrapper.className = "delete-btn-wrapper";
+          wrapper.innerHTML = `<button class="delete-btn" data-doc-id="${d.docId}">この記録を削除</button>`;
+          tbody.appendChild(wrapper); // trの直後に追加
+
+          const btn = wrapper.querySelector(".delete-btn");
+          btn.addEventListener("click", async () => {
+            if (!confirm("このスコアを削除しますか？")) return;
+            if (!confirm("後悔しませんね？")) return;
+            try {
+              await deleteDoc(doc(db, "scores", d.docId));
+              tr.remove();        // 対象行を削除
+              wrapper.remove();   // ボタンも削除
+            } catch (e) {
+              alert("削除に失敗しました: " + e.message);
+            }
+          });
+        }
+      });
+    }
+
+    let currentSort = { key: null, asc: false };
+
+    function sortBy(key) {
+      // 昇順・降順の状態を更新
+      if (currentSort.key === key) {
+        currentSort.asc = !currentSort.asc;
+      } else {
+        currentSort.key = key;
+        // スコアは降順(大きい順)が自然なのでfalseにする
+        currentSort.asc = key === "score" ? false : true;
+      }
+
+      // 既存の矢印表示を全てクリア
+      document.querySelectorAll(".sortable").forEach(th => {
+        th.classList.remove("asc", "desc");
+      });
+
+      // 今回ソート対象の列に矢印クラス追加
+      const sortTh = document.getElementById(`sort-${key}`);
+      if (sortTh) {
+        sortTh.classList.add(currentSort.asc ? "asc" : "desc");
+      }
+
+      const sorted = [...rows].sort((a, b) => {
+        let va = a[key];
+        let vb = b[key];
+        const getVal = v => (v === null || v === -1 || v === undefined || v === "") ? null : v;
+        va = getVal(va);
+        vb = getVal(vb);
+
+        if (key === "lamp") {
+          const lampA = lampSortOrder[va] ?? -1;
+          const lampB = lampSortOrder[vb] ?? -1;
+          if (lampA !== lampB) return currentSort.asc ? lampA - lampB : lampB - lampA;
+          // 同ランプならBPで比較
+          const bpa = getVal(a.bp);
+          const bpb = getVal(b.bp);
+          if (bpa === null && bpb === null) return 0;
+          if (bpa === null) return 1;
+          if (bpb === null) return -1;
+          return currentSort.asc ? bpa - bpb : bpb - bpa;
+        }
+
+        if (va === null && vb === null) return 0;
+        if (va === null) return 1;
+        if (vb === null) return -1;
+
+        if (typeof va === "number" && typeof vb === "number") {
+          return currentSort.asc ? va - vb : vb - va;
+        }
+        return currentSort.asc ? `${va}`.localeCompare(`${vb}`) : `${vb}`.localeCompare(`${va}`);
+      });
+
+      renderTable(sorted);
+    }
+
+    document.getElementById("sort-lamp").addEventListener("click", () => sortBy("lamp"));
+    document.getElementById("sort-bp").addEventListener("click", () => sortBy("bp"));
+    document.getElementById("sort-score").addEventListener("click", () => sortBy("score"));
+  </script>
+</body>
+</html>
