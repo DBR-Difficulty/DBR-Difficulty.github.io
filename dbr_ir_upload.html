@@ -166,7 +166,7 @@
       <!-- 隠し file input -->
       <input type="file" id="jsonFileInput" accept=".json" style="display: none;">
       <!-- 擬似ボタン -->
-      <label for="jsonFileInput" class="button">JSONファイルを選択</label>
+      <label for="jsonFileInput" class="button label-disabled">JSONファイルを選択</label>
       <!-- ファイル名表示（任意） -->
       <span id="fileName" class="subtext"></span>
 
@@ -298,6 +298,7 @@
 
           saveProfileBtn.disabled = false;
           uploadBtn.disabled = false;
+          deleteBtn.disabled = false;
 
           const userDocRef = doc(db, "users", currentUserUid);
           const userDocSnap = await getDoc(userDocRef);
@@ -327,6 +328,7 @@
           anonymousCheck.checked = false;
           saveProfileBtn.disabled = true;
           uploadBtn.disabled = true;
+          deleteBtn.disabled = true;
 
           // 疑似ファイル選択ボタンの有効/無効切り替え
           const fileLabel = document.querySelector('label[for="jsonFileInput"]');
