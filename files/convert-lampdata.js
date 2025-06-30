@@ -128,6 +128,12 @@
     // 'クリアランプマネージャー側表記': 'DBR難易度表側表記',
   };
 
+  // 表入りしたためレベル制限を無視して取得する例外リスト
+  // ["曲名", "譜面種別"]
+  const levelIgnoreExceptions = [
+    ["Rise'n Beauty", "N"],
+  ];
+
   const lampData = {};
 
   const dlElements = document.querySelectorAll('dl[class*="another"], dl[class*="normal"], dl[class*="hyper"], dl[class*="leggendaria"], dl[class*="beginner"]');
@@ -143,8 +149,6 @@
     if (!levelClass) return;
 
     const levelNumber = parseInt(levelClass.replace('l', ''), 10);
-    if (levelNumber < 7 || levelNumber > 12) return;  // Lv7～12以外はスキップ
-
     const diffChar = difficultyMap[diffClass];
 
     const musicNameElem = dl.querySelector('dd.musicName');
@@ -154,12 +158,17 @@
     // 曲名をマップで変換
     musicName = musicNameMap[musicName] || musicName;
 
+    // Lv6以下は原則スキップ、ただし例外は処理対象
+    const isLevelIgnored = levelNumber < 7 && !levelIgnoreExceptions.some(
+      ([title, diff]) => title === musicName && diff === diffChar
+    );
+    if (isLevelIgnored || levelNumber > 12) return;
+
     const dtElem = dl.querySelector('dt');
     if (!dtElem) return;
     const lampClass = dtElem.className.trim();
 
     const lampValue = lampMap[lampClass] || lampClass;
-
     if (lampValue === 'NO PLAY') return;  // NO PLAYは出力しない
 
     const key = `lamp_${musicName}(${diffChar})`;
