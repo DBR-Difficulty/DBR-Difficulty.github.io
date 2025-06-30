@@ -47,8 +47,8 @@ title_map = {
 }
 
 # INFが旧譜面の曲を置き換えるマップ
+# key = (曲名, 譜面種別)
 chart_specific_title_map = {
-    # key = (曲名, 譜面種別)
     ("ADVANCE", "A"): "ADVANCE(譜面変更前)",
     ("ADVANCE", "H"): "ADVANCE(譜面変更前)",
     ("ADVANCE", "N"): "ADVANCE(譜面変更前)",
@@ -73,6 +73,12 @@ chart_specific_title_map = {
     ("ミッドナイト堕天使", "A"): "ミッドナイト堕天使(譜面変更前)",
     ("L'amour et la liberte", "N"): "L'amour et la liberté(譜面変更前)"
 }
+
+# レベル制限を無視して取得する例外リスト
+# key = (曲名, 譜面種別)
+level_ignore_exceptions = [
+    ("Rise'n Beauty", "N"),
+]
 
 def convert_alllog(*args):
     try:
@@ -108,13 +114,16 @@ def convert_alllog(*args):
                         # 一応皿ありにも対応
                         # 多分DBRMやDBシンクロ乱も取れちゃう リザルトで共通なのが公式仕様なのでどうにもならない
                         # FHD化以前のオプション取得時代なら取れる？
-                        # レベル7未満は除外
+                        # レベル7未満は除外 表入りした譜面は例外的に取得
                         level = int(row[0])
-                        if level < 7 or "BATTLE, RAN / RAN" not in row[12]:
-                            continue
-
                         raw_title = row[1]
                         chart_type = row[2][-1]
+                        
+                        # 例外判定を先に行う
+                        ignore_level_limit = (raw_title, chart_type) in level_ignore_exceptions
+
+                        if (level < 7 and not ignore_level_limit) or "BATTLE, RAN / RAN" not in row[12]:
+                            continue
 
                         chart_specific_key = (raw_title, chart_type)
                         if chart_specific_key in chart_specific_title_map:
