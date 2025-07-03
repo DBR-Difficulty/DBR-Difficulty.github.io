@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>プレーデータ</title>
+  <link rel="icon" href="/favicon.ico" />
+  <link href="style/style.css" rel="stylesheet">
+  <script src="style/jquery-2.0.2.min.js"></script>
+  <style>
+    table.playerdata-table {
+      border-collapse: collapse;
+      margin: 1em auto;
+      width: 95%;
+    }
+    table.playerdata-table th, table.playerdata-table td {
+      border: 1px solid #ccc;
+      padding: 0.4em 0.6em;
+      text-align: center;
+    }
+    table.playerdata-table th {
+      background-color: #eee;
+    }
+    .level-cell {
+      font-weight: bold;
+      text-align: left;
+    }
+    .title-cell {
+      text-align: left;
+    }
+    .lamp-cell {
+      font-weight: bold;
+    }
+  </style>
+  <!-- 変更1: noUiSliderライブラリの読み込み -->
+  <link href="https://cdn.jsdelivr.net/npm/nouislider@15.7.0/dist/nouislider.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/nouislider@15.7.0/dist/nouislider.min.js"></script>
+
+  <!-- 変更2: フィルターUI追加（body内、h2の下） -->
+  <div style="width: 95%; margin: 1em auto; display: flex; gap: 2em; align-items: flex-start; flex-wrap: wrap;">
+
+    <div style="flex: 1 1 600px; min-width: 300px; display: flex; gap: 2em;">
+
+  <!-- 左カラム：レベル＆SPスライダー -->
+  <div style="flex: 1;">
+    <label>表示レベル範囲:</label>
+    <div id="level-range"></div>
+    <div style="margin-top: 0.5em; display: flex; align-items: center; gap: 0.5em;">
+      <label>☆: </label>
+      <input type="number" id="level-min" step="0.01" style="width:6ch;"> 〜
+      <input type="number" id="level-max" step="0.01" style="width:6ch;">
+    </div>
+
+    <div style="margin-top: 1em;">
+      <label>表示SPレベル範囲:</label>
+      <div id="splv-range"></div>
+      <div style="margin-top: 0.5em; display: flex; align-items: center; gap: 0.5em;">
+        <label>☆: </label>
+        <input type="number" id="splv-min" step="1" style="width:4ch;"> 〜
+        <input type="number" id="splv-max" step="1" style="width:4ch;">
+      </div>
+    </div>
+  </div>
+
+  <!-- 右カラム：チェックボックス群 -->
+  <div style="flex: 0 0 40rem; display: flex; flex-direction: column; gap: 0.5em;">
+    <label><b>表示オプション</b></label>
+    <label><input type="checkbox" id="show-unrated" checked> 未査定譜面を表示</label>
+    <label><input type="checkbox" id="hide-acdeleted"> 現行AC削除・未収録曲を除く</label>
+    <label><input type="checkbox" id="only-inf"> INFINITAS収録曲のみ表示（未査定譜面は非対応の場合あり）</label>
+    <label><input type="checkbox" id="katate-cp"> おまけ：片手クリアポイント基準を表示</label>
+  </div>
+
+</div>
+    <!-- 統計表示部分 -->
+    <div id="stats" style="
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 1em;
+      width: 100%;
+      font-size: 0.9em;
+      line-height: 1.4;
+    ">
+      <div id="lamp-stats" style="flex: 1 1 300px;"></div>
+      <div id="score-rank-stats" style="flex: 1 1 300px;"></div>
+      <div id="real-rank-stats" style="flex: 1 1 300px;"></div>
+    </div>
+  </div>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+    import { getFirestore, collection, query, where, getDocs, getDoc, doc } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDb8r_zN89WKh69HPWstxGKLR-E-spQl8U",
+      authDomain: "dbr-ir.firebaseapp.com",
+      projectId: "dbr-ir",
+      storageBucket: "dbr-ir.appspot.com",
+      messagingSenderId: "464886830974",
+      appId: "1:464886830974:web:f90d3605f62673136f052f"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const params = new URLSearchParams(location.search);
+    const userUid = params.get("uid");
+
+    const scoreMap = new Map();
+    const titleSet = new Set();
+
+    const playerNameEl = document.getElementById("player-name");
+    const tableContainer = document.getElementById("playdata-table");
+
+    const lampColorMap = {
+      "NO PLAY": "transparent", F: "#666666", AE: "#b366ff", E: "#33cc33", C: "#66ccff",
+      H: "#ffffff", EXH: "#ffff00", FC: "#ffa500"
+    };
+
+    function setLampStyle(cell, lamp) {
+      cell.style.background = lampColorMap[lamp] || "transparent";
+      cell.style.color = (["H", "EXH", "FC", "NO PLAY"].includes(lamp)) ? "black" : "white";
+    }
+
+    function getRankWithDiff(score, maxScore) {
+      if (score < 0 || maxScore <= 0) return "";
+
+      const scoreThresholds = [
+        { rank: "MAX", threshold: maxScore },
+        { rank: "AAA", threshold: (maxScore * 8) / 9 },
+        { rank: "AA",  threshold: (maxScore * 7) / 9 },
+        { rank: "A",   threshold: (maxScore * 6) / 9 },
+        { rank: "B",   threshold: (maxScore * 5) / 9 },
+        { rank: "C",   threshold: (maxScore * 4) / 9 },
+        { rank: "D",   threshold: (maxScore * 3) / 9 },
+        { rank: "E",   threshold: (maxScore * 2) / 9 },
+        { rank: "F",   threshold: 0 }
+      ];
+
+      if (score > maxScore) {
+        const diff = score - maxScore;
+        return `!? (MAX+${diff})`;
+      }
+
+      for (let i = 0; i < scoreThresholds.length; i++) {
+        const { rank, threshold } = scoreThresholds[i];
+        const thresholdCeil = Math.ceil(threshold);
+
+        if (score >= thresholdCeil) {
+          const currentDiff = score - thresholdCeil;
+
+          if (i > 0) {
+            const nextThresholdCeil = Math.ceil(scoreThresholds[i - 1].threshold);
+            const toNextRank = nextThresholdCeil - score;
+
+            if (Math.abs(toNextRank) <= Math.abs(currentDiff)) {
+              const nextRank = scoreThresholds[i - 1].rank;
+              return `${rank} (${nextRank}-${toNextRank})`;
+            }
+          }
+          return `${rank} (${rank}+${currentDiff})`;
+        }
+      }
+      return "F";
+    }
+
+    function getScoreRate(score, maxScore) {
+      if (!maxScore || maxScore <= 0 || isNaN(score)) return "";
+        const rate = (score / maxScore) * 100;
+        const floored = Math.floor(rate * 100) / 100;
+        return ` (${floored.toFixed(2)}%)`;
+    }
+
+    function applyFilters(songList) {
+      const [lvMin, lvMax] = levelSlider.noUiSlider.get().map(v => parseFloat(v.replace("☆", "")));
+      const [splvMin, splvMax] = splvSlider.noUiSlider.get().map(v => parseInt(v));
+      const showUnrated = document.getElementById("show-unrated").checked;
+      const hideAcDeleted = document.getElementById("hide-acdeleted").checked;
+      const onlyInf = document.getElementById("only-inf").checked;
+
+      return songList.filter(song => {    
+        const acdeleted = !!song.acdelete;
+        const inf = !!song.inf;
+
+        if (hideAcDeleted && acdeleted) return false;
+        if (onlyInf && !inf) return false;
+
+        // レベル
+        const level = parseFloat(song.level);
+        const levelOk = isNaN(level) ? showUnrated : (level >= lvMin && level <= lvMax); // 未査定はチェックボックスがONなら通す
+
+        // SPLv
+        const splv = parseInt(song.splv);
+        const splvOk = isNaN(splv) ? false : (splv >= splvMin && splv <= splvMax);
+
+        return levelOk && splvOk;
+      });
+    }
+
+    const levelSlider = document.getElementById("level-range");
+    const splvSlider = document.getElementById("splv-range");
+    const levelFormatter = {
+      to: v => `☆${v.toFixed(2)}`,  // ← 表示上2桁固定に
+      from: v => parseFloat(v.replace("☆", ""))
+    };
+
+    noUiSlider.create(levelSlider, {
+      start: [11.00, 13.00], connect: true, step: 0.01,
+      range: { min: 11.00, max: 13.00 }, tooltips: false,
+      format: {
+        to: v => `☆${v.toFixed(2)}`,
+        from: v => parseFloat(v.replace("\u2606", ""))
+      }
+    });
+    noUiSlider.create(splvSlider, {
+      start: [1, 12], connect: true, step: 1,
+      range: { min: 1, max: 12 }, tooltips: false,
+      format: {
+        to: v => `${v.toFixed(0)}`,
+        from: v => parseFloat(v.replace("\u2606", ""))
+      }
+    });
+
+    async function main() {
+      if (!userUid) {
+        playerNameEl.textContent = "ユーザーIDが指定されていません。";
+        return;
+      }
+
+      playerNameEl.textContent = "読み込み中…";
+      tableContainer.innerHTML = "<p>読み込み中…</p>";
+
+      let displayName = "不明ユーザー";
+      try {
+        const userSnap = await getDoc(doc(db, "users", userUid));
+        if (userSnap.exists()) {
+          const data = userSnap.data();
+          displayName = data.anonymous ? "匿名希望" : (data.displayName || "未設定");
+        }
+      } catch {
+        displayName = "ユーザー情報の取得に失敗";
+      }
+
+      const snap = await getDocs(query(collection(db, "scores"), where("userUid", "==", userUid)));
+      snap.forEach(doc => {
+        const data = doc.data();
+        if (data.title) {
+          scoreMap.set(data.title, data);
+          titleSet.add(data.title);
+        }
+      });
+
+      const header = await $.getJSON("dbralleheader.json");
+      const songList = await $.getJSON(header.data_url);
+
+      const filtered = songList.filter(song => titleSet.has(song.title));
+      filtered.sort((a, b) => {
+        const la = a.level || "ZZZ", lb = b.level || "ZZZ";
+        return la.localeCompare(lb) || a.title.localeCompare(b.title);
+      });
+
+      function renderStats(filteredSongs) {
+        const statsEl = document.getElementById("stats");
+        if (!statsEl) return;
+
+        const total = filteredSongs.length;
+        if (total === 0) {
+          const lampEl = document.getElementById("lamp-stats");
+          const scoreEl = document.getElementById("score-rank-stats");
+          const realEl = document.getElementById("real-rank-stats");
+
+          if (lampEl) lampEl.innerHTML = "";
+          if (scoreEl) scoreEl.innerHTML = "";
+          if (realEl) realEl.innerHTML = "";
+          return;
+        }
+
+        // カウントマップ
+        const lampCount = {};
+        const scoreRankCount = {};
+        const realRankCount = {};
+
+        for (const song of filteredSongs) {
+          const scoreData = scoreMap.get(song.title);
+          if (!scoreData) continue;
+
+          const lamp = scoreData.lamp || "NO DATA";
+          const score = scoreData.score;
+          const bp = scoreData.bp;
+
+          const notesValue = song.notes * 2;
+          const scratch = song.scratch ? notesValue - song.scratch * 2 : notesValue;
+          const maxScore = notesValue * 2;
+          const realMaxScore = scratch * 2;
+
+          // スコアランク
+          const scoreRank = (score !== -1) ? getRankWithDiff(score, maxScore).split(" ")[0] : "NO DATA";
+          const realRank = (score !== -1) ? getRankWithDiff(score, realMaxScore).split(" ")[0] : "NO DATA";
+
+          lampCount[lamp] = (lampCount[lamp] || 0) + 1;
+          scoreRankCount[scoreRank] = (scoreRankCount[scoreRank] || 0) + 1;
+          realRankCount[realRank] = (realRankCount[realRank] || 0) + 1;
+        }
+
+        function renderStatsTable(title, data) {
+          const total = Object.values(data).reduce((sum, c) => sum + c, 0);
+
+          let order = [];
+          if (title.includes("ランプ")) {
+            order = ["FC", "EXH", "H", "C", "E", "AE", "F", "NO PLAY", "NO DATA"];
+          } else if (title.includes("ランク")) {
+            order = ["!?", "MAX", "AAA", "AA", "A", "B", "C", "D", "E", "F", "NO DATA"];
+          }
+
+          const rows = Object.entries(data)
+            .sort((a, b) => {
+              const ia = order.indexOf(a[0]);
+              const ib = order.indexOf(b[0]);
+              return (ia === -1 ? 999 : ia) - (ib === -1 ? 999 : ib);
+            })
+            .map(([key, count]) => {
+              const pct = (count / total * 100).toFixed(2);
+              if (title.includes("ランプ")) {
+                return `<tr>
+                  <td style="text-align:left; border: 1px solid #ccc;" data-lamp="${key}"><b>${key}</b></td>
+                  <td style="text-align:left; border: 1px solid #ccc;">${count} 譜面</td>
+                  <td style="text-align:left; border: 1px solid #ccc;">${pct}%</td>
+                </tr>`;
+              } else {
+                return `<tr>
+                  <td style="text-align:left; border: 1px solid #ccc;"><b>${key}</b></td>
+                  <td style="text-align:left; border: 1px solid #ccc;">${count} 譜面</td>
+                  <td style="text-align:left; border: 1px solid #ccc;">${pct}%</td>
+                </tr>`;
+              }
+            }).join("");
+
+          return `
+            <h4>${title}</h4>
+            <table style="margin-bottom:1em; border-collapse:collapse; width:100%; border: 1px solid #ccc;">
+              <thead>
+                <tr style="background:#eee;">
+                  <th style="text-align:left; border: 1px solid #ccc;">種別</th>
+                  <th style="text-align:left; border: 1px solid #ccc;">件数</th>
+                  <th style="text-align:left; border: 1px solid #ccc;">割合</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${rows}
+              </tbody>
+            </table>`;
+        }
+
+        const lampStatsEl = document.getElementById("lamp-stats");
+        const scoreRankStatsEl = document.getElementById("score-rank-stats");
+        const realRankStatsEl = document.getElementById("real-rank-stats");
+
+        if (lampStatsEl) {
+          lampStatsEl.innerHTML = renderStatsTable("ランプ別内訳", lampCount);
+
+          // 色付け処理を追加
+          lampStatsEl.querySelectorAll("td").forEach(td => {
+            const lamp = td.getAttribute("data-lamp");
+            if (lamp) {
+              setLampStyle(td, lamp);
+            }
+          });
+        }
+        if (scoreRankStatsEl) scoreRankStatsEl.innerHTML = renderStatsTable("スコアランク内訳", scoreRankCount);
+        if (realRankStatsEl) realRankStatsEl.innerHTML = renderStatsTable("実質スコアランク内訳", realRankCount);
+      }
+
+      function renderTable(filtered) {
+        const count = filtered.length;
+        const statsEl = document.getElementById("stats");
+        const katateCpChecked = document.getElementById("katate-cp").checked;
+
+        let clearPointText = "";
+        if (katateCpChecked) {
+          const lampPointMap = { FC: 5, EXH: 4, H: 3, C: 2, E: 1 };
+          let totalPoint = 0;
+
+          for (const song of filtered) {
+            const scoreData = scoreMap.get(song.title);
+            if (!scoreData) continue;
+            const lamp = scoreData.lamp;
+            if (lamp && lampPointMap[lamp]) {
+              totalPoint += lampPointMap[lamp];
+            }
+          }
+          clearPointText = `（クリアポイント：${totalPoint}pt）`;
+        }
+
+        playerNameEl.textContent = `${displayName} さんのプレーデータ（${count} 件表示中）${clearPointText}`;
+
+        // データが0件ならテーブル・統計どちらも消す
+        if (count === 0) {
+          tableContainer.innerHTML = "<p>該当するプレーデータが見つかりませんでした。</p>";
+          // statsElは空にせず、内部の個別統計エリアだけ空にする
+          const lampStatsEl = document.getElementById("lamp-stats");
+          const scoreRankStatsEl = document.getElementById("score-rank-stats");
+          const realRankStatsEl = document.getElementById("real-rank-stats");
+
+          if (lampStatsEl) lampStatsEl.innerHTML = "";
+          if (scoreRankStatsEl) scoreRankStatsEl.innerHTML = "";
+          if (realRankStatsEl) realRankStatsEl.innerHTML = "";
+          return;
+        }
+
+        let html = `<table class="playerdata-table">
+          <thead>
+            <tr>
+              <th>レベル</th>
+              <th>曲名</th>
+              <th>ランプ</th>
+              <th>BP</th>
+              <th>スコア</th>
+              <th>スコアランク</th>
+              <th>実質ランク</th>
+            </tr>
+          </thead>
+          <tbody>`;
+
+        for (const song of filtered) {
+          const scoreData = scoreMap.get(song.title);
+          const level = song.level || "未査定";
+          const title = song.title;
+          const notesValue = song.notes * 2;
+          const scratch = song.scratch ? notesValue - song.scratch * 2 : notesValue;
+          const displayLevel = song.acdelete ? `†☆${level}` : `☆${level}`;
+
+          const lamp = scoreData.lamp || "";
+          const bp = scoreData.bp === -1 ? "" : scoreData.bp;
+          const score = scoreData.score === -1 ? "" : scoreData.score;
+
+          const link = `dbr_ir_ranking.html?title=${encodeURIComponent(title)}&notesValue=${notesValue}&notesDisplay=${scratch}&displayLevel=${encodeURIComponent(displayLevel)}`;
+
+          const maxScore = notesValue * 2;
+          const realMaxScore = scratch * 2;
+          const scoreRank = score !== "" ? getRankWithDiff(score, maxScore) + getScoreRate(score, maxScore) : "";
+          const realRank = score !== "" ? getRankWithDiff(score, realMaxScore) + getScoreRate(score, realMaxScore) : "";
+
+          html += `
+            <tr 
+              data-splv="${song.splv || ''}" 
+              data-acdelete="${song.acdelete ? '1' : '0'}" 
+              data-inf="${song.inf ? '1' : '0'}"
+            >
+              <td class="level-cell">${displayLevel}</td>
+              <td class="title-cell"><a href="${link}" target="_blank">${title}</a></td>
+              <td class="lamp-cell" data-lamp="${lamp}">${lamp}</td>
+              <td>${bp}</td>
+              <td>${score}</td>
+              <td>${scoreRank}</td>
+              <td>${realRank}</td>
+            </tr>`;
+        }
+
+        html += "</tbody></table>";
+        tableContainer.innerHTML = html;
+
+        // 色付け
+        document.querySelectorAll(".lamp-cell").forEach(td => {
+          const lamp = td.getAttribute("data-lamp");
+          setLampStyle(td, lamp);
+        });
+
+        // 統計表示
+        renderStats(filtered);
+      }
+
+      // filtered 定義後の続きに追加：
+      function updateOnSliderChange() {
+        const filteredData = applyFilters(filtered);
+        renderTable(filteredData);
+      }
+
+      // 初回表示
+      updateOnSliderChange();
+
+      const levelMinInput = document.getElementById("level-min");
+      const levelMaxInput = document.getElementById("level-max");
+      const splvMinInput = document.getElementById("splv-min");
+      const splvMaxInput = document.getElementById("splv-max");
+
+      // スライダー → input
+      levelSlider.noUiSlider.on("update", (values) => {
+        levelMinInput.value = parseFloat(values[0].replace("☆", "")).toFixed(2);
+        levelMaxInput.value = parseFloat(values[1].replace("☆", "")).toFixed(2);
+      });
+
+      splvSlider.noUiSlider.on("update", (values) => {
+        splvMinInput.value = parseInt(values[0]);
+        splvMaxInput.value = parseInt(values[1]);
+      });
+
+      // input → スライダー
+      [levelMinInput, levelMaxInput].forEach((input, i) => {
+        input.addEventListener("change", () => {
+          const min = parseFloat(levelMinInput.value);
+          const max = parseFloat(levelMaxInput.value);
+          if (!isNaN(min) && !isNaN(max)) {
+            levelSlider.noUiSlider.set([min, max]);
+          }
+        });
+      });
+
+      [splvMinInput, splvMaxInput].forEach((input, i) => {
+        input.addEventListener("change", () => {
+          const min = parseInt(splvMinInput.value);
+          const max = parseInt(splvMaxInput.value);
+          if (!isNaN(min) && !isNaN(max)) {
+            splvSlider.noUiSlider.set([min, max]);
+          }
+        });
+      });
+
+      // スライダーイベント登録
+      levelSlider.noUiSlider.on("update", updateOnSliderChange);
+      splvSlider.noUiSlider.on("update", updateOnSliderChange);
+      document.getElementById("show-unrated").addEventListener("change", updateOnSliderChange);
+      document.getElementById("hide-acdeleted").addEventListener("change", updateOnSliderChange);
+      document.getElementById("only-inf").addEventListener("change", updateOnSliderChange);
+      document.getElementById("katate-cp").addEventListener("change", updateOnSliderChange);
+    }
+
+    main();
+  </script>
+</head>
+<body>
+  <h2 id="player-name">読み込み中…</h2>
+  <div id="playdata-table"></div>
+</body>
+</html>

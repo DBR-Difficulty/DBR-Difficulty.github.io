@@ -229,8 +229,8 @@
   }[code] || code || "");
 
   const lampColorMap = {
-    "NO PLAY": "transparent", F: "#666", AE: "#b66", E: "#3c3", C: "#6cf",
-    H: "#fff", EXH: "#ff0", FC: "#fa0"
+    "NO PLAY": "transparent", F: "#666666", AE: "#b366ff", E: "#33cc33", C: "#66ccff",
+    H: "#ffffff", EXH: "#ffff00", FC: "#ffa500"
   };
 
   const setLampCellStyle = (cell, value) => {
@@ -311,7 +311,7 @@
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td>${index + 1}</td>
-          <td>${d.displayName}</td>
+          <td><a href="dbr_ir_playerdata.html?uid=${d.userUid}" target="_blank">${d.displayName}</a></td>
           <td class="lamp-cell">${lampCodeToText(d.lamp)}</td>
           <td>${d.bp === -1 ? "" : d.bp}</td>
           <td>${score !== null ? score : ""}</td>
@@ -357,8 +357,8 @@
         currentSort.asc = !currentSort.asc;
       } else {
         currentSort.key = key;
-        // スコアは降順(大きい順)が自然なのでfalseにする
-        currentSort.asc = key === "score" ? false : true;
+        // スコアとランプは降順が自然
+        currentSort.asc = (key === "score" || key === "lamp") ? false : true;
       }
 
       // 既存の矢印表示を全てクリア
