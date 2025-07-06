@@ -160,9 +160,11 @@
 
     </center>
     <div class="top-section-box">
-      <label>表示するユーザー名: <input type="text" id="displayName" /></label><br />
+      <label>表示するユーザー名: <input type="text" id="displayName" maxlength="30" /></label><br />
       <label><input type="checkbox" id="anonymousCheck" /> 匿名希望</label><br />
-      <button id="saveProfileBtn" disabled>プロフィール保存</button><br /><br />
+      <button id="saveProfileBtn" disabled>プロフィール保存</button>
+      <a id="playerDataLink" class="button label-disabled" style="margin-left: 1.125rem;">自分のプレイデータを見る</a><br /><br />
+
       <!-- 隠し file input -->
       <input type="file" id="jsonFileInput" accept=".json" style="display: none;">
       <!-- 擬似ボタン -->
@@ -312,6 +314,10 @@
           // 疑似ファイル選択ボタンの有効/無効切り替え
           const fileLabel = document.querySelector('label[for="jsonFileInput"]');
           fileLabel.classList.remove("label-disabled");
+
+          // リンクを設定して表示
+          playerDataLink.href = `dbr_ir_playerdata.html?uid=${currentUserUid}`;
+          playerDataLink.classList.remove("label-disabled");
         } else {
           currentUserUid = null;
           loginBtn.style.display = "inline";
@@ -327,6 +333,10 @@
           // 疑似ファイル選択ボタンの有効/無効切り替え
           const fileLabel = document.querySelector('label[for="jsonFileInput"]');
           fileLabel.classList.add("label-disabled");
+
+          // リンクを非表示
+          playerDataLink.removeAttribute("href");
+          playerDataLink.classList.add("label-disabled");
         }
       });
 
@@ -337,10 +347,17 @@
         }
         const displayName = displayNameInput.value.trim();
         const anonymous = anonymousCheck.checked;
+
         if (displayName.length === 0 && !anonymous) {
           alert("匿名希望か、表示名を入力してください");
           return;
         }
+
+        if (displayName.length > 30) {
+          alert("表示名は30文字以内で入力してください");
+          return;
+        }
+
         try {
           await setDoc(doc(db, "users", currentUserUid), {
             displayName,

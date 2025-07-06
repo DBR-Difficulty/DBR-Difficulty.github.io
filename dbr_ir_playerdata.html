@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>プレーデータ</title>
+  <title>プレーデータ - DBR IR</title>
   <link rel="icon" href="/favicon.ico" />
   <link href="style/style.css" rel="stylesheet">
   <script src="style/jquery-2.0.2.min.js"></script>
@@ -30,60 +30,93 @@
     .lamp-cell {
       font-weight: bold;
     }
+
+    button, .button {
+      background-color: #f5f5f5;
+      color: #000;
+      border: 1px solid #888;
+      border-radius: 0.375rem;
+      padding: 0.5rem 1rem;
+      font-weight: bold;
+      text-decoration: none;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    button {
+      margin-top: 1rem;
+    }
+
+    .button {
+      margin-bottom: 1rem;
+      display: inline-block;
+    }
+
+    button:disabled, .button.label-disabled {
+      background-color: #dcdcdc;
+      color: #888;
+      border-color: #ccc;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
   </style>
   <!-- 変更1: noUiSliderライブラリの読み込み -->
   <link href="https://cdn.jsdelivr.net/npm/nouislider@15.7.0/dist/nouislider.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/nouislider@15.7.0/dist/nouislider.min.js"></script>
+  <!-- 🔽 追加：縮小用ラッパー -->
+  <div style="transform: scale(0.97);">
+    <!-- 変更2: フィルターUI追加（body内、h2の下） -->
+    <div style="width: 95%; margin: 1em auto; display: flex; gap: 2em; align-items: flex-start; flex-wrap: wrap;">
+      <div style="flex: 1 1 600px; min-width: 300px; display: flex; gap: 2em;">
+        <!-- 左カラム：レベル＆SPスライダー -->
+        <div style="flex: 1;">
+          <label>表示レベル範囲:</label>
+          <div id="level-range"></div>
+            <div style="margin-top: 0.5em; display: flex; align-items: center; gap: 0.5em;">
+              <label>☆: </label>
+              <input type="number" id="level-min" step="0.01" style="width:6ch;"> 〜
+              <input type="number" id="level-max" step="0.01" style="width:6ch;">
+            </div>
 
-  <!-- 変更2: フィルターUI追加（body内、h2の下） -->
-  <div style="width: 95%; margin: 1em auto; display: flex; gap: 2em; align-items: flex-start; flex-wrap: wrap;">
+            <div style="margin-top: 1em;">
+              <label>表示SPレベル範囲:</label>
+              <div id="splv-range"></div>
+              <div style="margin-top: 0.5em; display: flex; align-items: center; gap: 0.5em;">
+                <label>☆: </label>
+                <input type="number" id="splv-min" step="1" style="width:4ch;"> 〜
+                <input type="number" id="splv-max" step="1" style="width:4ch;">
+              </div>
+            </div>
 
-    <div style="flex: 1 1 600px; min-width: 300px; display: flex; gap: 2em;">
+            <div style="width: 100%; text-align: left; margin-bottom: 0.5em;">
+              <button id="reset-filters" style="padding: 0.3em 1em;">ソートを初期表示状態に戻す</button>
+            </div>
+          </div>
 
-  <!-- 左カラム：レベル＆SPスライダー -->
-  <div style="flex: 1;">
-    <label>表示レベル範囲:</label>
-    <div id="level-range"></div>
-    <div style="margin-top: 0.5em; display: flex; align-items: center; gap: 0.5em;">
-      <label>☆: </label>
-      <input type="number" id="level-min" step="0.01" style="width:6ch;"> 〜
-      <input type="number" id="level-max" step="0.01" style="width:6ch;">
-    </div>
-
-    <div style="margin-top: 1em;">
-      <label>表示SPレベル範囲:</label>
-      <div id="splv-range"></div>
-      <div style="margin-top: 0.5em; display: flex; align-items: center; gap: 0.5em;">
-        <label>☆: </label>
-        <input type="number" id="splv-min" step="1" style="width:4ch;"> 〜
-        <input type="number" id="splv-max" step="1" style="width:4ch;">
-      </div>
-    </div>
-  </div>
-
-  <!-- 右カラム：チェックボックス群 -->
-  <div style="flex: 0 0 40rem; display: flex; flex-direction: column; gap: 0.5em;">
-    <label><b>表示オプション</b></label>
-    <label><input type="checkbox" id="show-unrated" checked> 未査定譜面を表示</label>
-    <label><input type="checkbox" id="hide-acdeleted"> 現行AC削除・未収録曲を除く</label>
-    <label><input type="checkbox" id="only-inf"> INFINITAS収録曲のみ表示（未査定譜面は非対応の場合あり）</label>
-    <label><input type="checkbox" id="katate-cp"> おまけ：片手クリアポイント基準を表示</label>
-  </div>
-
-</div>
-    <!-- 統計表示部分 -->
-    <div id="stats" style="
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 1em;
-      width: 100%;
-      font-size: 0.9em;
-      line-height: 1.4;
-    ">
-      <div id="lamp-stats" style="flex: 1 1 300px;"></div>
-      <div id="score-rank-stats" style="flex: 1 1 300px;"></div>
-      <div id="real-rank-stats" style="flex: 1 1 300px;"></div>
+          <!-- 右カラム：チェックボックス群 -->
+          <div style="flex: 0 0 40rem; display: flex; flex-direction: column; gap: 0.5em;">
+            <label><b>表示オプション</b></label>
+            <label><input type="checkbox" id="show-unrated" checked> 未査定譜面を表示</label>
+            <label><input type="checkbox" id="hide-acdeleted"> 現行AC削除・未収録曲を除く</label>
+            <label><input type="checkbox" id="only-inf"> INFINITAS収録曲のみ表示（未査定譜面は非対応の場合あり）</label>
+            <label><input type="checkbox" id="katate-cp"> おまけ：片手クリアポイント基準の値を表示</label>
+          </div>
+        </div>
+        <!-- 統計表示部分 -->
+        <div id="stats" style="
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-between;
+          gap: 1em;
+          width: 100%;
+          font-size: 0.9em;
+          line-height: 1.4;
+        ">
+          <div id="lamp-stats" style="flex: 1 1 300px;"></div>
+          <div id="score-rank-stats" style="flex: 1 1 300px;"></div>
+          <div id="real-rank-stats" style="flex: 1 1 300px;"></div>
+        </div>
     </div>
   </div>
   <script type="module">
@@ -390,6 +423,7 @@
           clearPointText = `（クリアポイント：${totalPoint}pt）`;
         }
 
+        document.title = `${displayName} さんのプレーデータ - DBR IR`;
         playerNameEl.textContent = `${displayName} さんのプレーデータ（${count} 件表示中）${clearPointText}`;
 
         // データが0件ならテーブル・統計どちらも消す
@@ -521,6 +555,27 @@
       document.getElementById("hide-acdeleted").addEventListener("change", updateOnSliderChange);
       document.getElementById("only-inf").addEventListener("change", updateOnSliderChange);
       document.getElementById("katate-cp").addEventListener("change", updateOnSliderChange);
+
+      document.getElementById("reset-filters").onclick = () => {
+        // スライダー初期値に戻す
+        levelSlider.noUiSlider.set([11.00, 13.00]);
+        splvSlider.noUiSlider.set([1, 12]);
+
+        // 入力欄も同期
+        levelMinInput.value = "11.00";
+        levelMaxInput.value = "13.00";
+        splvMinInput.value = "1";
+        splvMaxInput.value = "12";
+
+        // チェックボックス初期値に戻す
+        document.getElementById("show-unrated").checked = true;
+        document.getElementById("hide-acdeleted").checked = false;
+        document.getElementById("only-inf").checked = false;
+        document.getElementById("katate-cp").checked = false;
+
+        // 再描画
+        updateOnSliderChange();
+      };
     }
 
     main();
