@@ -6,6 +6,7 @@ from js import document, Uint8Array, Blob, URL, FileReader
 # daken_counter : DBR難易度表
 # daken_counter側誤字じゃなければ消していく
 title_map = {
+    # song_info側 or 共通
     "ギョギョっと人魚 爆婚ブライダル": "ギョギョっと人魚♨爆婚ブライダル",
     "キャトられ恋はモ～モク": "キャトられ♥恋はモ～モク",
     "100％ minimoo-G": "100% minimoo-G",
@@ -44,6 +45,16 @@ title_map = {
     "Love km": "Love♡km",
     "Note Highway ft.KANASA from bless4": "Note Highway ft. KANASA from bless4",
     "Programmed Sun(xac Antarctic Ocean mix)": "Programmed Sun (xac Antarctic Ocean mix)",
+
+    # informations2.2側
+    "Dans la nuit de leternite": "Dans la nuit de l'eternite",
+    "Let's bounce !!": "Let's Bounce !!",
+    "POLKAMANIA": "POLꞰAMAИIA",
+    "Parvati": "Pārvatī",
+    "RINNE": "RINИE",
+    "fffff": "ƒƒƒƒƒ",
+    "uan": "uən",
+    "♥LOVE2 シュガ→♥": "♥LOVE² シュガ→♥",
 }
 
 # INFが旧譜面の曲を置き換えるマップ
@@ -193,14 +204,18 @@ def convert_alllog(*args):
                     if d["bp"] is not None: output["bp"][f"bp_{key}"] = str(d["bp"])
 
                 json_str = json.dumps(output, ensure_ascii=False, indent=2)
-                document.getElementById("output").textContent = json_str
 
                 blob = Blob.new([json_str], { "type": "application/json" })
                 url = URL.createObjectURL(blob)
-                btn = document.getElementById("downloadBtn")
-                btn.href = url
-                btn.download = "dbr_import.json"
-                btn.disabled = False
+
+                # 自動ダウンロードをトリガー
+                a = document.createElement("a")
+                a.href = url
+                a.download = "dbr_import.json"
+                a.style.display = "none"
+                document.body.appendChild(a)
+                a.click()
+                document.body.removeChild(a)
 
             except Exception as e:
                 print(f"読み込みエラー: {e}")

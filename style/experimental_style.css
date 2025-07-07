@@ -241,6 +241,15 @@ body.diff {
 
 /* ゲージ増加量列 */
 .col-gauge {
+  min-width: 10ch;
+  max-width: 10ch;
+  width: 1%;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* 平均密度列 */
+.col-density {
   min-width: 11ch;
   max-width: 11ch;
   width: 1%;
