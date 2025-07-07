@@ -109,7 +109,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
             Array.from(headerRow.cells).forEach((cell, idx) => {
                 const txt = cell.textContent.trim();
-                if (txt === "動画")    videoCellIndex   = idx;
+                if (txt === "IR")    irCellIndex   = idx;
+                else if (txt === "動画")    videoCellIndex   = idx;
                 else if (txt === "TexTage") textageCellIndex = idx;
                 else if (txt === "ランプ")   lampCellIndex    = idx;
                 else if (txt === "タイトル") titleCellIndex    = idx;
@@ -157,8 +158,8 @@ document.addEventListener("DOMContentLoaded", function () {
             };
 
             const centerCols = new Set([
-                "col-recommend", "col-video", "col-textage",
-                "col-gauge", "col-inf"
+                "col-recommend", "col-ir", "col-video", "col-textage",
+                "col-gauge", "col-density", "col-inf"
             ]);
 
             // --- テーブル → worksheet へ書き出し ---
@@ -174,8 +175,8 @@ document.addEventListener("DOMContentLoaded", function () {
             
                     const cell = excelRow.getCell(colIndex + 1);
 
-                    /* ---------- 動画 / TexTage 列：リンク保持 ---------- */
-                    if (colIndex === videoCellIndex || colIndex === textageCellIndex) {
+                    /* ---------- IR / 動画 / TexTage 列：リンク保持 ---------- */
+                    if (colIndex === irCellIndex || colIndex === videoCellIndex || colIndex === textageCellIndex) {
                         const a = td.querySelector("a");
                         if (a && a.href) {
                             cell.value = { text: a.textContent.trim() || "リンク", hyperlink: a.href };
@@ -235,8 +236,8 @@ document.addEventListener("DOMContentLoaded", function () {
                             cell.font = { ...cell.font, color: blue };
                         }
 
-                        // 動画 / TexTage 列：青＋下線
-                        if (colIndex === videoCellIndex || colIndex === textageCellIndex) {
+                        // IR / 動画 / TexTage 列：青＋下線
+                        if (colIndex === irCellIndex || colIndex === videoCellIndex || colIndex === textageCellIndex) {
                             cell.font = { ...cell.font, color: blue, underline: true };
                         }
 

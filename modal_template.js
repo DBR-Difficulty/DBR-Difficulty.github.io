@@ -34,6 +34,7 @@ function setupModal(columnsToShow) {
         video: "動画",
         textage: "TexTage",
         gauge: "ゲージ増加量（ノマゲ以下、GREAT以上）",
+        density: "平均密度（ノーツ数/楽曲秒数）",
         comment: "コメント",
         remarks: "備考",
         inf: "INFINITAS収録有無",
@@ -481,7 +482,7 @@ function setupModal(columnsToShow) {
                             pattern="[0-9]+"
                             maxlength="4"
                             oninput="this.value = this.value.replace(/[^\\d]/g, ''); if (this.value.startsWith('0')) this.value = this.value.slice(1);"
-                            value="${halfNotes || ''}" style="width: 4ch; margin-top: 0.5rem;">
+                            value="${halfNotes != null ? halfNotes : ''}" style="width: 4ch; margin-top: 0.5rem;">
                     </label>
                     <br>
                     <label>SP皿枚数（任意）: 
@@ -489,7 +490,7 @@ function setupModal(columnsToShow) {
                             pattern="[0-9]+"
                             maxlength="4"
                             oninput="this.value = this.value.replace(/[^\\d]/g, ''); if (this.value.startsWith('0')) this.value = this.value.slice(1);"
-                            value="${halfScratch || ''}" style="width: 4ch; margin-top: 0.5rem;">
+                            value="${halfScratch != null ? halfScratch : ''}" style="width: 4ch; margin-top: 0.5rem;">
                     </label>
                     <br>
                     <label>BPM（任意）: 
@@ -607,11 +608,11 @@ function setupModal(columnsToShow) {
 
                 // チェックボックスが外れている場合、初期値送信
                 if (!$("#detailedScoreInfo").is(":checked")) {
-                    formData.notes_sp = halfNotes || '';
-                    formData.sara_sp = halfScratch || '';
-                    formData.bpm = modalData.bpm || '';
-                    formData.textage_id = textageID || '';
-                    formData.video_url = videoURL || '';
+                    formData.notes_sp = halfNotes != null ? halfNotes : '';
+                    formData.sara_sp = halfScratch != null ? halfScratch : '';
+                    formData.bpm = modalData.bpm != null ? modalData.bpm : '';
+                    formData.textage_id = textageID != null ? textageID : '';
+                    formData.video_url = videoURL != null ? videoURL : '';
                 }
 
                 // 変更提案やおすすめ提案のバリデーション
