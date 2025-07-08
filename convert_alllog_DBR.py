@@ -47,7 +47,7 @@ title_map = {
     "Programmed Sun(xac Antarctic Ocean mix)": "Programmed Sun (xac Antarctic Ocean mix)",
 
     # informations2.2側
-    "Dans la nuit de leternite": "Dans la nuit de l'eternite",
+    "Dans la nuit de leternite": "Dans la nuit de l'éternité",
     "Let's bounce !!": "Let's Bounce !!",
     "POLKAMANIA": "POLꞰAMAИIA",
     "Parvati": "Pārvatī",
