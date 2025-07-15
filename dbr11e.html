@@ -68,7 +68,7 @@ $(document).ready(function(){
 
 
 // ソートのための引数追加
-function makeDBRTable(info, mark, order) {
+function makeDBRTable(info, mark, order, songTimes = {}) {
 	// orderが未指定の場合はnull
 	if(typeof order === 'undefined'){
 		order = null;

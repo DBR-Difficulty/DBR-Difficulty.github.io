@@ -2,6 +2,6 @@
   "symbol": "☆",
   "data_url": "json/misatei_all_json.json",
   "level_order": [],
-  "song_times": "json/song_times.json",
-  "last_updated": "20250708"
+  "song_times": "json/textage_playtimes.json",
+  "last_updated": "20250714"
 }

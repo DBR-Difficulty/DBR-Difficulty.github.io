@@ -167,13 +167,13 @@
                     }
 
                     let density = "–";
+                    const seconds = songTimes[chartKey] || null;
 
-                    if (songTimes[chartKey]) {
-                        const seconds = songTimes[chartKey];
+                    if (seconds) {
                         density = (pureNotes / seconds).toFixed(2) + "notes/s";
                     }
 
-                    let row = `<tr class='tr_normal'>
+                    let row = `<tr class='tr_normal'${seconds ? ` data-playtime="${seconds}"` : ''}>
                     <td class='col-level'>${displayLevel}</td>
                     <td class='col-recommend'>${data.recommend}</td>
                     <td class='col-ver'>${data.ver}</td>

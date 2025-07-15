@@ -55,6 +55,12 @@ title_map = {
     "fffff": "ƒƒƒƒƒ",
     "uan": "uən",
     "♥LOVE2 シュガ→♥": "♥LOVE² シュガ→♥",
+
+    # 実地検証分
+    "ジオメトリックティーパーティー": "ジオメトリック∮ティーパーティー",
+    "Dans la nuit de l'eternite":  "Dans la nuit de l'éternité",
+    "ACT0": "ACTØ",
+    "VOID": "VØID",
 }
 
 # INFが旧譜面の曲を置き換えるマップ
@@ -89,6 +95,22 @@ chart_specific_title_map = {
 # key = (曲名, 譜面種別)
 level_ignore_exceptions = [
     ("Rise'n Beauty", "N"),
+    ("World Wide Love", "A"),
+    ("Love Again...", "A"),
+    ("リメンバーリメンバー", "H"),
+    ("華蝶風雪", "N"),
+    ("零 - ZERO -", "N"),
+    ("旋律のドグマ～Misérables～", "N"),
+    ("Realize Maze", "N"),
+    ("New Lights", "N"),
+    ("B4U(BEMANI FOR YOU MIX)", "N"),
+    ("Flashes", "N"),
+    ("凛として咲く花の如く", "N"),
+    ("Verflucht", "N"),
+    ("EXUSIA", "N"),
+    ("ALBIDA", "N"),
+    ("Sounds Of Summer", "N"),
+    ("Beat Radiance", "N"),
 ]
 
 def convert_alllog(*args):
@@ -133,7 +155,11 @@ def convert_alllog(*args):
                         # 例外判定を先に行う
                         ignore_level_limit = (raw_title, chart_type) in level_ignore_exceptions
 
-                        if (level < 7 and not ignore_level_limit) or "BATTLE, RAN / RAN" not in row[12]:
+                        # rowの長さによってオプション列のインデックスを決定
+                        option_col_idx = 13 if len(row) >= 15 else 12
+
+                        # 条件式の修正
+                        if (level < 7 and not ignore_level_limit) or "BATTLE, RAN / RAN" not in row[option_col_idx]:
                             continue
 
                         chart_specific_key = (raw_title, chart_type)
@@ -147,7 +173,9 @@ def convert_alllog(*args):
                         lamp_raw = row[7]
                         score = int(row[9]) if row[9] not in (None, "") else None
                         bp = int(row[11]) if row[11] not in (None, "") else None
-                        is_ascr = "A-SCR" in row[12]
+
+                        # is_ascr も同様に修正
+                        is_ascr = "A-SCR" in row[option_col_idx]
 
                         if key not in best_data:
                             best_data[key] = {"lamp": None, "lamp_rank": len(lamp_order), "score": None, "bp": None}

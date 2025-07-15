@@ -34,7 +34,7 @@ function setupModal(columnsToShow) {
         video: "動画",
         textage: "TexTage",
         gauge: "ゲージ増加量（ノマゲ以下、GREAT以上）",
-        density: "平均密度（ノーツ数/楽曲秒数）",
+        density: "平均密度（ノーツ数/演奏時間）",
         comment: "コメント",
         remarks: "備考",
         inf: "INFINITAS収録有無",
@@ -100,9 +100,11 @@ function setupModal(columnsToShow) {
     // 表の行のレベル列にクリックイベントを登録
     $(document).off("click", ".col-level, .col-recommend, .col-ver, .col-title")
            .on("click", ".col-level, .col-recommend, .col-ver, .col-title", function () {
-        const $row = $(this).closest("tr");
-
         const modalData = {};
+        const $row = $(this).closest("tr");
+        const playtime = $row.data("playtime");
+        modalData.playtime = playtime;
+
         columnsToShow.forEach(key => {
             const $cell = $row.find(`.col-${key}`);
 
@@ -339,6 +341,23 @@ function setupModal(columnsToShow) {
 
                 html += `<div style="margin-bottom: 0.2rem;"><b>${label}:</b> ${sanitizedText}</div>`;
 
+            } else if (key === "density") {
+                html += `<div style="margin-bottom: 0.2rem;"><b>${label}:</b> ${modalData[key]}</div>`;
+                if (modalData.playtime) {
+                    const totalSec = modalData.playtime;
+                    const secStr = totalSec.toFixed(2);
+
+                    let min = Math.floor(totalSec / 60);
+                    let sec = Math.round(totalSec % 60);
+
+                    if (sec === 60) {
+                        min += 1;
+                        sec = 0;
+                    }
+
+                    const remStr = sec.toString().padStart(2, '0');
+                    html += `<div style="margin-bottom: 0.2rem;"><b>演奏時間:</b> ${secStr} sec.（${min}:${remStr}）</div>`;
+                }
             } else if (modalData[key] && modalData[key].toString().trim()) {
                 html += `<div style="margin-bottom: 0.2rem;"><b>${label}:</b> ${modalData[key]}</div>`;
             }

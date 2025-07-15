@@ -59,6 +59,7 @@
                 // まずヘッダーファイル（dbralleheader_experimental.json）を読み込む
                 $.getJSON($("meta[name=alldbrtable]").attr("content"), function(header) {
                     const dataUrl = header.data_url;
+                    const timesUrl = header.song_times;  // 追加: 演奏時間JSONのURL
 
                     // JSONファイルの更新日を取得してページに反映
                     fetch(dataUrl, { method: "HEAD" })
@@ -80,8 +81,14 @@
 
                     // 実データの読み込み
                     // ローカルJSONに固定
-                    $.getJSON(dataUrl, function(info) {
-                        makeDBRTable(info, header.symbol, header.level_order || null);
+
+                    // song_times も同時に取得してから makeDBRTable を呼ぶ
+                    $.when(
+                        $.getJSON(dataUrl),
+                        timesUrl ? $.getJSON(timesUrl) : $.Deferred().resolve({})
+                    ).done(function(info, songTimesResult) {
+                        const songTimes = songTimesResult[0];  // $.getJSON の戻り値は配列で包まれる
+                        makeDBRTable(info[0], header.symbol, header.level_order || null, songTimes);
                         $("#loading").remove(); // ローディング終了
                         document.getElementById("export-excel-btn").disabled = false; // Excel出力可能
 
@@ -89,7 +96,7 @@
                             "level", "recommend", "ver", "title", "bpm",
                             "lamp", "bp", "score", "score-rank", "real-rank",  // 拡張機能用
                             "notes", "splv", "video", "textage",
-                            "gauge", "comment"
+                            "gauge", "density", "comment"
                             ]); // 表描画後にモーダルを設定
                     }).fail(function() {
                         $("#loading").html(
@@ -116,7 +123,7 @@
                 return roundedValue.toFixed(2);
             }
 
-            function makeDBRTable(info, mark, order) {
+            function makeDBRTable(info, mark, order, songTimes = {}) {
                 const obj = $("#table_int");
                 obj.empty(); // 一応中身クリア
 
@@ -124,7 +131,7 @@
                 obj.append(
                     $("<tr height='20' style='color:white;background-color:#666666'></tr>").append(
                     "<td>レベル</td><td>薦</td><td>ver</td><td>タイトル</td><td>BPM</td>" +
-                    "<td>ノーツ数</td><td>SPLv</td><td>動画</td><td>TexTage</td><td>ゲージ増加量</td><td>コメント</td>"
+                    "<td>ノーツ数</td><td>SPLv</td><td>動画</td><td>TexTage</td><td>ゲージ増加量</td><td>平均密度</td><td>コメント</td>"
                     )
                 );
 
@@ -144,9 +151,30 @@
 
                     let notesValue = data.notes * 2;
                     let notesDisplay = data.scratch ? (notesValue - (data.scratch * 2)) : `(${notesValue})`;
-                    let gaugeIncrease = calculateGaugeIncrease(notesValue);
+                    const gaugeIncrease = calculateGaugeIncrease(notesValue);
 
-                    let row = `<tr class='tr_normal'>
+                    // 譜面キーを作る（例: "VANESSA(H)"）
+                    const chartKey = `${data.title}`;
+                    let pureNotes = 0;
+
+                    if (typeof notesDisplay === "number") {
+                        pureNotes = notesDisplay;
+                    } else if (typeof notesDisplay === "string" && notesDisplay.startsWith("(")) {
+                        // ()で囲まれている → notesValue を使用
+                        pureNotes = notesValue;
+                    } else {
+                        // 念のため fallback（皿なし、notesDisplayをそのまま数値化）
+                        pureNotes = parseInt(notesDisplay, 10) || notesValue;
+                    }
+
+                    let density = "–";
+                    const seconds = songTimes[chartKey] || null;
+
+                    if (seconds) {
+                        density = (pureNotes / seconds).toFixed(2) + "notes/s";
+                    }
+
+                    let row = `<tr class='tr_normal'${seconds ? ` data-playtime="${seconds}"` : ''}>
                     <td class='col-level'>${displayLevel}</td>
                     <td class='col-recommend'>${data.recommend}</td>
                     <td class='col-ver'>${data.ver}</td>
@@ -204,6 +232,7 @@
 
                     // 残りの列（コメントなど）
                     row += `<td class='col-gauge'>${gaugeIncrease}%/note</td>
+                    <td class='col-density'>${density}</td>
                     <td class='col-comment'>${data.comment || ''}</td>
                     </tr>`;
 
@@ -217,7 +246,7 @@
                 Object.values(sections)
                     .sort((a, b) => a.isDeleted - b.isDeleted || a.displayLevel.localeCompare(b.displayLevel))
                     .forEach(section => {
-                        htmlContent += `<tr class='tr_separate'><td colspan='11' align='center'><b>${section.displayLevel} (${section.count}譜面)</b></td></tr>`;
+                        htmlContent += `<tr class='tr_separate'><td colspan='12' align='center'><b>${section.displayLevel} (${section.count}譜面)</b></td></tr>`;
                         htmlContent += section.rows.join("");
                     });
 
