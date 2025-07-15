@@ -106,6 +106,7 @@ document.addEventListener("DOMContentLoaded", function () {
             let notesCellIndex   = -1;
             let scratchCellIndex = -1;
             let splvCellIndex    = -1;
+            let irCellIndex = -1;
 
             Array.from(headerRow.cells).forEach((cell, idx) => {
                 const txt = cell.textContent.trim();
@@ -176,7 +177,11 @@ document.addEventListener("DOMContentLoaded", function () {
                     const cell = excelRow.getCell(colIndex + 1);
 
                     /* ---------- IR / 動画 / TexTage 列：リンク保持 ---------- */
-                    if (colIndex === irCellIndex || colIndex === videoCellIndex || colIndex === textageCellIndex) {
+                    if (
+                        (irCellIndex !== -1 && colIndex === irCellIndex) ||
+                        (videoCellIndex !== -1 && colIndex === videoCellIndex) ||
+                        (textageCellIndex !== -1 && colIndex === textageCellIndex)
+                    ) {
                         const a = td.querySelector("a");
                         if (a && a.href) {
                             cell.value = { text: a.textContent.trim() || "リンク", hyperlink: a.href };
@@ -237,7 +242,11 @@ document.addEventListener("DOMContentLoaded", function () {
                         }
 
                         // IR / 動画 / TexTage 列：青＋下線
-                        if (colIndex === irCellIndex || colIndex === videoCellIndex || colIndex === textageCellIndex) {
+                        if (
+                            (irCellIndex !== -1 && colIndex === irCellIndex) ||
+                            (videoCellIndex !== -1 && colIndex === videoCellIndex) ||
+                            (textageCellIndex !== -1 && colIndex === textageCellIndex)
+                        ) {
                             cell.font = { ...cell.font, color: blue, underline: true };
                         }
 

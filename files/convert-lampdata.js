@@ -134,6 +134,23 @@
   // ["曲名", "譜面種別"]
   const levelIgnoreExceptions = [
     ["Rise'n Beauty", "N"],
+    ["World Wide Love", "A"],
+    ["Love Again...", "A"],
+    ["VR - Virtual Reality (prod.by Snail's House)", "H"],
+    ["リメンバーリメンバー", "H"],
+    ["華蝶風雪", "N"],
+    ["零 - ZERO -", "N"],
+    ["旋律のドグマ～Misérables～", "N"],
+    ["Realize Maze", "N"],
+    ["New Lights", "N"],
+    ["B4U(BEMANI FOR YOU MIX)", "N"],
+    ["Flashes", "N"],
+    ["凛として咲く花の如く", "N"],
+    ["Verflucht", "N"],
+    ["EXUSIA", "N"],
+    ["ALBIDA", "N"],
+    ["Sounds Of Summer", "N"],
+    ["Beat Radiance", "N"],
   ];
 
   const lampData = {};
