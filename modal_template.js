@@ -153,8 +153,12 @@ function setupModal(columnsToShow) {
                 let recommendText = '';
                 if (modalData[key] === "☆") {
                     recommendText = "☆（強くおすすめできる）";
+                } else if (modalData[key] === "◎") {
+                    recommendText = "◎（おすすめできる）";
                 } else if (modalData[key] === "○") {
                     recommendText = "○（やって損はしない）";
+                } else if (modalData[key] === "△") {
+                    recommendText = "△（やるのもよい）";
                 } else {
                     recommendText = "無記入（そうでもない）";
                 }
@@ -447,7 +451,9 @@ function setupModal(columnsToShow) {
                     <select name="recommend_new" style="margin-top: 0.2rem; margin-bottom: 0.2rem;">
                         <option value="">（選択）</option>
                         <option value="☆">☆:強くおすすめできる</option>
+                        <option value="◎">◎:おすすめできる</option>
                         <option value="○">○:やって損はしない</option>
+                        <option value="△">△:やるのもよい</option>
                         <option value="">無記入:そうでもない</option>
                     </select>
                 </label><br>
@@ -556,7 +562,9 @@ function setupModal(columnsToShow) {
                     <select name="recommend_change" required>
                         <option value="">（選択）</option>
                         <option value="☆">☆:強くおすすめできる</option>
+                        <option value="◎">◎:おすすめできる</option>
                         <option value="○">○:やって損はしない</option>
+                        <option value="△">△:やるのもよい</option>
                         <option value="">無記入:そうでもない</option>
                     </select>
                 </label><br>
