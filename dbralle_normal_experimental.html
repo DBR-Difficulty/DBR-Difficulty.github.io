@@ -139,7 +139,7 @@
 
                 info.forEach(data => {
                     if (!data.level || data.level === "未査定") return; // 未査定のデータをスキップ
-                    if (!data.recommend) return; // オススメでない曲のデータをスキップ
+                    if (!["☆", "◎", "○"].includes(data.recommend)) return; // オススメでない曲のデータをスキップ
 
                     let baseLevel = data.level || "未査定";
                     let isDeleted = data.acdelete ? 1 : 0;
