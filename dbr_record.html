@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>DBRプレー記録管理</title>
+  <style>
+    body {
+      font-family: sans-serif;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 4px;
+      text-align: center;
+    }
+    .folder {
+      cursor: pointer;
+      background-color: #eee;
+      font-weight: bold;
+    }
+    .hidden {
+      display: none;
+    }
+    select {
+      width: 5ch;
+    }
+    input[type="text"]#searchInput {
+      width: 30ch; /* または好きな長さに調整 */
+      min-width: 300px; /* 最小幅の指定も可 */
+    }
+    input[type="text"]:not(#searchInput) {
+      width: 5ch; /* 他の入力欄（BPやスコア）は従来通り */
+    }
+    .lamp-cell {
+      font-weight: bold;
+      color: white;
+    }
+    .sort-buttons, .search-bar, .import-export {
+      margin-bottom: 1em;
+    }
+    .sort-buttons button, .import-export button, .import-export .button {
+      margin-right: 0.5em;
+    }
+    /* input, select, textarea のサイズを変更 */
+    input, select, textarea {
+        font-size: 1.2rem;  /* フォントサイズを大きく */
+    }
+    /* レベル */
+    .col-level {
+      min-width: 6ch;
+      max-width: 6ch;
+      width: 1%;
+      text-align: center;
+    }
+
+    /* バージョン */
+    .col-ver {
+      min-width: 3ch;
+      max-width: 3ch;
+      width: 1%;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    /* 曲名 */
+    .col-title {
+      min-width: 25ch;
+      max-width: 50ch;
+      width: 50%;
+      text-align: center;
+    }
+
+    /* SPLv */
+    .col-splv {
+      min-width: 4ch;
+      max-width: 6ch;
+      width: 1%;
+      text-align: center;
+    }
+    /* ランプ */
+    .col-lamp {
+      min-width: 10ch;
+      max-width: 10ch;
+      width: 1%;
+      text-align: center;
+      padding: 0;
+    }
+
+    /* BP */
+    .col-bp {
+      min-width: 8ch;
+      max-width: 8ch;
+      width: 1%;
+      text-align: center;
+      padding: 0;
+    }
+
+    /* スコア */
+    .col-score {
+      min-width: 8ch;
+      max-width: 8ch;
+      width: 1%;
+      text-align: center;
+      padding: 0;
+    }
+
+    button, .button {
+      background-color: #f5f5f5;
+      color: #000;
+      border: 1px solid #888;
+      border-radius: 0.375rem;
+      padding: 0.5rem 1rem;
+      font-weight: bold;
+      text-decoration: none;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <h2>DBRプレー記録管理</h2>
+  <ul>
+      <li>DBR向けプレー記録管理ページです データはブラウザに直接保存されます</li>
+      <li>意図しないデータ消失が起こりうるため、定期的にエクスポート機能でバックアップを取ることを推奨します</li>
+      <li>読み込み高速化のため、あらかじめ生成済の表データを直接読み込んでいます<br>
+        <b>最新の表状況が反映されませんので、あくまで記録用としてお考えください</b></li>
+      <li id="lastUpdated">表データの最終生成日は です</li>
+      <li><b><a href="dbr_table_extend.html">難易度表拡張機能</a>と記録を共有しています</b> 環境のある方はぜひ併せてお使いください</li>
+      <li>データ量などの都合で全譜面を収録しているのは☆7～☆12までです ご了承ください</li>
+      <li>現行AC作品でプレーできない譜面はグレーで表示されます</li>
+  </ul>
+  <div class="sort-buttons">
+    <button onclick="sortBy('splv')">SPLv順</button>
+    <button onclick="sortBy('level')">難易度表レベル順</button>
+    <button onclick="sortBy('ver')">バージョン順</button>
+  </div>
+  <div class="search-bar">
+    <label for="searchInput">タイトル検索：</label>
+    <input type="text" id="searchInput" placeholder="キーワード入力" oninput="filterByTitle()">
+  </div>
+  <div class="import-export">
+    <label class="button" style="display:inline-block;">
+      <span style="cursor:pointer;">インポート</span>
+      <input type="file" id="importFile" accept="application/json" onchange="importData(event)" style="display:none;">
+    </label>
+    <button onclick="exportData()">エクスポート</button>
+  </div>
+  <div id="tableContainer"></div>
+
+  <script>
+    const lampOptions = ["NO PLAY", "F", "AE", "E", "C", "H", "EXH", "FC"];
+    const lampColorMap = {
+      "NO PLAY": "transparent",
+      "F": "#666666",
+      "AE": "#b366ff",
+      "E": "#33cc33",
+      "C": "#66ccff",
+      "H": "#ffffff",
+      "EXH": "#ffff00",
+      "FC": "#FFA500"
+    };
+
+    let currentDataArray = [];
+    let currentGroupKey = "splv";
+    let currentKeyword = "";
+
+    document.addEventListener('DOMContentLoaded', () => {
+      fetch("dbralleheader_experimental.json")
+        .then(res => res.json())
+        .then(header => {
+          // ▼ 日付整形して最終生成日に反映
+          if (header.last_updated && /^\d{8}$/.test(header.last_updated)) {
+            const y = header.last_updated.slice(0, 4);
+            const m = header.last_updated.slice(4, 6);
+            const d = header.last_updated.slice(6, 8);
+            const formatted = `${y}/${m}/${d}`;
+            const elem = document.getElementById("lastUpdated");
+            if (elem) {
+              elem.innerHTML = `表データの最終生成日は <b>${formatted}</b> です`;
+            }
+          }
+
+          // ▼ headerを次に渡すため return Promise.all にする
+          return Promise.all([
+            fetch(header.data_url).then(res => res.json()),
+            header  // 次のthenで受け取れるようにする
+          ]);
+        })
+        .then(([json, header]) => {
+          currentDataArray = json;
+          buildTable(currentDataArray, currentGroupKey);
+        })
+        .catch(err => {
+          document.getElementById("tableContainer").textContent = "読み込み失敗: " + err;
+          console.error(err);
+        });
+    });
+
+    function sortBy(key) {
+      currentGroupKey = key;
+      buildTable(currentDataArray, key);
+    }
+
+    function filterByTitle() {
+      currentKeyword = document.getElementById("searchInput").value.trim().toLowerCase();
+      buildTable(currentDataArray, currentGroupKey);
+    }
+
+    function sanitizeGroupKey(group) {
+      return String(group).replace(/[^a-zA-Z0-9_-]/g, '_');
+    }
+
+    function buildTable(dataArray, groupKey) {
+      const container = document.getElementById("tableContainer");
+      container.innerHTML = "";
+      const grouped = {};
+
+      dataArray.forEach(item => {
+        if (currentKeyword && !item.title.toLowerCase().includes(currentKeyword)) return;
+        const key = item[groupKey] ?? "未設定";
+        if (!grouped[key]) grouped[key] = [];
+        grouped[key].push(item);
+      });
+
+      const table = document.createElement("table");
+      const header = document.createElement("tr");
+      const headerLabels = [
+        { text: "タイトル", class: "col-title" },
+        { text: "レベル", class: "col-level" },
+        { text: "Ver", class: "col-ver" },
+        { text: "SPLv", class: "col-splv" },
+        { text: "ランプ", class: "col-lamp" },
+        { text: "BP", class: "col-bp" },
+        { text: "スコア", class: "col-score" }
+      ];
+
+      headerLabels.forEach(({ text, class: className }) => {
+        const th = document.createElement("th");
+        th.textContent = text;
+        th.className = className;
+        header.appendChild(th);
+      });
+      table.appendChild(header);
+
+      const verLabelMap = {
+        "1": "1st style", "s": "substream", "2": "2nd style", "3": "3rd style",
+        "4": "4th style", "5": "5th style", "6": "6th style", "7": "7th style",
+        "8": "8th style", "9": "9th style", "10": "10th style", "11": "11 IIDX RED",
+        "12": "12 HAPPY SKY", "13": "13 DistorteD", "14": "14 GOLD", "15": "15 DJ TROOPERS",
+        "16": "16 EMPRESS", "17": "17 SIRIUS", "18": "18 Resort Anthem", "19": "19 Lincle",
+        "20": "20 tricoro", "21": "21 SPADA", "22": "22 PENDUAL", "23": "23 copula",
+        "24": "24 SINOBUZ", "25": "25 CANNON BALLERS", "26": "26 Rootage", "27": "27 HEROIC VERSE",
+        "28": "28 BISTROVER", "29": "29 CastHour", "30": "30 RESIDENT", "31": "31 EPOLIS",
+        "32": "32 Pinky Crush", "33": "33 Sparkle Shower", "0": "CS or INFINITAS 専用曲"
+      };
+
+      // グループキーでソート順を切り替え
+      const sortedGroupKeys = Object.keys(grouped).sort((a, b) => {
+        const normalize = v => {
+          if (groupKey === "ver") {
+            if (v === "") return Infinity;  // 不明
+            if (v === "0") return 999;      // CS、INF
+            if (v === "s") return 1.5;      // substream
+          } else if (groupKey === "level") {
+            if (v === "" || v === "未査定") return Infinity; // レベル未査定 → 最後尾
+          }
+
+          const num = parseFloat(v);
+          return isNaN(num) ? v : num;
+        };
+        const na = normalize(a);
+        const nb = normalize(b);
+
+        if (groupKey === "level") {
+          return na - nb; // 昇順（空欄＝未査定は Infinity 扱いで最後に）
+        } else if (groupKey === "ver") {
+          return na - nb; // 昇順
+        } else {
+          return nb - na; // 降順（デフォルト）
+        }
+      });
+
+      sortedGroupKeys.forEach(group => {
+        const safeGroup = sanitizeGroupKey(group);
+        const displayLabel = (() => {
+          if (groupKey === "ver") {
+            return verLabelMap[group] || `不明`;
+          } else if (groupKey === "level") {
+            return group === "" ? "☆未査定" : `☆${group}`;
+          } else if (groupKey === "splv") {
+            return `☆${group}`;
+          } else {
+            return group;
+          }
+        })();
+
+        const sectionRow = document.createElement("tr");
+        sectionRow.className = "folder";
+        const td = document.createElement("td");
+        td.colSpan = 7;
+        td.textContent = `${displayLabel} (${grouped[group].length}譜面)`;
+        td.addEventListener("click", () => {
+          const rows = table.querySelectorAll(`.group-${safeGroup}`);
+          rows.forEach(row => row.classList.toggle("hidden"));
+        });
+        sectionRow.appendChild(td);
+        table.appendChild(sectionRow);
+
+        grouped[group].forEach(chart => {
+          const row = document.createElement("tr");
+          row.classList.add(`group-${safeGroup}`);
+
+          if (chart.acdelete) {
+            row.style.backgroundColor = "#dddddd";  // グレーに
+          }
+
+          const key = chart.title;
+
+          const lampKey = `lamp_${key}`;
+          const bpKey = `bp_${key}`;
+          const scoreKey = `score_${key}`;
+
+          const lamp = localStorage.getItem(lampKey) || "NO PLAY";
+          const bp = localStorage.getItem(bpKey) || "";
+          const score = localStorage.getItem(scoreKey) || "";
+
+          row.appendChild(tdText(chart.title));
+          row.appendChild(tdText(chart.level || ""));
+          row.appendChild(tdText(chart.ver || ""));
+          row.appendChild(tdText(chart.splv || ""));
+
+          const lampTd = document.createElement("td");
+          const lampSelect = document.createElement("select");
+          lampOptions.forEach(opt => {
+            const op = document.createElement("option");
+            op.value = opt;
+            op.textContent = opt;
+            if (opt === lamp) op.selected = true;
+            lampSelect.appendChild(op);
+          });
+          lampSelect.addEventListener("change", () => {
+            localStorage.setItem(lampKey, lampSelect.value);
+            lampTd.style.backgroundColor = lampColorMap[lampSelect.value];
+          });
+          lampTd.appendChild(lampSelect);
+          lampTd.style.backgroundColor = lampColorMap[lamp];
+          row.appendChild(lampTd);
+
+          const bpTd = document.createElement("td");
+          const bpInput = document.createElement("input");
+          bpInput.type = "text";
+          bpInput.value = bp;
+          bpInput.maxLength = 4;
+          bpInput.addEventListener("input", () => {
+            bpInput.value = bpInput.value.replace(/[^0-9]/g, "").slice(0, 4);
+            localStorage.setItem(bpKey, bpInput.value);
+          });
+          bpTd.appendChild(bpInput);
+          row.appendChild(bpTd);
+
+          const scoreTd = document.createElement("td");
+          const scoreInput = document.createElement("input");
+          scoreInput.type = "text";
+          scoreInput.value = score;
+          scoreInput.maxLength = 4;
+          scoreInput.addEventListener("input", () => {
+            scoreInput.value = scoreInput.value.replace(/[^0-9]/g, "").slice(0, 4);
+            localStorage.setItem(scoreKey, scoreInput.value);
+          });
+          scoreTd.appendChild(scoreInput);
+          row.appendChild(scoreTd);
+
+          row.classList.add("hidden");
+          table.appendChild(row);
+        });
+      });
+
+      container.appendChild(table);
+    }
+
+    function tdText(text) {
+      const td = document.createElement("td");
+      td.textContent = text;
+      return td;
+    }
+
+    function exportData() {
+      const data = {
+        lamp: {},
+        bp: {},
+        score: {},
+        textageKey: {}
+      };
+
+      Object.keys(localStorage).forEach(key => {
+        if (key.startsWith("lamp_")) {
+          data.lamp[key] = localStorage.getItem(key);
+        } else if (key.startsWith("bp_")) {
+          data.bp[key] = localStorage.getItem(key);
+        } else if (key.startsWith("score_")) {
+          data.score[key] = localStorage.getItem(key);
+        }
+      });
+
+      const textage = localStorage.getItem("textageKey");
+      if (textage) {
+        try {
+          data.textageKey = JSON.parse(textage);
+        } catch (e) {
+          console.warn("textageKey parse failed", e);
+        }
+      }
+
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "dbr_data.json";
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }
+
+    function importData(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const json = JSON.parse(e.target.result);
+          const textageKeyObj = JSON.parse(localStorage.getItem("textageKey") || "{}");
+
+          const updatedCounts = { lamp: 0, bp: 0, score: 0 };
+          const lampOrder = ["NO PLAY", "F", "AE", "E", "C", "H", "EXH", "FC"];
+
+          ["lamp", "bp", "score"].forEach(type => {
+            if (json[type]) {
+              for (const [key, newValue] of Object.entries(json[type])) {
+                const oldValue = localStorage.getItem(key);
+                if (typeof newValue !== "string" || newValue.trim() === "") continue;
+
+                let shouldUpdate = false;
+                if (type === "lamp") {
+                  const newIndex = lampOrder.indexOf(newValue);
+                  const oldIndex = lampOrder.indexOf(oldValue);
+                  if (newIndex > oldIndex) shouldUpdate = true;
+                } else if (type === "bp") {
+                  const newNum = parseInt(newValue, 10);
+                  const oldNum = parseInt(oldValue, 10);
+                  if (!isNaN(newNum) && (isNaN(oldNum) || newNum < oldNum)) shouldUpdate = true;
+                } else if (type === "score") {
+                  const newNum = parseInt(newValue, 10);
+                  const oldNum = parseInt(oldValue, 10);
+                  if (!isNaN(newNum) && (isNaN(oldNum) || newNum > oldNum)) shouldUpdate = true;
+                }
+
+                if (shouldUpdate) {
+                  localStorage.setItem(key, newValue);
+                  updatedCounts[type]++;
+                }
+
+                const shortKey = key.replace(new RegExp("^" + type + "_"), "");
+                if (json.textageKey && json.textageKey[shortKey]) {
+                  textageKeyObj[shortKey] = json.textageKey[shortKey];
+                }
+              }
+            }
+          });
+
+          localStorage.setItem("textageKey", JSON.stringify(textageKeyObj));
+
+          alert(`インポートが成功しました！\n\nランプ: ${updatedCounts.lamp} 件\nBP: ${updatedCounts.bp} 件\nスコア: ${updatedCounts.score} 件`);
+          buildTable(currentDataArray, currentGroupKey);
+        } catch (e) {
+          console.error("インポートエラー:", e);
+          alert("インポート中にエラーが発生しました。");
+        }
+      };
+
+      reader.readAsText(file);
+    }
+  </script>
+</body>
+</html>
