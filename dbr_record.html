@@ -49,13 +49,6 @@
     input, select, textarea {
         font-size: 1.2rem;  /* フォントサイズを大きく */
     }
-    /* レベル */
-    .col-level {
-      min-width: 6ch;
-      max-width: 6ch;
-      width: 1%;
-      text-align: center;
-    }
 
     /* バージョン */
     .col-ver {
@@ -68,23 +61,30 @@
 
     /* 曲名 */
     .col-title {
-      min-width: 25ch;
+      min-width: 15ch;
       max-width: 50ch;
       width: 50%;
+      text-align: center;
+    }
+    /* レベル */
+    .col-level {
+      min-width: 4ch;
+      max-width: 4ch;
+      width: 1%;
       text-align: center;
     }
 
     /* SPLv */
     .col-splv {
       min-width: 4ch;
-      max-width: 6ch;
+      max-width: 4ch;
       width: 1%;
       text-align: center;
     }
     /* ランプ */
     .col-lamp {
-      min-width: 10ch;
-      max-width: 10ch;
+      min-width: 12ch;
+      max-width: 12ch;
       width: 1%;
       text-align: center;
       padding: 0;
@@ -92,8 +92,8 @@
 
     /* BP */
     .col-bp {
-      min-width: 8ch;
-      max-width: 8ch;
+      min-width: 12ch;
+      max-width: 12ch;
       width: 1%;
       text-align: center;
       padding: 0;
@@ -101,8 +101,8 @@
 
     /* スコア */
     .col-score {
-      min-width: 8ch;
-      max-width: 8ch;
+      min-width: 12ch;
+      max-width: 12ch;
       width: 1%;
       text-align: center;
       padding: 0;
@@ -118,6 +118,12 @@
       text-decoration: none;
       cursor: pointer;
       font-size: 1rem;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        font-size: 0.8rem;
+      }
     }
   </style>
 </head>
