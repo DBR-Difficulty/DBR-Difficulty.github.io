@@ -173,6 +173,8 @@
 
       input[type="text"]#searchInput {
           font-size: 0.9rem;
+      min-width: 1ch;
+      max-width: 50ch;
       }
 
       input[type="text"]:not(#searchInput) {
@@ -204,11 +206,6 @@
         word-break: break-all;
         white-space: normal;
       }
-      
-    input[type="text"]#searchInput {
-      font-size: 1.4rem;
-      min-width: 10ch; /* 最小幅の指定も可 */
-    }
     }
   </style>
 </head>
