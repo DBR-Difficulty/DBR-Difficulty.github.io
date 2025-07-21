@@ -23,22 +23,27 @@
     table {
       border-collapse: collapse;
     }
+
     th, td {
       border: 1px solid #ccc;
       padding: 4px;
       text-align: center;
     }
+
     .folder {
       cursor: pointer;
       background-color: #eee;
       font-weight: bold;
     }
+
     .hidden {
       display: none;
     }
+
     select {
-      width: 5ch;
+      width: auto;
     }
+
     .lamp-cell {
       font-weight: bold;
       color: white;
@@ -47,18 +52,22 @@
     .sort-buttons, .search-bar, .import-export {
       margin-bottom: 1em;
     }
+
     .sort-buttons button, .import-export button, .import-export .button {
       margin-right: 0.5em;
     }
+
     /* input, select, textarea のサイズを変更 */
     input, select, textarea {
         font-size: 1.2rem;  /* フォントサイズを大きく */
     }
+
     input[type="text"]#searchInput {
       font-size: 1.4rem;
       width: 40ch; /* または好きな長さに調整 */
       min-width: 40ch; /* 最小幅の指定も可 */
     }
+
     input[type="text"]:not(#searchInput) {
       width: 5ch; /* 他の入力欄（BPやスコア）は従来通り */
     }
@@ -76,9 +85,10 @@
     .header-title {
       min-width: 10ch;
       max-width: 50ch;
-      width: 70%;
+      width: 90%;
       text-align: center;
     }
+
     /* レベル */
     .header-level {
       min-width: 6ch;
@@ -94,6 +104,7 @@
       width: 1%;
       text-align: center;
     }
+
     /* ランプ */
     .header-lamp {
       min-width: 10ch;
@@ -105,8 +116,8 @@
 
     /* BP */
     .header-bp {
-      min-width: 8ch;
-      max-width: 8ch;
+      min-width: 6ch;
+      max-width: 6ch;
       width: 1%;
       text-align: center;
       padding: 0;
@@ -114,9 +125,8 @@
 
     /* スコア */
     .header-score {
-      min-width: 8ch;
-      max-width: 8ch;
-      width: 1%;
+      min-width: 6ch;
+      max-width: 6ch;
       text-align: center;
       padding: 0;
     }
@@ -165,24 +175,29 @@
       margin: 0.375rem 0 0.75rem 0;
     }
 
+    .title-span {
+      font-size: 1.75rem;
+    }
+
     @media (max-width: 768px) {
       body {
-        font-size: 0.6rem;
+        font-size: 0.75rem;
         margin: 0, 0.75rem, 0, 0.25rem;
       }
 
       input[type="text"]#searchInput {
-          font-size: 0.9rem;
-      min-width: 1ch;
-      max-width: 50ch;
+        font-size: 0.9rem;
+        min-width: 1ch;
+        max-width: 50ch;
       }
 
       input[type="text"]:not(#searchInput) {
-          font-size: 0.75rem;
+          font-size: 0.85rem;
       }
 
       select {
-        font-size: 0.75rem;
+        font-size: 0.85rem;
+        width: auto;
       }
 
       button, .button {
@@ -206,13 +221,16 @@
         word-break: break-all;
         white-space: normal;
       }
+      .title-span{
+        font-size: 1.25rem;
+      }
     }
   </style>
 </head>
 <body>
   <div class="allContainer">
     <center>
-      <h2>DBRプレー記録管理</h2>
+    <strong><span class="title-span">DBRプレー記録管理</span></strong><br>
       <div class="notice-box">
         <ul>
             <li>DBR向けプレー記録管理ページです データはブラウザに直接保存されます</li>
@@ -221,6 +239,9 @@
               <b>最新の表状況が反映されませんので、あくまで記録用としてお考えください</b></li>
             <li id="lastUpdated">難易度表データの最終生成日は です</li>
             <li><b><a href="dbr_table_extend.html">難易度表拡張機能</a>と記録を共有しています</b> 環境のある方はぜひ併せてお使いください</li>
+            <li>表側でタイトルの修正があった場合、その譜面のプレー記録が読み込めなくなります<br>
+              内部にデータは存在するため、お手数ですがエクスポートしたJSONファイルをご確認ください<br>
+              （拡張機能を併用している場合、難易度表の表示時に修復できる場合があります）</li>
             <li>データ量などの都合で全譜面を収録しているのは☆7～☆12までです ご了承ください</li>
             <li>現行AC作品でプレーできない譜面はグレーで表示されます</li>
         </ul>
@@ -235,7 +256,7 @@
       </div>
       <div class="search-bar">
         <label for="searchInput">タイトル検索：</label>
-        <input type="text" id="searchInput" placeholder="キーワード入力" oninput="filterByTitle()">
+        <input type="text" id="searchInput" placeholder="" oninput="filterByTitle()">
       </div>
       <div class="import-export">
         <label class="button" style="display:inline-block;">
@@ -265,6 +286,8 @@
     let currentKeyword = "";
 
     document.addEventListener('DOMContentLoaded', () => {
+      textageKeyMap = JSON.parse(localStorage.getItem("textageKey") || "{}");
+      // その後 fetch() や buildTable() などを呼び出す
       fetch("dbralleheader_experimental.json")
         .then(res => res.json())
         .then(header => {
@@ -310,9 +333,34 @@
       return String(group).replace(/[^a-zA-Z0-9_-]/g, '_');
     }
 
+    // ランプセルの見た目を状態に応じて設定
+    function setLampCellStyle(cell, value) {
+      if (value === "NO PLAY") {
+        cell.style.background = "transparent";
+        cell.style.color = "transparent"; // NO PLAY のときは文字も背景も透明
+      } else {
+        cell.style.background = lampColorMap[value] || "transparent";
+        cell.style.color = (value === "H" || value === "EXH" || value === "FC") ? "black" : "white";
+      }
+    }
+
+    let textageKeyMap = {};
+
     function buildTable(dataArray, groupKey) {
       const container = document.getElementById("tableContainer");
       container.innerHTML = "";
+
+      // localStorageから該当データをまとめて取得してキャッシュ
+      const lampCache = {};
+      const bpCache = {};
+      const scoreCache = {};
+
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key.startsWith("lamp_")) lampCache[key] = localStorage.getItem(key);
+        else if (key.startsWith("bp_")) bpCache[key] = localStorage.getItem(key);
+        else if (key.startsWith("score_")) scoreCache[key] = localStorage.getItem(key);
+      }
       const grouped = {};
 
       dataArray.forEach(item => {
@@ -322,6 +370,7 @@
         grouped[key].push(item);
       });
 
+      const fragment = document.createDocumentFragment();
       const table = document.createElement("table");
       const header = document.createElement("tr");
       const headerLabels = [
@@ -415,46 +464,76 @@
           }
 
           const key = chart.title;
+          /**
+           * TexTageKeyによるタイトル復元はめちゃくちゃ重くなるので諦めました 
+           */
+          // const textageID = chart.textageid || "";  // 空でもOK
+          // const currentTextageKey = generateTextageKey(textageID, chart.title);
+
+          // // textageKey管理
+          // updateTextageKeyOnLoad(chart.title, currentTextageKey);
+          // const lampMigration = migrateOldDataIfNeeded("lamp", chart.title, currentTextageKey);
+          // const bpMigration = migrateOldDataIfNeeded("bp", chart.title, currentTextageKey);
+          // const scoreMigration = migrateOldDataIfNeeded("score", chart.title, currentTextageKey);
+          // updateTextageKeyMapIfNeeded(bpMigration, scoreMigration, lampMigration);
 
           const lampKey = `lamp_${key}`;
           const bpKey = `bp_${key}`;
           const scoreKey = `score_${key}`;
 
-          const lamp = localStorage.getItem(lampKey) || "NO PLAY";
-          const bp = localStorage.getItem(bpKey) || "";
-          const score = localStorage.getItem(scoreKey) || "";
+          const lamp = lampCache[lampKey] || "NO PLAY";
+          const bp = bpCache[bpKey] || "";
+          const score = scoreCache[scoreKey] || "";
 
           row.appendChild(tdText(chart.title, "col-title"));  // ← クラス追加
-          row.appendChild(tdText(chart.level || ""));
-          row.appendChild(tdText(chart.ver || ""));
-          row.appendChild(tdText(chart.splv || ""));
+          row.appendChild(tdText(chart.level, "col-level" || ""));
+          row.appendChild(tdText(chart.ver, "col-ver" || ""));
+          row.appendChild(tdText(chart.splv, "col-splv" || ""));
 
-          const lampTd = document.createElement("td");
-          const lampSelect = document.createElement("select");
-          lampOptions.forEach(opt => {
-            const op = document.createElement("option");
-            op.value = opt;
-            op.textContent = opt;
-            if (opt === lamp) op.selected = true;
-            lampSelect.appendChild(op);
+          // ランプ状態を表示するセルを作成
+          const lampCell = document.createElement("td");
+          setLampCellStyle(lampCell, lamp);
+          lampCell.textContent = lamp === "NO PLAY" ? "" : lamp; // "NO PLAY"のときは非表示
+          lampCell.style.cursor = "pointer";
+          lampCell.style.textAlign = "center";
+          lampCell.style.width = "1%";
+          lampCell.style.whiteSpace = "nowrap";
+          lampCell.dataset.lampKey = lampKey; // ここでランプキーをデータ属性として保存
+          lampCell.classList.add("col-lamp"); // モーダル対応
+
+
+          // クリックでランプ選択プルダウン表示
+          lampCell.addEventListener("click", () => {
+            const current = localStorage.getItem(lampKey) || "NO PLAY"; // ← 修正：常に最新値を参照
+            showLampSelector(lampCell, current, newValue => {
+              localStorage.setItem(lampKey, newValue);
+              setLampCellStyle(lampCell, newValue);
+              lampCell.textContent = newValue === "NO PLAY" ? "" : newValue;
+            });
           });
-          lampSelect.addEventListener("change", () => {
-            localStorage.setItem(lampKey, lampSelect.value);
-            lampTd.style.backgroundColor = lampColorMap[lampSelect.value];
-          });
-          lampTd.appendChild(lampSelect);
-          lampTd.style.backgroundColor = lampColorMap[lamp];
-          row.appendChild(lampTd);
+          row.appendChild(lampCell);
 
           const bpTd = document.createElement("td");
           const bpInput = document.createElement("input");
           bpInput.type = "text";
           bpInput.value = bp;
           bpInput.maxLength = 4;
+          bpInput.style.width = "auto";
+          bpInput.style.minWidth = "5ch";
+          bpInput.style.maxWidth = "5ch";
+          bpInput.style.width = "100%"; // tdいっぱいに広げる
+          bpInput.style.boxSizing = "border-box"; // padding込みでサイズ制御
+          bpInput.style.border = "none"; // 見た目をすっきり
+          bpInput.style.textAlign = "center";
+          bpInput.style.padding = "0 0.25em"; // 必要に応じて
+          bpInput.style.backgroundColor = "inherit";
+          bpInput.style.font = "inherit"; // 他とフォント揃える（任意）
           bpInput.addEventListener("input", () => {
             bpInput.value = bpInput.value.replace(/[^0-9]/g, "").slice(0, 4);
             localStorage.setItem(bpKey, bpInput.value);
           });
+
+          bpTd.classList.add("col-bp");
           bpTd.appendChild(bpInput);
           row.appendChild(bpTd);
 
@@ -463,10 +542,22 @@
           scoreInput.type = "text";
           scoreInput.value = score;
           scoreInput.maxLength = 4;
+          scoreInput.style.width = "auto";
+          scoreInput.style.minWidth = "5ch";
+          scoreInput.style.maxWidth = "5ch";
+          scoreInput.style.width = "100%"; // tdいっぱいに広げる
+          scoreInput.style.boxSizing = "border-box"; // padding込みでサイズ制御
+          scoreInput.style.border = "none"; // 見た目をすっきり
+          scoreInput.style.textAlign = "center";
+          scoreInput.style.padding = "0 0.25em"; // 必要に応じて
+          scoreInput.style.backgroundColor = "inherit";
+          scoreInput.style.font = "inherit"; // 他とフォント揃える（任意）
           scoreInput.addEventListener("input", () => {
             scoreInput.value = scoreInput.value.replace(/[^0-9]/g, "").slice(0, 4);
             localStorage.setItem(scoreKey, scoreInput.value);
           });
+
+          scoreTd.classList.add("col-score");
           scoreTd.appendChild(scoreInput);
           row.appendChild(scoreTd);
 
@@ -475,7 +566,9 @@
         });
       });
 
-      container.appendChild(table);
+      // 最後に fragment に table を追加して container に反映
+      fragment.appendChild(table);
+      container.appendChild(fragment);
     }
 
     function tdText(text, className = "") {
@@ -483,6 +576,122 @@
       td.textContent = text;
       if (className) td.className = className;
       return td;
+    }
+
+    // セル上にランプ選択用セレクトボックスを表示
+    function showLampSelector(cell, current, onChange) {
+      const select = document.createElement("select");
+      lampOptions.forEach(opt => {
+        const option = document.createElement("option");
+        option.value = opt;
+        option.textContent = opt;
+        if (opt === current) option.selected = true;
+        select.appendChild(option);
+      });
+
+      const rect = cell.getBoundingClientRect();
+      select.style.position = "absolute";
+      select.style.zIndex = 1000;
+      select.style.left = `${window.scrollX + rect.left}px`;
+      select.style.top = `${window.scrollY + rect.top}px`;
+
+      document.body.appendChild(select);
+      select.focus();
+
+      select.addEventListener("change", () => {
+        const newValue = select.value;
+        onChange(newValue);
+        removeSelectElement(select);
+      });
+      
+      // 「blur」イベントで遅延削除を実行
+      select.addEventListener("blur", () => {
+        setTimeout(() => {
+          if (document.body.contains(select)) {
+            removeSelectElement(select);
+          }
+        }, 0);
+      });
+    }
+
+    // セレクトボックスを削除
+    function removeSelectElement(select) {
+      if (select && document.body.contains(select)) {
+        document.body.removeChild(select);
+      }
+    }
+
+    function updateTextageKeyMapIfAbsent(title, textageKey) {
+      if (!textageKey) return;
+      const map = JSON.parse(localStorage.getItem("textageKey") || "{}");
+      const oldKey = map[title];
+
+      const hasStoredData =
+        localStorage.getItem("lamp_" + title) ||
+        localStorage.getItem("bp_" + title) ||
+        localStorage.getItem("score_" + title);
+
+      if (oldKey !== textageKey && hasStoredData) {
+        for (const otherTitle in map) {
+          if (otherTitle !== title && map[otherTitle] === textageKey) {
+            delete map[otherTitle];
+            break;
+          }
+        }
+        map[title] = textageKey;
+        localStorage.setItem("textageKey", JSON.stringify(map));
+      }
+    }
+
+    function updateTextageKeyMapIfNeeded(bpMigration, scoreMigration, lampMigration) {
+      const textageKeyMap = JSON.parse(localStorage.getItem("textageKey") || "{}");
+
+      for (const migration of [bpMigration, scoreMigration, lampMigration]) {
+        if (migration?.pendingMapUpdate !== null) {
+          const { oldTitle, newTitle, textageKey } = migration.pendingMapUpdate;
+          delete textageKeyMap[oldTitle];
+          textageKeyMap[newTitle] = textageKey;
+        }
+      }
+
+      localStorage.setItem("textageKey", JSON.stringify(textageKeyMap));
+    }
+
+    function migrateOldDataIfNeeded(type, title, textageKey) {
+      const key = `${type}_${title}`;
+      let stored = localStorage.getItem(key);
+      let pendingMapUpdate = null;
+
+      if (stored === null && textageKey) {
+        const textageKeyMap = JSON.parse(localStorage.getItem("textageKey") || "{}");
+        for (const oldTitle in textageKeyMap) {
+          if (textageKeyMap[oldTitle] === textageKey) {
+            const oldKey = `${type}_${oldTitle}`;
+            const oldValue = localStorage.getItem(oldKey);
+            if (oldValue !== null) {
+              localStorage.setItem(key, oldValue);
+              stored = oldValue;
+              localStorage.removeItem(oldKey);
+              pendingMapUpdate = { oldTitle, newTitle: title, textageKey };
+              break;
+            }
+          }
+        }
+      }
+      return { stored, pendingMapUpdate };
+    }
+
+    function updateTextageKeyOnLoad(title, currentTextageKey) {
+      const storedTextageKey = JSON.parse(localStorage.getItem("textageKey") || "{}")[title];
+      if (currentTextageKey && currentTextageKey !== storedTextageKey) {
+        updateTextageKeyMapIfAbsent(title, currentTextageKey);
+      }
+    }
+
+    function generateTextageKey(textageID, title) {
+      const suffix = title.slice(-3); // (H)、(A)など
+      if (!/^\([A-Z]\)$/.test(suffix)) return null;
+      return textageID + suffix;
     }
 
     function exportData() {
