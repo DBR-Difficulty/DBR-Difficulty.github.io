@@ -43,6 +43,7 @@
       font-weight: bold;
       color: white;
     }
+
     .sort-buttons, .search-bar, .import-export {
       margin-bottom: 1em;
     }
@@ -198,10 +199,16 @@
       .notice-box {
         width: 95%;
       }
-      .cell-title {
+      .col-title {
+        max-width: 20ch;
         word-break: break-all;
         white-space: normal;
       }
+      
+    input[type="text"]#searchInput {
+      font-size: 1.4rem;
+      min-width: 10ch; /* 最小幅の指定も可 */
+    }
     }
   </style>
 </head>
