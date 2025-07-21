@@ -237,8 +237,8 @@
     };
 
     noUiSlider.create(levelSlider, {
-      start: [11.00, 13.00], connect: true, step: 0.01,
-      range: { min: 11.00, max: 13.00 }, tooltips: false,
+      start: [10.70, 13.00], connect: true, step: 0.01,
+      range: { min: 10.70, max: 13.00 }, tooltips: false,
       format: {
         to: v => `☆${v.toFixed(2)}`,
         from: v => parseFloat(v.replace("\u2606", ""))
@@ -558,11 +558,11 @@
 
       document.getElementById("reset-filters").onclick = () => {
         // スライダー初期値に戻す
-        levelSlider.noUiSlider.set([11.00, 13.00]);
+        levelSlider.noUiSlider.set([10.70, 13.00]);
         splvSlider.noUiSlider.set([1, 12]);
 
         // 入力欄も同期
-        levelMinInput.value = "11.00";
+        levelMinInput.value = "10.70";
         levelMaxInput.value = "13.00";
         splvMinInput.value = "1";
         splvMaxInput.value = "12";
