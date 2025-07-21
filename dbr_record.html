@@ -6,11 +6,22 @@
   <title>DBRプレー記録管理</title>
   <style>
     body {
-      font-family: sans-serif;
+      font-family: "Noto Sans JP", sans-serif;
+      font-size: 1rem;
+      line-height: 1.6;
+      color: #333;
+      background-color: #fff;
+      table-layout: fixed;
+      margin: 0, 1.25rem, 0, 0.75rem;
+      max-width: 100%;
     }
+
+    .allcontainer {
+      margin: 1.25rem;
+    }
+
     table {
       border-collapse: collapse;
-      width: 100%;
     }
     th, td {
       border: 1px solid #ccc;
@@ -28,13 +39,6 @@
     select {
       width: 5ch;
     }
-    input[type="text"]#searchInput {
-      width: 30ch; /* または好きな長さに調整 */
-      min-width: 300px; /* 最小幅の指定も可 */
-    }
-    input[type="text"]:not(#searchInput) {
-      width: 5ch; /* 他の入力欄（BPやスコア）は従来通り */
-    }
     .lamp-cell {
       font-weight: bold;
       color: white;
@@ -49,9 +53,17 @@
     input, select, textarea {
         font-size: 1.2rem;  /* フォントサイズを大きく */
     }
+    input[type="text"]#searchInput {
+      font-size: 1.4rem;
+      width: 40ch; /* または好きな長さに調整 */
+      min-width: 40ch; /* 最小幅の指定も可 */
+    }
+    input[type="text"]:not(#searchInput) {
+      width: 5ch; /* 他の入力欄（BPやスコア）は従来通り */
+    }
 
     /* バージョン */
-    .col-ver {
+    .header-ver {
       min-width: 3ch;
       max-width: 3ch;
       width: 1%;
@@ -60,14 +72,14 @@
     }
 
     /* 曲名 */
-    .col-title {
+    .header-title {
       min-width: 10ch;
       max-width: 50ch;
-      width: 50%;
+      width: 70%;
       text-align: center;
     }
     /* レベル */
-    .col-level {
+    .header-level {
       min-width: 6ch;
       max-width: 6ch;
       width: 1%;
@@ -75,14 +87,14 @@
     }
 
     /* SPLv */
-    .col-splv {
+    .header-splv {
       min-width: 4ch;
       max-width: 4ch;
       width: 1%;
       text-align: center;
     }
     /* ランプ */
-    .col-lamp {
+    .header-lamp {
       min-width: 10ch;
       max-width: 10ch;
       width: 1%;
@@ -91,7 +103,7 @@
     }
 
     /* BP */
-    .col-bp {
+    .header-bp {
       min-width: 8ch;
       max-width: 8ch;
       width: 1%;
@@ -100,7 +112,7 @@
     }
 
     /* スコア */
-    .col-score {
+    .header-score {
       min-width: 8ch;
       max-width: 8ch;
       width: 1%;
@@ -119,63 +131,114 @@
       cursor: pointer;
       font-size: 1rem;
     }
-    body {
-      font-family: sans-serif;
-      margin: 0;
-      padding: 0;
-      overflow-x: hidden; /* 横スクロールを基本的に無効に */
+
+    .notice-box {
+      border: 0.125rem solid #666;
+      background-color: #353535;
+      color: white;
+      padding: 0.625rem;
+      margin: 0.625rem auto;
+      width: 80%;
+      text-align: left;
+      border-radius: 0.3125rem;
     }
+
+    .notice-box ul {
+      list-style-type: square;
+      padding-left: 1.25rem;
+    }
+
+    .notice-box li {
+      margin-bottom: 0.3125rem;
+    }
+
+    .notice-box a:visited {
+      color: #cc00cc;
+    }
+
+    .notice-box a {
+      color: #bce2e8;
+    }
+
+    .toplink-margin {
+      margin: 0.375rem 0 0.75rem 0;
+    }
+
     @media (max-width: 768px) {
       body {
-        font-size: 0.55rem;
+        font-size: 0.6rem;
+        margin: 0, 0.75rem, 0, 0.25rem;
       }
 
-      input, select {
-        font-size: 0.65rem;
+      input[type="text"]#searchInput {
+          font-size: 0.9rem;
+      }
+
+      input[type="text"]:not(#searchInput) {
+          font-size: 0.75rem;
+      }
+
+      select {
+        font-size: 0.75rem;
       }
 
       button, .button {
-        font-size: 0.65rem;
+        font-size: 0.75rem;
       }
 
       /* 曲名 */
-      .col-title {      
+      .header-title {
         max-width: 20ch;
-        width: 1%;
+      }
+      
+      .toplink-margin {
+        margin: 0.25rem 0 0.5rem 0;
+      }
+
+      .notice-box {
+        width: 95%;
       }
     }
   </style>
 </head>
 <body>
-  <h2>DBRプレー記録管理</h2>
-  <ul>
-      <li>DBR向けプレー記録管理ページです データはブラウザに直接保存されます</li>
-      <li>意図しないデータ消失が起こりうるため、定期的にエクスポート機能でバックアップを取ることを推奨します</li>
-      <li>読み込み高速化のため、あらかじめ生成済の難易度表データを直接読み込んでいます<br>
-        <b>最新の表状況が反映されませんので、あくまで記録用としてお考えください</b></li>
-      <li id="lastUpdated">難易度表データの最終生成日は です</li>
-      <li><b><a href="dbr_table_extend.html">難易度表拡張機能</a>と記録を共有しています</b> 環境のある方はぜひ併せてお使いください</li>
-      <li>データ量などの都合で全譜面を収録しているのは☆7～☆12までです ご了承ください</li>
-      <li>現行AC作品でプレーできない譜面はグレーで表示されます</li>
-  </ul>
-  <div class="sort-buttons">
-    <button onclick="sortBy('splv')">SPLv順</button>
-    <button onclick="sortBy('level')">難易度表レベル順</button>
-    <button onclick="sortBy('ver')">バージョン順</button>
+  <div class="allContainer">
+    <h2>DBRプレー記録管理</h2>
+    <center>
+    <div class="notice-box">
+      <ul>
+          <li>DBR向けプレー記録管理ページです データはブラウザに直接保存されます</li>
+          <li>意図しないデータ消失が起こりうるため、定期的にエクスポート機能でバックアップを取ることを推奨します</li>
+          <li>読み込み高速化のため、あらかじめ生成済の難易度表データを直接読み込んでいます<br>
+            <b>最新の表状況が反映されませんので、あくまで記録用としてお考えください</b></li>
+          <li id="lastUpdated">難易度表データの最終生成日は です</li>
+          <li><b><a href="dbr_table_extend.html">難易度表拡張機能</a>と記録を共有しています</b> 環境のある方はぜひ併せてお使いください</li>
+          <li>データ量などの都合で全譜面を収録しているのは☆7～☆12までです ご了承ください</li>
+          <li>現行AC作品でプレーできない譜面はグレーで表示されます</li>
+      </ul>
+    </div>
+    <div class="toplink-margin">
+        <a href="index.html">TOPに戻る</a>
+    </div>
+    <div class="sort-buttons">
+      <button onclick="sortBy('splv')">SPLv順</button>
+      <button onclick="sortBy('level')">難易度表レベル順</button>
+      <button onclick="sortBy('ver')">バージョン順</button>
+    </div>
+    <div class="search-bar">
+      <label for="searchInput">タイトル検索：</label>
+      <input type="text" id="searchInput" placeholder="キーワード入力" oninput="filterByTitle()">
+    </div>
+    <div class="import-export">
+      <label class="button" style="display:inline-block;">
+        <span style="cursor:pointer;">インポート</span>
+        <input type="file" id="importFile" accept="application/json" onchange="importData(event)" style="display:none;">
+      </label>
+      <button onclick="exportData()">エクスポート</button>
+    </div>
+    </center>
+    <div id="tableContainer"></div>
   </div>
-  <div class="search-bar">
-    <label for="searchInput">タイトル検索：</label>
-    <input type="text" id="searchInput" placeholder="キーワード入力" oninput="filterByTitle()">
-  </div>
-  <div class="import-export">
-    <label class="button" style="display:inline-block;">
-      <span style="cursor:pointer;">インポート</span>
-      <input type="file" id="importFile" accept="application/json" onchange="importData(event)" style="display:none;">
-    </label>
-    <button onclick="exportData()">エクスポート</button>
-  </div>
-  <div id="tableContainer"></div>
-
   <script>
     const lampOptions = ["NO PLAY", "F", "AE", "E", "C", "H", "EXH", "FC"];
     const lampColorMap = {
@@ -254,13 +317,13 @@
       const table = document.createElement("table");
       const header = document.createElement("tr");
       const headerLabels = [
-        { text: "タイトル", class: "col-title" },
-        { text: "レベル", class: "col-level" },
-        { text: "Ver", class: "col-ver" },
-        { text: "SPLv", class: "col-splv" },
-        { text: "ランプ", class: "col-lamp" },
-        { text: "BP", class: "col-bp" },
-        { text: "スコア", class: "col-score" }
+        { text: "タイトル", class: "header-title" },
+        { text: "レベル", class: "header-level" },
+        { text: "Ver", class: "header-ver" },
+        { text: "SPLv", class: "header-splv" },
+        { text: "ランプ", class: "header-lamp" },
+        { text: "BP", class: "header-bp" },
+        { text: "スコア", class: "header-score" }
       ];
 
       headerLabels.forEach(({ text, class: className }) => {
