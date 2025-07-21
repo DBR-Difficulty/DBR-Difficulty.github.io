@@ -198,44 +198,48 @@
       .notice-box {
         width: 95%;
       }
+      .cell-title {
+        word-break: break-all;
+        white-space: normal;
+      }
     }
   </style>
 </head>
 <body>
   <div class="allContainer">
-    <h2>DBRプレー記録管理</h2>
     <center>
-    <div class="notice-box">
-      <ul>
-          <li>DBR向けプレー記録管理ページです データはブラウザに直接保存されます</li>
-          <li>意図しないデータ消失が起こりうるため、定期的にエクスポート機能でバックアップを取ることを推奨します</li>
-          <li>読み込み高速化のため、あらかじめ生成済の難易度表データを直接読み込んでいます<br>
-            <b>最新の表状況が反映されませんので、あくまで記録用としてお考えください</b></li>
-          <li id="lastUpdated">難易度表データの最終生成日は です</li>
-          <li><b><a href="dbr_table_extend.html">難易度表拡張機能</a>と記録を共有しています</b> 環境のある方はぜひ併せてお使いください</li>
-          <li>データ量などの都合で全譜面を収録しているのは☆7～☆12までです ご了承ください</li>
-          <li>現行AC作品でプレーできない譜面はグレーで表示されます</li>
-      </ul>
-    </div>
-    <div class="toplink-margin">
-        <a href="index.html">TOPに戻る</a>
-    </div>
-    <div class="sort-buttons">
-      <button onclick="sortBy('splv')">SPLv順</button>
-      <button onclick="sortBy('level')">難易度表レベル順</button>
-      <button onclick="sortBy('ver')">バージョン順</button>
-    </div>
-    <div class="search-bar">
-      <label for="searchInput">タイトル検索：</label>
-      <input type="text" id="searchInput" placeholder="キーワード入力" oninput="filterByTitle()">
-    </div>
-    <div class="import-export">
-      <label class="button" style="display:inline-block;">
-        <span style="cursor:pointer;">インポート</span>
-        <input type="file" id="importFile" accept="application/json" onchange="importData(event)" style="display:none;">
-      </label>
-      <button onclick="exportData()">エクスポート</button>
-    </div>
+      <h2>DBRプレー記録管理</h2>
+      <div class="notice-box">
+        <ul>
+            <li>DBR向けプレー記録管理ページです データはブラウザに直接保存されます</li>
+            <li>意図しないデータ消失が起こりうるため、定期的にエクスポート機能でバックアップを取ることを推奨します</li>
+            <li>読み込み高速化のため、あらかじめ生成済の難易度表データを直接読み込んでいます<br>
+              <b>最新の表状況が反映されませんので、あくまで記録用としてお考えください</b></li>
+            <li id="lastUpdated">難易度表データの最終生成日は です</li>
+            <li><b><a href="dbr_table_extend.html">難易度表拡張機能</a>と記録を共有しています</b> 環境のある方はぜひ併せてお使いください</li>
+            <li>データ量などの都合で全譜面を収録しているのは☆7～☆12までです ご了承ください</li>
+            <li>現行AC作品でプレーできない譜面はグレーで表示されます</li>
+        </ul>
+      </div>
+      <div class="toplink-margin">
+          <a href="index.html">TOPに戻る</a>
+      </div>
+      <div class="sort-buttons">
+        <button onclick="sortBy('splv')">SPLv順</button>
+        <button onclick="sortBy('level')">難易度表レベル順</button>
+        <button onclick="sortBy('ver')">バージョン順</button>
+      </div>
+      <div class="search-bar">
+        <label for="searchInput">タイトル検索：</label>
+        <input type="text" id="searchInput" placeholder="キーワード入力" oninput="filterByTitle()">
+      </div>
+      <div class="import-export">
+        <label class="button" style="display:inline-block;">
+          <span style="cursor:pointer;">インポート</span>
+          <input type="file" id="importFile" accept="application/json" onchange="importData(event)" style="display:none;">
+        </label>
+        <button onclick="exportData()">エクスポート</button>
+      </div>
     </center>
     <div id="tableContainer"></div>
   </div>
@@ -416,7 +420,7 @@
           const bp = localStorage.getItem(bpKey) || "";
           const score = localStorage.getItem(scoreKey) || "";
 
-          row.appendChild(tdText(chart.title));
+          row.appendChild(tdText(chart.title, "col-title"));  // ← クラス追加
           row.appendChild(tdText(chart.level || ""));
           row.appendChild(tdText(chart.ver || ""));
           row.appendChild(tdText(chart.splv || ""));
@@ -470,9 +474,10 @@
       container.appendChild(table);
     }
 
-    function tdText(text) {
+    function tdText(text, className = "") {
       const td = document.createElement("td");
       td.textContent = text;
+      if (className) td.className = className;
       return td;
     }
 
