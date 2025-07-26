@@ -287,6 +287,14 @@ body.diff {
   text-align: left;
 }
 
+/* 発狂 */
+.col-insane {
+  min-width: 6ch;
+  max-width: 6ch;
+  width: 1%;
+  text-align: left;
+}
+
 .modal {
     display: none;
     position: fixed;
