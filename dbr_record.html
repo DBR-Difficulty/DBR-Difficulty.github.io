@@ -179,6 +179,15 @@
       font-size: 1.75rem;
     }
 
+    #clearAllButton {
+      position: absolute;
+      top: 0.5rem;
+      left: 0.5rem;
+      z-index: 1000;
+      font-size: 0.75rem;
+      padding: 0.5rem 0.75rem;
+    }
+
     @media (max-width: 768px) {
       body {
         font-size: 0.75rem;
@@ -216,18 +225,28 @@
       .notice-box {
         width: 95%;
       }
+
       .col-title {
         max-width: 20ch;
         word-break: break-all;
         white-space: normal;
       }
+
       .title-span{
         font-size: 1.25rem;
+      }
+
+      #clearAllButton {
+        top: 0.25rem;
+        left: 0.25rem;
+        font-size: 0.5rem;
+        padding: 0.2rem 0.2rem;
       }
     }
   </style>
 </head>
 <body>
+  <button onclick="clearAllData()" id="clearAllButton" class="button">ランプ・BP・スコア全消去</button>
   <div class="allContainer">
     <center>
     <strong><span class="title-span">DBRプレー記録管理</span></strong><br>
@@ -788,6 +807,25 @@
 
       reader.readAsText(file);
     }
+
+    function clearAllData() {
+    if (confirm("すべてのランプ、BP、スコアデータを削除します。よろしいですか？")) {
+      if (confirm("後悔しませんね？")) {
+        const keysToDelete = [];
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          if (key.startsWith("lamp_") || key.startsWith("bp_") || key.startsWith("score_")) {
+            keysToDelete.push(key);
+          }
+        }
+        if (localStorage.getItem("textageKey")) {
+          keysToDelete.push("textageKey");
+        }
+        keysToDelete.forEach(key => localStorage.removeItem(key));
+        location.reload();
+      }
+    }
+  }
   </script>
 </body>
 </html>
