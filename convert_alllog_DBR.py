@@ -111,6 +111,12 @@ level_ignore_exceptions = [
     ("ALBIDA", "N"),
     ("Sounds Of Summer", "N"),
     ("Beat Radiance", "N"),
+    ("AA", "N"),
+    ("bag", "H"),
+    ("DoLL", "H"),
+    ("Blame", "N"),
+    ("EDEN", "N"),
+    ("e-motion 2003 -romantic extra-", "N"),
 ]
 
 def convert_alllog(*args):

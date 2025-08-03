@@ -151,6 +151,13 @@
     ["ALBIDA", "N"],
     ["Sounds Of Summer", "N"],
     ["Beat Radiance", "N"],
+    ["AA", "N"],
+    ["bag", "H"],
+    ["DoLL", "H"],
+    ["Blame", "N"],
+    ["EDEN", "N"],
+    ["e-motion 2003 -romantic extra-", "N"],
+    ["Cheer Train", "H"],
   ];
 
   const lampData = {};
