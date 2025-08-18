@@ -158,6 +158,22 @@
     ["EDEN", "N"],
     ["e-motion 2003 -romantic extra-", "N"],
     ["Cheer Train", "H"],
+    ["V", "N"],
+    ["Ganymede", "N"],
+    ["neu", "N"],
+    ["Übertreffen", "N"],
+    ["CaptivAte～浄化～", "N"],
+    ["405nm (Ryu☆mix)", "N"],
+    ["こっちを向いてよ", "H"],
+    ["こっちを向いてよ", "N"],
+    ["quasar", "N"],
+    ["Skyscraper", "H"],
+    ["Summer Vacation(CU mix)", "N"],
+    ["Voltage (feat. Hidemaru)", "N"],
+    ["earth scape", "H"],
+    ["LOVE IS ORANGE", "H"],
+    ["Fly Away To India", "H"],
+    ["GRADIUSIC CYBER", "H"],
   ];
 
   const lampData = {};
