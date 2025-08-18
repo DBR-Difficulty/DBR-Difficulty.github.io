@@ -16,6 +16,7 @@
     "video2": "",
     "pending": "",
     "insane": "16",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -37,6 +38,7 @@
     "video2": "",
     "pending": "",
     "insane": "13",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -58,6 +60,7 @@
     "video2": "",
     "pending": "12.92",
     "insane": "1",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -79,6 +82,7 @@
     "video2": "",
     "pending": "92-?",
     "insane": "1",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -100,6 +104,7 @@
     "video2": "",
     "pending": "",
     "insane": "6",
+    "hardlevel": "12.96",
     "comment1": "同時系良譜面だけどサビ前とラストに二重乱打が来るのでクソゲー感が否めない",
     "comment2": "",
     "splv": "12"
@@ -121,6 +126,7 @@
     "video2": "",
     "pending": "",
     "insane": "15",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -142,6 +148,7 @@
     "video2": "",
     "pending": "",
     "insane": "6",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -163,6 +170,7 @@
     "video2": "",
     "pending": "",
     "insane": "15",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -184,6 +192,7 @@
     "video2": "",
     "pending": "",
     "insane": "5",
+    "hardlevel": "12.97",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -205,6 +214,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -226,6 +236,7 @@
     "video2": "",
     "pending": "",
     "insane": "4",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -247,6 +258,7 @@
     "video2": "",
     "pending": "",
     "insane": "3",
+    "hardlevel": "12.98",
     "comment1": "外れた時が悲惨",
     "comment2": "",
     "splv": "12"
@@ -268,6 +280,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -289,6 +302,7 @@
     "video2": "",
     "pending": "",
     "insane": "7",
+    "hardlevel": "12.97",
     "comment1": "",
     "comment2": "R.I.P.",
     "splv": "12"
@@ -310,6 +324,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -331,6 +346,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -352,6 +368,7 @@
     "video2": "",
     "pending": "",
     "insane": "13",
+    "hardlevel": "12.99",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -373,6 +390,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -394,6 +412,7 @@
     "video2": "",
     "pending": "",
     "insane": "6",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -415,6 +434,7 @@
     "video2": "https://www.youtube.com/watch?v=iFYpJ9D0TpU",
     "pending": "",
     "insane": "1",
+    "hardlevel": "12.97",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -436,6 +456,7 @@
     "video2": "",
     "pending": "",
     "insane": "13",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -457,15 +478,16 @@
     "video2": "",
     "pending": "93-",
     "insane": "5",
+    "hardlevel": "12.97",
     "comment1": "",
     "comment2": "",
     "splv": "12"
   },
   {
     "ver": "21",
-    "level": "12.97",
+    "level": "12.98",
     "title": "Adularia(A)",
-    "video": "https://www.youtube.com/watch?v=eP_8Ow53hv0",
+    "video": "https://www.youtube.com/watch?v=XVWG4bYk8SY",
     "textageid": "adularia",
     "notes": "1449",
     "scratch": "23",
@@ -478,6 +500,7 @@
     "video2": "",
     "pending": "",
     "insane": "9",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -499,6 +522,7 @@
     "video2": "",
     "pending": "",
     "insane": "3",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -520,6 +544,7 @@
     "video2": "",
     "pending": "",
     "insane": "10",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -541,6 +566,7 @@
     "video2": "",
     "pending": "",
     "insane": "15",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -562,6 +588,7 @@
     "video2": "",
     "pending": "",
     "insane": "1",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -583,6 +610,7 @@
     "video2": "",
     "pending": "",
     "insane": "12",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -604,6 +632,7 @@
     "video2": "https://www.youtube.com/watch?v=zpEg4kX_F_4",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "ラス殺し",
     "comment2": "",
     "splv": "12"
@@ -625,6 +654,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -646,6 +676,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -667,6 +698,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -688,6 +720,7 @@
     "video2": "",
     "pending": "",
     "insane": "17",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -709,6 +742,7 @@
     "video2": "",
     "pending": "",
     "insane": "2",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -730,6 +764,7 @@
     "video2": "",
     "pending": "93-",
     "insane": "5",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -751,6 +786,7 @@
     "video2": "https://www.youtube.com/watch?v=Jtq41T7iO2s",
     "pending": "12.91でいい",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -772,6 +808,7 @@
     "video2": "",
     "pending": "",
     "insane": "17",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -793,6 +830,7 @@
     "video2": "",
     "pending": "",
     "insane": "12",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -814,6 +852,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -835,6 +874,7 @@
     "video2": "",
     "pending": "",
     "insane": "16",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -856,6 +896,7 @@
     "video2": "",
     "pending": "93",
     "insane": "3",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -877,6 +918,7 @@
     "video2": "",
     "pending": "",
     "insane": "16",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -898,6 +940,7 @@
     "video2": "",
     "pending": "",
     "insane": "1",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -919,6 +962,7 @@
     "video2": "https://www.youtube.com/watch?v=n5WYVM13_Z0",
     "pending": "",
     "insane": "1",
+    "hardlevel": "12.98",
     "comment1": "悪くはない",
     "comment2": "軸の位置次第",
     "splv": "12"
@@ -940,6 +984,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -961,6 +1006,7 @@
     "video2": "https://www.youtube.com/watch?v=S2fAX7akuYI",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -981,7 +1027,8 @@
     "infpack": "",
     "video2": "",
     "pending": "",
-    "insane": "3",
+    "insane": "4",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -1003,6 +1050,7 @@
     "video2": "",
     "pending": "",
     "insane": "4",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -1024,6 +1072,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -1045,6 +1094,7 @@
     "video2": "",
     "pending": "",
     "insane": "4",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -1066,6 +1116,7 @@
     "video2": "",
     "pending": "",
     "insane": "10",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -1087,6 +1138,7 @@
     "video2": "",
     "pending": "",
     "insane": "2",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -1108,6 +1160,7 @@
     "video2": "https://www.youtube.com/watch?v=RnMMSPRMUME",
     "pending": "89-90",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -1129,6 +1182,7 @@
     "video2": "",
     "pending": "",
     "insane": "16",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -1150,6 +1204,7 @@
     "video2": "",
     "pending": "",
     "insane": "17",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -1171,6 +1226,7 @@
     "video2": "",
     "pending": "",
     "insane": "15",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -1192,6 +1248,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -1213,6 +1270,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -1234,6 +1292,7 @@
     "video2": "",
     "pending": "",
     "insane": "7",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -1242,7 +1301,7 @@
     "ver": "22",
     "level": "12.90",
     "title": "Beat Radiance(L)",
-    "video": "https://www.youtube.com/watch?v=E7EhC14xBJg",
+    "video": "https://www.youtube.com/watch?v=dZKJA4JmpAQ",
     "textageid": "beatradi",
     "notes": "1809",
     "scratch": "97",
@@ -1255,6 +1314,7 @@
     "video2": "https://www.youtube.com/watch?v=jGEVu3m6keE",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -1276,6 +1336,7 @@
     "video2": "",
     "pending": "",
     "insane": "19",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -1297,6 +1358,7 @@
     "video2": "",
     "pending": "",
     "insane": "7",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -1318,6 +1380,7 @@
     "video2": "",
     "pending": "",
     "insane": "1",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -1339,6 +1402,7 @@
     "video2": "",
     "pending": "",
     "insane": "18",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -1360,6 +1424,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -1381,6 +1446,7 @@
     "video2": "https://www.youtube.com/watch?v=aGscVg6p_j8",
     "pending": "",
     "insane": "",
+    "hardlevel": "12.95",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -1402,6 +1468,7 @@
     "video2": "",
     "pending": "",
     "insane": "16",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -1423,6 +1490,7 @@
     "video2": "",
     "pending": "",
     "insane": "7",
+    "hardlevel": "12.97",
     "comment1": "",
     "comment2": "やらんでも…",
     "splv": "12"
@@ -1444,6 +1512,7 @@
     "video2": "",
     "pending": "88?",
     "insane": "3",
+    "hardlevel": "12.96",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -1465,6 +1534,7 @@
     "video2": "",
     "pending": "",
     "insane": "7",
+    "hardlevel": "",
     "comment1": "効果的ではない",
     "comment2": "",
     "splv": "12"
@@ -1486,6 +1556,7 @@
     "video2": "",
     "pending": "下げても良いかも",
     "insane": "",
+    "hardlevel": "",
     "comment1": "100%回復できるのでイージー自体は楽",
     "comment2": "回復量覚えてません",
     "splv": "12"
@@ -1507,6 +1578,7 @@
     "video2": "",
     "pending": "",
     "insane": "16",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -1528,6 +1600,7 @@
     "video2": "",
     "pending": "",
     "insane": "13",
+    "hardlevel": "12.99",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -1549,6 +1622,7 @@
     "video2": "",
     "pending": "",
     "insane": "4",
+    "hardlevel": "12.97",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -1570,6 +1644,7 @@
     "video2": "",
     "pending": "",
     "insane": "13",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -1591,6 +1666,7 @@
     "video2": "",
     "pending": "",
     "insane": "10",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -1612,6 +1688,7 @@
     "video2": "",
     "pending": "",
     "insane": "15",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -1633,6 +1710,7 @@
     "video2": "",
     "pending": "",
     "insane": "8",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -1654,6 +1732,7 @@
     "video2": "https://www.youtube.com/watch?v=mkYxKOyN3NA",
     "pending": "",
     "insane": "1",
+    "hardlevel": "12.96",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -1675,6 +1754,7 @@
     "video2": "",
     "pending": "",
     "insane": "4",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -1696,6 +1776,7 @@
     "video2": "",
     "pending": "",
     "insane": "14",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -1717,6 +1798,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -1738,6 +1820,7 @@
     "video2": "https://www.youtube.com/watch?v=-4OtXmvujIg",
     "pending": "",
     "insane": "2",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -1759,6 +1842,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -1780,6 +1864,7 @@
     "video2": "",
     "pending": "",
     "insane": "18",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -1801,6 +1886,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "配置に左右されやすい",
     "comment2": "",
     "splv": "12"
@@ -1822,6 +1908,7 @@
     "video2": "https://www.youtube.com/watch?v=RhvT8vZ4cF4",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -1843,6 +1930,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -1864,6 +1952,7 @@
     "video2": "",
     "pending": "95-",
     "insane": "5",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -1885,6 +1974,7 @@
     "video2": "",
     "pending": "",
     "insane": "16",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -1906,6 +1996,7 @@
     "video2": "",
     "pending": "",
     "insane": "19",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -1927,6 +2018,7 @@
     "video2": "",
     "pending": "",
     "insane": "4",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -1948,6 +2040,7 @@
     "video2": "",
     "pending": "",
     "insane": "6",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -1969,6 +2062,7 @@
     "video2": "",
     "pending": "",
     "insane": "14",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -1990,6 +2084,7 @@
     "video2": "https://www.youtube.com/watch?v=L33xCxRDeZM",
     "pending": "",
     "insane": "4",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -2011,6 +2106,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -2032,6 +2128,7 @@
     "video2": "",
     "pending": "",
     "insane": "6",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -2053,6 +2150,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "いつ頃残りだすか謎→この辺らしい",
     "splv": "12"
@@ -2074,6 +2172,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -2095,6 +2194,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -2116,6 +2216,7 @@
     "video2": "",
     "pending": "",
     "insane": "17",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -2137,6 +2238,7 @@
     "video2": "",
     "pending": "",
     "insane": "15",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -2158,6 +2260,7 @@
     "video2": "",
     "pending": "",
     "insane": "8",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -2179,6 +2282,7 @@
     "video2": "",
     "pending": "",
     "insane": "14",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -2200,6 +2304,7 @@
     "video2": "",
     "pending": "",
     "insane": "5",
+    "hardlevel": "12.97",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -2221,6 +2326,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -2242,6 +2348,7 @@
     "video2": "",
     "pending": "",
     "insane": "14",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -2263,6 +2370,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -2284,6 +2392,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -2305,6 +2414,7 @@
     "video2": "https://www.youtube.com/watch?v=GsbYDid3yLA",
     "pending": "91-92",
     "insane": "1",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -2326,6 +2436,7 @@
     "video2": "",
     "pending": "",
     "insane": "4",
+    "hardlevel": "12.97",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -2347,6 +2458,7 @@
     "video2": "",
     "pending": "",
     "insane": "18",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -2368,6 +2480,7 @@
     "video2": "",
     "pending": "",
     "insane": "16",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -2389,6 +2502,7 @@
     "video2": "",
     "pending": "",
     "insane": "4",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -2410,6 +2524,7 @@
     "video2": "",
     "pending": "",
     "insane": "3",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -2431,6 +2546,7 @@
     "video2": "",
     "pending": "",
     "insane": "3",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -2452,6 +2568,7 @@
     "video2": "",
     "pending": "",
     "insane": "4",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -2473,6 +2590,7 @@
     "video2": "",
     "pending": "",
     "insane": "13",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -2494,6 +2612,7 @@
     "video2": "",
     "pending": "",
     "insane": "20",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -2515,6 +2634,7 @@
     "video2": "",
     "pending": "",
     "insane": "10",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -2536,6 +2656,7 @@
     "video2": "",
     "pending": "",
     "insane": "14",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -2557,6 +2678,7 @@
     "video2": "",
     "pending": "",
     "insane": "12",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -2578,6 +2700,7 @@
     "video2": "",
     "pending": "",
     "insane": "13",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -2599,6 +2722,7 @@
     "video2": "",
     "pending": "",
     "insane": "9",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -2620,6 +2744,7 @@
     "video2": "",
     "pending": "",
     "insane": "16",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -2641,6 +2766,7 @@
     "video2": "",
     "pending": "",
     "insane": "20",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -2662,6 +2788,7 @@
     "video2": "",
     "pending": "86-88",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "怪しい",
     "splv": "12"
@@ -2683,6 +2810,7 @@
     "video2": "",
     "pending": "",
     "insane": "4",
+    "hardlevel": "12.97",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -2704,6 +2832,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -2725,6 +2854,7 @@
     "video2": "",
     "pending": "89?",
     "insane": "",
+    "hardlevel": "",
     "comment1": "やる意味はあんまりない　ランプは狙いやすい",
     "comment2": "",
     "splv": "12"
@@ -2746,6 +2876,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -2767,6 +2898,7 @@
     "video2": "",
     "pending": "",
     "insane": "13",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -2788,6 +2920,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -2809,6 +2942,7 @@
     "video2": "",
     "pending": "",
     "insane": "6",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -2830,6 +2964,7 @@
     "video2": "",
     "pending": "",
     "insane": "3",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -2851,6 +2986,7 @@
     "video2": "",
     "pending": "",
     "insane": "4",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -2872,6 +3008,7 @@
     "video2": "",
     "pending": "",
     "insane": "7",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -2893,6 +3030,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -2914,6 +3052,7 @@
     "video2": "",
     "pending": "",
     "insane": "4",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -2935,6 +3074,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "運",
     "splv": "12"
@@ -2956,6 +3096,7 @@
     "video2": "",
     "pending": "",
     "insane": "4",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -2977,6 +3118,7 @@
     "video2": "",
     "pending": "",
     "insane": "3",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -2998,6 +3140,7 @@
     "video2": "",
     "pending": "",
     "insane": "16",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -3019,6 +3162,7 @@
     "video2": "",
     "pending": "",
     "insane": "18",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -3040,6 +3184,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -3061,6 +3206,7 @@
     "video2": "",
     "pending": "",
     "insane": "13",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -3082,6 +3228,7 @@
     "video2": "",
     "pending": "",
     "insane": "18",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -3103,6 +3250,7 @@
     "video2": "",
     "pending": "",
     "insane": "17",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -3124,6 +3272,7 @@
     "video2": "",
     "pending": "",
     "insane": "11",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -3145,6 +3294,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -3166,6 +3316,7 @@
     "video2": "",
     "pending": "",
     "insane": "11",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -3187,6 +3338,7 @@
     "video2": "https://www.youtube.com/watch?v=zvMOa6jX05E",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": ".96ぐらいの体感だけど絶対違いそう",
     "splv": "12"
@@ -3208,6 +3360,7 @@
     "video2": "",
     "pending": "",
     "insane": "18",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -3229,6 +3382,7 @@
     "video2": "",
     "pending": "",
     "insane": "2",
+    "hardlevel": "12.96",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -3250,6 +3404,7 @@
     "video2": "https://www.youtube.com/watch?v=d23pTgUpyAw",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -3271,6 +3426,7 @@
     "video2": "",
     "pending": "",
     "insane": "19",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -3292,6 +3448,7 @@
     "video2": "",
     "pending": "",
     "insane": "5",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -3313,6 +3470,7 @@
     "video2": "",
     "pending": "",
     "insane": "13",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -3321,7 +3479,7 @@
     "ver": "32",
     "level": "",
     "title": "EYE OF THE HEAVEN(A)",
-    "video": "",
+    "video": "https://www.youtube.com/watch?v=v9ApBTXCU5U",
     "textageid": "eyeheavn",
     "notes": "1824",
     "scratch": "56",
@@ -3334,6 +3492,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -3355,6 +3514,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "12.92",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -3376,6 +3536,7 @@
     "video2": "",
     "pending": "",
     "insane": "12",
+    "hardlevel": "12.99",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -3397,6 +3558,7 @@
     "video2": "",
     "pending": "",
     "insane": "11",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -3418,6 +3580,7 @@
     "video2": "",
     "pending": "",
     "insane": "2",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -3439,6 +3602,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "運",
     "splv": "12"
@@ -3460,6 +3624,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -3481,6 +3646,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -3502,6 +3668,7 @@
     "video2": "",
     "pending": "",
     "insane": "8",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -3523,6 +3690,7 @@
     "video2": "https://www.youtube.com/watch?v=I0BGHr3d8pM",
     "pending": "12.90",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -3544,6 +3712,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "運 弱いイレーサー",
     "splv": "12"
@@ -3565,6 +3734,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "2021/11/25 .84→.85",
     "splv": "12"
@@ -3586,6 +3756,7 @@
     "video2": "",
     "pending": "",
     "insane": "3",
+    "hardlevel": "12.97",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -3607,6 +3778,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -3628,6 +3800,7 @@
     "video2": "",
     "pending": "",
     "insane": "5",
+    "hardlevel": "12.97",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -3649,6 +3822,7 @@
     "video2": "",
     "pending": "",
     "insane": "11",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -3670,6 +3844,7 @@
     "video2": "",
     "pending": "89",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -3691,6 +3866,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -3712,6 +3888,7 @@
     "video2": "",
     "pending": "",
     "insane": "4",
+    "hardlevel": "12.97",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -3733,6 +3910,7 @@
     "video2": "https://www.youtube.com/watch?v=3utJp6Zj3u0",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -3754,6 +3932,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -3775,6 +3954,7 @@
     "video2": "",
     "pending": "",
     "insane": "14",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -3796,6 +3976,7 @@
     "video2": "",
     "pending": "",
     "insane": "2",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -3817,6 +3998,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -3838,6 +4020,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -3859,6 +4042,7 @@
     "video2": "",
     "pending": "",
     "insane": "15",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -3880,6 +4064,7 @@
     "video2": "",
     "pending": "",
     "insane": "8",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -3901,6 +4086,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -3922,6 +4108,7 @@
     "video2": "",
     "pending": "93-",
     "insane": "3",
+    "hardlevel": "12.96",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -3943,6 +4130,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "12.84",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -3964,6 +4152,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "12.83",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -3985,6 +4174,7 @@
     "video2": "",
     "pending": "",
     "insane": "3",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -4006,6 +4196,7 @@
     "video2": "https://www.youtube.com/watch?v=-ylkTN8dFMk",
     "pending": "89?",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "怪しい",
     "splv": "12"
@@ -4027,6 +4218,7 @@
     "video2": "",
     "pending": "",
     "insane": "10",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -4048,6 +4240,7 @@
     "video2": "",
     "pending": "",
     "insane": "13",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "紫はラストで足りる",
     "splv": "12"
@@ -4069,6 +4262,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "やらんでも…",
     "splv": "12"
@@ -4090,6 +4284,7 @@
     "video2": "",
     "pending": "",
     "insane": "16",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -4111,6 +4306,7 @@
     "video2": "",
     "pending": "",
     "insane": "16",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -4132,6 +4328,7 @@
     "video2": "",
     "pending": "",
     "insane": "7",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -4153,6 +4350,7 @@
     "video2": "",
     "pending": "",
     "insane": "2",
+    "hardlevel": "12.97",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -4174,6 +4372,7 @@
     "video2": "",
     "pending": "",
     "insane": "5",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -4195,6 +4394,7 @@
     "video2": "https://www.youtube.com/watch?v=0kR4RbRv5ZU",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "正規大当たりなので基本全部ハズレ",
     "comment2": "",
     "splv": "12"
@@ -4216,6 +4416,7 @@
     "video2": "",
     "pending": "",
     "insane": "10",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -4237,6 +4438,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -4258,6 +4460,7 @@
     "video2": "",
     "pending": "",
     "insane": "7",
+    "hardlevel": "12.97",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -4279,6 +4482,7 @@
     "video2": "",
     "pending": "",
     "insane": "10",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -4300,6 +4504,7 @@
     "video2": "",
     "pending": "",
     "insane": "19",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -4321,6 +4526,7 @@
     "video2": "",
     "pending": "",
     "insane": "2",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -4342,6 +4548,7 @@
     "video2": "",
     "pending": "",
     "insane": "12",
+    "hardlevel": "12.99",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -4363,6 +4570,7 @@
     "video2": "",
     "pending": "",
     "insane": "7",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -4384,6 +4592,7 @@
     "video2": "",
     "pending": "",
     "insane": "16",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -4405,6 +4614,7 @@
     "video2": "https://www.youtube.com/watch?v=oPcL3IIYBOA",
     "pending": "88-89?",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -4426,6 +4636,7 @@
     "video2": "",
     "pending": "",
     "insane": "5",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -4447,6 +4658,7 @@
     "video2": "",
     "pending": "",
     "insane": "2",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -4468,6 +4680,7 @@
     "video2": "",
     "pending": "",
     "insane": "14",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -4489,6 +4702,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -4510,6 +4724,7 @@
     "video2": "",
     "pending": "",
     "insane": "2",
+    "hardlevel": "12.96",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -4531,6 +4746,7 @@
     "video2": "",
     "pending": "",
     "insane": "13",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -4552,6 +4768,7 @@
     "video2": "",
     "pending": "",
     "insane": "6",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -4573,6 +4790,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "運",
     "splv": "12"
@@ -4594,6 +4812,7 @@
     "video2": "",
     "pending": "",
     "insane": "16",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -4615,6 +4834,7 @@
     "video2": "",
     "pending": "",
     "insane": "2",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -4636,6 +4856,7 @@
     "video2": "",
     "pending": "",
     "insane": "12",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -4657,6 +4878,7 @@
     "video2": "",
     "pending": "",
     "insane": "19",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -4678,6 +4900,7 @@
     "video2": "",
     "pending": "",
     "insane": "5",
+    "hardlevel": "12.96",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -4699,6 +4922,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -4720,6 +4944,7 @@
     "video2": "",
     "pending": "",
     "insane": "9",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "運",
     "splv": "12"
@@ -4741,6 +4966,7 @@
     "video2": "",
     "pending": "",
     "insane": "5",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "運",
     "splv": "12"
@@ -4762,6 +4988,7 @@
     "video2": "",
     "pending": "",
     "insane": "16",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -4783,6 +5010,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -4804,6 +5032,7 @@
     "video2": "https://www.youtube.com/watch?v=HmkXcOWGe_s",
     "pending": "12.92か",
     "insane": "",
+    "hardlevel": "12.97",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -4825,6 +5054,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "こっちは意味あり寄り",
     "splv": "12"
@@ -4846,6 +5076,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "悪い譜面じゃないんだけど、やる意味ある？",
     "comment2": "",
     "splv": "12"
@@ -4867,6 +5098,7 @@
     "video2": "",
     "pending": "",
     "insane": "4",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -4888,6 +5120,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "サビ後半から回復",
     "comment2": "",
     "splv": "12"
@@ -4909,6 +5142,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -4930,6 +5164,7 @@
     "video2": "",
     "pending": "",
     "insane": "3",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -4951,6 +5186,7 @@
     "video2": "",
     "pending": "",
     "insane": "17",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -4972,6 +5208,7 @@
     "video2": "",
     "pending": "",
     "insane": "7",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "加速後から",
     "splv": "12"
@@ -4993,6 +5230,7 @@
     "video2": "https://www.youtube.com/watch?v=vrvYh607pUw",
     "pending": "86-87",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -5014,6 +5252,7 @@
     "video2": "",
     "pending": "",
     "insane": "16",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -5035,6 +5274,7 @@
     "video2": "",
     "pending": "",
     "insane": "19",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -5056,6 +5296,7 @@
     "video2": "",
     "pending": "",
     "insane": "19",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -5077,6 +5318,7 @@
     "video2": "",
     "pending": "",
     "insane": "7",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -5098,6 +5340,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -5119,6 +5362,7 @@
     "video2": "",
     "pending": "",
     "insane": "4",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -5140,6 +5384,7 @@
     "video2": "",
     "pending": "",
     "insane": "7",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -5161,6 +5406,7 @@
     "video2": "",
     "pending": "しんどさでいえば12.91",
     "insane": "",
+    "hardlevel": "12.97",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -5182,6 +5428,7 @@
     "video2": "",
     "pending": "",
     "insane": "4",
+    "hardlevel": "12.97",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -5203,6 +5450,7 @@
     "video2": "",
     "pending": "",
     "insane": "5",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -5224,6 +5472,7 @@
     "video2": "https://www.youtube.com/watch?v=qOyjAfHnlg8",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -5245,6 +5494,7 @@
     "video2": "",
     "pending": "",
     "insane": "4",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -5266,6 +5516,7 @@
     "video2": "https://www.youtube.com/watch?v=wic1It5Ftbg",
     "pending": "",
     "insane": "",
+    "hardlevel": "12.96",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -5287,6 +5538,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -5308,6 +5560,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -5329,6 +5582,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -5350,6 +5604,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -5371,6 +5626,7 @@
     "video2": "",
     "pending": "",
     "insane": "4",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -5392,6 +5648,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -5413,6 +5670,7 @@
     "video2": "",
     "pending": "",
     "insane": "16",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -5434,6 +5692,7 @@
     "video2": "",
     "pending": "強",
     "insane": "",
+    "hardlevel": "",
     "comment1": "配置に左右されやすい",
     "comment2": "",
     "splv": "12"
@@ -5455,6 +5714,7 @@
     "video2": "",
     "pending": "",
     "insane": "18",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -5476,6 +5736,7 @@
     "video2": "",
     "pending": "",
     "insane": "5",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -5497,6 +5758,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -5518,6 +5780,7 @@
     "video2": "",
     "pending": "",
     "insane": "9",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -5539,6 +5802,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -5560,6 +5824,7 @@
     "video2": "https://www.youtube.com/watch?v=5wrEuEq7DME",
     "pending": "91",
     "insane": "",
+    "hardlevel": "12.97",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -5581,6 +5846,7 @@
     "video2": "",
     "pending": "",
     "insane": "7",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -5602,6 +5868,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "適正外",
     "splv": "12"
@@ -5623,6 +5890,7 @@
     "video2": "",
     "pending": "",
     "insane": "18",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -5644,6 +5912,7 @@
     "video2": "",
     "pending": "弱",
     "insane": "2",
+    "hardlevel": "12.97",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -5665,6 +5934,7 @@
     "video2": "",
     "pending": "",
     "insane": "12",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -5686,6 +5956,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -5707,6 +5978,7 @@
     "video2": "",
     "pending": "91に下げてもいい",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -5728,6 +6000,7 @@
     "video2": "",
     "pending": "",
     "insane": "10",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -5749,6 +6022,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -5770,6 +6044,7 @@
     "video2": "",
     "pending": "",
     "insane": "20",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -5791,6 +6066,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "12.95",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -5812,6 +6088,7 @@
     "video2": "",
     "pending": "",
     "insane": "4",
+    "hardlevel": "12.97",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -5833,6 +6110,7 @@
     "video2": "",
     "pending": "12.91-92でもいいかも",
     "insane": "1",
+    "hardlevel": "12.93",
     "comment1": "好き",
     "comment2": "",
     "splv": "12"
@@ -5854,6 +6132,7 @@
     "video2": "",
     "pending": "",
     "insane": "10",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -5875,6 +6154,7 @@
     "video2": "",
     "pending": "",
     "insane": "10",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -5896,6 +6176,7 @@
     "video2": "",
     "pending": "91-92",
     "insane": "3",
+    "hardlevel": "12.97",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -5917,6 +6198,7 @@
     "video2": "",
     "pending": "",
     "insane": "18",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -5938,6 +6220,7 @@
     "video2": "",
     "pending": "",
     "insane": "3",
+    "hardlevel": "12.97",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -5959,6 +6242,7 @@
     "video2": "",
     "pending": "92-?",
     "insane": "8",
+    "hardlevel": "12.97",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -5980,6 +6264,7 @@
     "video2": "",
     "pending": "",
     "insane": "9",
+    "hardlevel": "12.99",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -6001,6 +6286,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -6022,6 +6308,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -6043,6 +6330,7 @@
     "video2": "",
     "pending": "",
     "insane": "4",
+    "hardlevel": "12.97",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -6064,6 +6352,7 @@
     "video2": "",
     "pending": "",
     "insane": "3",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -6085,6 +6374,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -6106,6 +6396,7 @@
     "video2": "",
     "pending": "",
     "insane": "10",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -6127,6 +6418,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -6148,6 +6440,7 @@
     "video2": "https://www.youtube.com/watch?v=_WV0ASeW4UI",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -6169,6 +6462,7 @@
     "video2": "",
     "pending": "",
     "insane": "18",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -6190,6 +6484,7 @@
     "video2": "",
     "pending": "",
     "insane": "4",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -6211,6 +6506,7 @@
     "video2": "",
     "pending": "",
     "insane": "8",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -6232,6 +6528,7 @@
     "video2": "",
     "pending": "",
     "insane": "14",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -6253,6 +6550,7 @@
     "video2": "",
     "pending": "",
     "insane": "7",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -6274,6 +6572,7 @@
     "video2": "",
     "pending": "",
     "insane": "7",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -6295,6 +6594,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -6316,6 +6616,7 @@
     "video2": "",
     "pending": "",
     "insane": "4",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -6337,6 +6638,7 @@
     "video2": "",
     "pending": "",
     "insane": "1",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -6358,6 +6660,7 @@
     "video2": "",
     "pending": "93-",
     "insane": "6",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -6379,6 +6682,7 @@
     "video2": "",
     "pending": "",
     "insane": "13",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -6400,6 +6704,7 @@
     "video2": "",
     "pending": "",
     "insane": "1",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -6421,6 +6726,7 @@
     "video2": "",
     "pending": "",
     "insane": "16",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -6442,6 +6748,7 @@
     "video2": "",
     "pending": "",
     "insane": "10",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -6463,6 +6770,7 @@
     "video2": "https://www.youtube.com/watch?v=eUkroQPZ2cw",
     "pending": "92-",
     "insane": "2",
+    "hardlevel": "12.96",
     "comment1": "",
     "comment2": "怪しい",
     "splv": "12"
@@ -6484,6 +6792,7 @@
     "video2": "",
     "pending": "",
     "insane": "3",
+    "hardlevel": "12.96",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -6505,6 +6814,7 @@
     "video2": "",
     "pending": "",
     "insane": "12",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -6526,6 +6836,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -6547,6 +6858,7 @@
     "video2": "",
     "pending": "",
     "insane": "10",
+    "hardlevel": "",
     "comment1": "ラストまではいい譜面",
     "comment2": "",
     "splv": "12"
@@ -6568,6 +6880,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -6589,6 +6902,7 @@
     "video2": "https://www.youtube.com/watch?v=OXfUjCOdwN4",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "むずかしい",
     "comment2": "",
     "splv": "12"
@@ -6610,6 +6924,7 @@
     "video2": "",
     "pending": "",
     "insane": "9",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -6631,6 +6946,7 @@
     "video2": "https://www.youtube.com/watch?v=FJhIz1iGA88",
     "pending": "",
     "insane": "3",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -6652,6 +6968,7 @@
     "video2": "",
     "pending": "93-",
     "insane": "4",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -6673,6 +6990,7 @@
     "video2": "",
     "pending": "12.92",
     "insane": "2",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -6694,6 +7012,7 @@
     "video2": "",
     "pending": "",
     "insane": "16",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -6715,6 +7034,7 @@
     "video2": "",
     "pending": "",
     "insane": "16",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -6736,6 +7056,7 @@
     "video2": "",
     "pending": "",
     "insane": "3",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -6757,6 +7078,7 @@
     "video2": "",
     "pending": "",
     "insane": "13",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -6778,6 +7100,7 @@
     "video2": "",
     "pending": "",
     "insane": "12",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -6799,6 +7122,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -6820,6 +7144,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "怪しい",
     "splv": "12"
@@ -6841,6 +7166,7 @@
     "video2": "",
     "pending": "",
     "insane": "18",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -6862,6 +7188,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -6883,6 +7210,7 @@
     "video2": "",
     "pending": "",
     "insane": "18",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -6904,6 +7232,7 @@
     "video2": "",
     "pending": "",
     "insane": "4",
+    "hardlevel": "12.96",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -6925,6 +7254,7 @@
     "video2": "",
     "pending": "",
     "insane": "7",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -6946,6 +7276,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "謎",
     "splv": "12"
@@ -6967,6 +7298,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -6988,6 +7320,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -7009,6 +7342,7 @@
     "video2": "",
     "pending": "",
     "insane": "4",
+    "hardlevel": "12.97",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -7030,6 +7364,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "2021/11/25 .84→.85",
     "splv": "12"
@@ -7051,6 +7386,7 @@
     "video2": "",
     "pending": "",
     "insane": "7",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -7072,6 +7408,7 @@
     "video2": "",
     "pending": "",
     "insane": "1",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -7093,6 +7430,7 @@
     "video2": "",
     "pending": "",
     "insane": "5",
+    "hardlevel": "12.97",
     "comment1": "前半スカスカ　中盤いい　ラスト複本CN むずい",
     "comment2": "",
     "splv": "12"
@@ -7114,6 +7452,7 @@
     "video2": "",
     "pending": "ラス殺し考慮しても12.90か",
     "insane": "",
+    "hardlevel": "",
     "comment1": "ラス殺し",
     "comment2": "",
     "splv": "12"
@@ -7135,6 +7474,7 @@
     "video2": "",
     "pending": "",
     "insane": "16",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -7156,6 +7496,7 @@
     "video2": "",
     "pending": "",
     "insane": "6",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -7177,6 +7518,7 @@
     "video2": "",
     "pending": "",
     "insane": "12",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -7198,6 +7540,7 @@
     "video2": "",
     "pending": "",
     "insane": "12",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -7219,6 +7562,7 @@
     "video2": "",
     "pending": "",
     "insane": "12",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -7240,6 +7584,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -7261,6 +7606,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -7282,6 +7628,7 @@
     "video2": "",
     "pending": "",
     "insane": "4",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -7303,6 +7650,7 @@
     "video2": "",
     "pending": "",
     "insane": "5",
+    "hardlevel": "12.96",
     "comment1": "",
     "comment2": "ラスゲー",
     "splv": "12"
@@ -7324,6 +7672,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -7345,6 +7694,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -7366,6 +7716,7 @@
     "video2": "",
     "pending": "",
     "insane": "7",
+    "hardlevel": "12.97",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -7387,6 +7738,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -7408,6 +7760,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "B4Uの上位みたいな譜面　ラスト4・5押しなのでクリアはできないものと思った方が無難",
     "comment2": "",
     "splv": "12"
@@ -7429,6 +7782,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -7450,6 +7804,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -7471,6 +7826,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -7492,6 +7848,7 @@
     "video2": "",
     "pending": "",
     "insane": "4",
+    "hardlevel": "12.97",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -7513,6 +7870,7 @@
     "video2": "",
     "pending": "",
     "insane": "7",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -7534,6 +7892,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -7555,6 +7914,7 @@
     "video2": "",
     "pending": "",
     "insane": "11",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -7576,6 +7936,7 @@
     "video2": "",
     "pending": "",
     "insane": "7",
+    "hardlevel": "12.99",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -7597,6 +7958,7 @@
     "video2": "",
     "pending": "",
     "insane": "14",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -7618,6 +7980,7 @@
     "video2": "",
     "pending": "12.93",
     "insane": "3",
+    "hardlevel": "12.96",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -7639,6 +8002,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -7660,6 +8024,7 @@
     "video2": "",
     "pending": "",
     "insane": "4",
+    "hardlevel": "12.97",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -7681,6 +8046,7 @@
     "video2": "",
     "pending": "",
     "insane": "3",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -7702,6 +8068,7 @@
     "video2": "",
     "pending": "",
     "insane": "6",
+    "hardlevel": "12.96",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -7723,6 +8090,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -7744,6 +8112,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -7765,6 +8134,7 @@
     "video2": "",
     "pending": "",
     "insane": "15",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -7786,6 +8156,7 @@
     "video2": "",
     "pending": "",
     "insane": "13",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -7807,6 +8178,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -7828,6 +8200,7 @@
     "video2": "",
     "pending": "",
     "insane": "3",
+    "hardlevel": "12.97",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -7849,6 +8222,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -7870,6 +8244,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -7891,6 +8266,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -7912,6 +8288,7 @@
     "video2": "",
     "pending": "",
     "insane": "11",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -7933,6 +8310,7 @@
     "video2": "https://www.youtube.com/watch?v=_LfIoKSpH-o",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -7941,7 +8319,7 @@
     "ver": "16",
     "level": "12.96",
     "title": "Secrets(L)",
-    "video": "",
+    "video": "https://www.youtube.com/watch?v=II1SOYvm5js",
     "textageid": "secrets",
     "notes": "2116",
     "scratch": "224",
@@ -7954,6 +8332,7 @@
     "video2": "",
     "pending": "",
     "insane": "6",
+    "hardlevel": "12.97",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -7975,6 +8354,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -7996,6 +8376,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -8017,6 +8398,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -8038,6 +8420,7 @@
     "video2": "",
     "pending": "",
     "insane": "6",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -8059,6 +8442,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -8080,6 +8464,7 @@
     "video2": "",
     "pending": "",
     "insane": "13",
+    "hardlevel": "12.99",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -8101,6 +8486,7 @@
     "video2": "",
     "pending": "",
     "insane": "17",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -8122,6 +8508,7 @@
     "video2": "",
     "pending": "",
     "insane": "20",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -8143,6 +8530,7 @@
     "video2": "",
     "pending": "12.93",
     "insane": "3",
+    "hardlevel": "12.97",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -8164,6 +8552,7 @@
     "video2": "",
     "pending": "",
     "insane": "18",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -8185,6 +8574,7 @@
     "video2": "",
     "pending": "89-90",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -8206,6 +8596,7 @@
     "video2": "",
     "pending": "",
     "insane": "4",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -8227,6 +8618,7 @@
     "video2": "",
     "pending": "",
     "insane": "2",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -8248,6 +8640,7 @@
     "video2": "",
     "pending": "",
     "insane": "12",
+    "hardlevel": "12.99",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -8269,6 +8662,7 @@
     "video2": "",
     "pending": "",
     "insane": "4",
+    "hardlevel": "12.97",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -8290,6 +8684,7 @@
     "video2": "",
     "pending": "87-88",
     "insane": "",
+    "hardlevel": "",
     "comment1": "88〜89程度か",
     "comment2": "",
     "splv": "12"
@@ -8311,6 +8706,7 @@
     "video2": "",
     "pending": "",
     "insane": "15",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -8332,6 +8728,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -8353,6 +8750,7 @@
     "video2": "",
     "pending": "",
     "insane": "13",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -8374,6 +8772,7 @@
     "video2": "https://www.youtube.com/watch?v=p3R84UL5sfg",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -8395,6 +8794,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -8416,6 +8816,7 @@
     "video2": "",
     "pending": "",
     "insane": "11",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -8437,6 +8838,7 @@
     "video2": "",
     "pending": "",
     "insane": "4",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -8458,6 +8860,7 @@
     "video2": "https://www.youtube.com/watch?v=5KgCpDdZhL0",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "サビ前発狂でゲージが空になってからの勝負",
     "comment2": "",
     "splv": "12"
@@ -8479,6 +8882,7 @@
     "video2": "",
     "pending": "",
     "insane": "11",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -8500,6 +8904,7 @@
     "video2": "",
     "pending": "",
     "insane": "12",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -8521,6 +8926,7 @@
     "video2": "",
     "pending": "",
     "insane": "20",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -8542,6 +8948,7 @@
     "video2": "",
     "pending": "",
     "insane": "7",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -8563,6 +8970,7 @@
     "video2": "",
     "pending": "",
     "insane": "2",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -8584,6 +8992,7 @@
     "video2": "https://www.youtube.com/watch?v=HBLQO2uzjZw",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -8605,6 +9014,7 @@
     "video2": "",
     "pending": "",
     "insane": "3",
+    "hardlevel": "12.94",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -8626,6 +9036,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -8647,6 +9058,7 @@
     "video2": "https://www.youtube.com/watch?v=XQ5hows1xEo",
     "pending": "",
     "insane": "1",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -8668,6 +9080,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -8689,6 +9102,7 @@
     "video2": "",
     "pending": "",
     "insane": "4",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "個人差 当たり待ち",
     "splv": "12"
@@ -8710,6 +9124,7 @@
     "video2": "",
     "pending": "",
     "insane": "13",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -8731,6 +9146,7 @@
     "video2": "",
     "pending": "90-91",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -8752,6 +9168,7 @@
     "video2": "",
     "pending": "",
     "insane": "11",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -8773,6 +9190,7 @@
     "video2": "",
     "pending": "",
     "insane": "7",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -8794,6 +9212,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -8815,6 +9234,7 @@
     "video2": "",
     "pending": "90-92",
     "insane": "2",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "怪しい",
     "splv": "12"
@@ -8836,6 +9256,7 @@
     "video2": "",
     "pending": "",
     "insane": "3",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "93→94に上げました",
     "splv": "12"
@@ -8857,6 +9278,7 @@
     "video2": "",
     "pending": "",
     "insane": "15",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -8878,6 +9300,7 @@
     "video2": "",
     "pending": "",
     "insane": "3",
+    "hardlevel": "12.96",
     "comment1": "ラストまではかなり練習になる",
     "comment2": "",
     "splv": "12"
@@ -8899,6 +9322,7 @@
     "video2": "",
     "pending": "91-92",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -8920,6 +9344,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -8941,6 +9366,7 @@
     "video2": "",
     "pending": "",
     "insane": "10",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -8962,6 +9388,7 @@
     "video2": "",
     "pending": "",
     "insane": "18",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -8983,6 +9410,7 @@
     "video2": "",
     "pending": "",
     "insane": "6",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -9004,6 +9432,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -9025,6 +9454,7 @@
     "video2": "",
     "pending": "",
     "insane": "17",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -9046,6 +9476,7 @@
     "video2": "",
     "pending": "",
     "insane": "4",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -9067,6 +9498,7 @@
     "video2": "",
     "pending": "",
     "insane": "11",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -9088,6 +9520,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -9109,6 +9542,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -9130,6 +9564,7 @@
     "video2": "",
     "pending": "",
     "insane": "15",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -9151,6 +9586,7 @@
     "video2": "",
     "pending": "",
     "insane": "11",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -9172,6 +9608,7 @@
     "video2": "",
     "pending": "12.91-92でもいい　個人差",
     "insane": "3",
+    "hardlevel": "",
     "comment1": "12.91（ビタチョコより弱いと感じたが個人差？）",
     "comment2": "",
     "splv": "12"
@@ -9193,6 +9630,7 @@
     "video2": "",
     "pending": "",
     "insane": "16",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -9214,6 +9652,7 @@
     "video2": "",
     "pending": "",
     "insane": "1",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -9235,6 +9674,7 @@
     "video2": "https://www.youtube.com/watch?v=80j0x2crSak",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -9256,6 +9696,7 @@
     "video2": "",
     "pending": "",
     "insane": "12",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -9277,6 +9718,7 @@
     "video2": "",
     "pending": "",
     "insane": "20",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -9298,6 +9740,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -9319,6 +9762,7 @@
     "video2": "",
     "pending": "",
     "insane": "3",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -9340,6 +9784,7 @@
     "video2": "",
     "pending": "",
     "insane": "7",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -9361,6 +9806,7 @@
     "video2": "https://www.youtube.com/watch?v=eV5nBmUwnqw",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -9382,6 +9828,7 @@
     "video2": "",
     "pending": "",
     "insane": "9",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -9403,6 +9850,7 @@
     "video2": "https://www.youtube.com/watch?v=0QTTb-e0uh4",
     "pending": "",
     "insane": "3",
+    "hardlevel": "12.97",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -9424,6 +9872,7 @@
     "video2": "https://www.youtube.com/watch?v=csi_NJ-s-pk",
     "pending": "",
     "insane": "",
+    "hardlevel": "12.96",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -9445,6 +9894,7 @@
     "video2": "",
     "pending": "",
     "insane": "2",
+    "hardlevel": "12.97",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -9466,6 +9916,7 @@
     "video2": "",
     "pending": "",
     "insane": "16",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -9487,6 +9938,7 @@
     "video2": "",
     "pending": "",
     "insane": "13",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -9508,6 +9960,7 @@
     "video2": "",
     "pending": "",
     "insane": "18",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -9529,6 +9982,7 @@
     "video2": "",
     "pending": "",
     "insane": "6",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -9550,6 +10004,7 @@
     "video2": "",
     "pending": "",
     "insane": "16",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -9571,6 +10026,7 @@
     "video2": "",
     "pending": "",
     "insane": "3",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -9592,6 +10048,7 @@
     "video2": "",
     "pending": "",
     "insane": "4",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -9613,6 +10070,7 @@
     "video2": "",
     "pending": "",
     "insane": "5",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -9634,6 +10092,7 @@
     "video2": "",
     "pending": "",
     "insane": "12",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -9655,6 +10114,7 @@
     "video2": "",
     "pending": "",
     "insane": "18",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -9676,6 +10136,7 @@
     "video2": "",
     "pending": "",
     "insane": "4",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -9697,6 +10158,7 @@
     "video2": "",
     "pending": "",
     "insane": "11",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -9718,6 +10180,7 @@
     "video2": "",
     "pending": "",
     "insane": "5",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -9739,6 +10202,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -9760,6 +10224,7 @@
     "video2": "",
     "pending": "",
     "insane": "5",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -9781,6 +10246,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -9802,6 +10268,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -9823,6 +10290,7 @@
     "video2": "https://www.youtube.com/watch?v=zSVDuoKvexg",
     "pending": "",
     "insane": "1",
+    "hardlevel": "12.97",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -9844,6 +10312,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -9865,6 +10334,7 @@
     "video2": "",
     "pending": "",
     "insane": "12",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -9886,6 +10356,7 @@
     "video2": "",
     "pending": "",
     "insane": "6",
+    "hardlevel": "12.97",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -9907,6 +10378,7 @@
     "video2": "",
     "pending": "",
     "insane": "13",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -9928,6 +10400,7 @@
     "video2": "",
     "pending": "",
     "insane": "6",
+    "hardlevel": "12.96",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -9949,6 +10422,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -9970,6 +10444,7 @@
     "video2": "",
     "pending": "",
     "insane": "13",
+    "hardlevel": "12.99",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -9991,6 +10466,7 @@
     "video2": "",
     "pending": "",
     "insane": "14",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -10012,6 +10488,7 @@
     "video2": "",
     "pending": "",
     "insane": "3",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -10033,6 +10510,7 @@
     "video2": "",
     "pending": "",
     "insane": "7",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -10054,6 +10532,7 @@
     "video2": "https://www.youtube.com/watch?v=bXdNNtIDgCw",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -10075,6 +10554,7 @@
     "video2": "",
     "pending": "",
     "insane": "17",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -10096,6 +10576,7 @@
     "video2": "",
     "pending": "12.86?",
     "insane": "",
+    "hardlevel": "",
     "comment1": "発狂とそれ以外の差が結構大きい",
     "comment2": "87~88?",
     "splv": "12"
@@ -10117,6 +10598,7 @@
     "video2": "",
     "pending": "",
     "insane": "13",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -10138,6 +10620,7 @@
     "video2": "",
     "pending": "",
     "insane": "20",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -10159,6 +10642,7 @@
     "video2": "",
     "pending": "",
     "insane": "5",
+    "hardlevel": "12.99",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -10180,6 +10664,7 @@
     "video2": "",
     "pending": "",
     "insane": "6",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -10201,6 +10686,7 @@
     "video2": "",
     "pending": "",
     "insane": "15",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -10222,6 +10708,7 @@
     "video2": "",
     "pending": "",
     "insane": "2",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -10243,6 +10730,7 @@
     "video2": "",
     "pending": "",
     "insane": "11",
+    "hardlevel": "12.99",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -10264,6 +10752,7 @@
     "video2": "",
     "pending": "強",
     "insane": "",
+    "hardlevel": "12.97",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -10285,6 +10774,7 @@
     "video2": "",
     "pending": "",
     "insane": "16",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -10306,6 +10796,7 @@
     "video2": "",
     "pending": "",
     "insane": "15",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -10327,6 +10818,7 @@
     "video2": "",
     "pending": "",
     "insane": "16",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -10348,6 +10840,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -10369,6 +10862,7 @@
     "video2": "",
     "pending": "",
     "insane": "2",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -10390,6 +10884,7 @@
     "video2": "",
     "pending": "",
     "insane": "12",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -10411,6 +10906,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -10432,6 +10928,7 @@
     "video2": "",
     "pending": "",
     "insane": "17",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -10453,6 +10950,7 @@
     "video2": "",
     "pending": "",
     "insane": "4",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -10474,6 +10972,7 @@
     "video2": "",
     "pending": "",
     "insane": "9",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -10495,6 +10994,7 @@
     "video2": "",
     "pending": "",
     "insane": "12",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -10516,6 +11016,7 @@
     "video2": "",
     "pending": "",
     "insane": "9",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -10537,6 +11038,7 @@
     "video2": "",
     "pending": "12.91最強格としとく感",
     "insane": "",
+    "hardlevel": "12.96",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -10558,6 +11060,7 @@
     "video2": "",
     "pending": "",
     "insane": "18",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -10579,6 +11082,7 @@
     "video2": "",
     "pending": "",
     "insane": "11",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -10600,6 +11104,7 @@
     "video2": "",
     "pending": "",
     "insane": "5",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -10621,6 +11126,7 @@
     "video2": "",
     "pending": "",
     "insane": "18",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -10642,6 +11148,7 @@
     "video2": "",
     "pending": "",
     "insane": "20",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -10663,6 +11170,7 @@
     "video2": "https://www.youtube.com/watch?v=-NdY4FKd2kE",
     "pending": "",
     "insane": "3",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -10684,6 +11192,7 @@
     "video2": "",
     "pending": "12.88?",
     "insane": "",
+    "hardlevel": "",
     "comment1": "難所抜けたあとの回復で間に合う　しょうもない",
     "comment2": "87~88",
     "splv": "12"
@@ -10705,6 +11214,7 @@
     "video2": "",
     "pending": "",
     "insane": "1",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -10726,6 +11236,7 @@
     "video2": "",
     "pending": "",
     "insane": "12",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -10747,6 +11258,7 @@
     "video2": "",
     "pending": "",
     "insane": "7",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -10768,6 +11280,7 @@
     "video2": "https://www.youtube.com/watch?v=SxECvr_Ufqg",
     "pending": "12.91でいい",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -10789,6 +11302,7 @@
     "video2": "",
     "pending": "",
     "insane": "8",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -10810,6 +11324,7 @@
     "video2": "",
     "pending": "",
     "insane": "19",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -10831,6 +11346,7 @@
     "video2": "",
     "pending": "",
     "insane": "2",
+    "hardlevel": "12.97",
     "comment1": "92→93に上げました",
     "comment2": "",
     "splv": "12"
@@ -10852,6 +11368,7 @@
     "video2": "",
     "pending": "",
     "insane": "8",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -10873,6 +11390,7 @@
     "video2": "",
     "pending": "",
     "insane": "7",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -10894,6 +11412,7 @@
     "video2": "",
     "pending": "",
     "insane": "6",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -10915,6 +11434,7 @@
     "video2": "",
     "pending": "",
     "insane": "15",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -10936,6 +11456,7 @@
     "video2": "",
     "pending": "",
     "insane": "18",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -10957,6 +11478,7 @@
     "video2": "",
     "pending": "",
     "insane": "5",
+    "hardlevel": "12.96",
     "comment1": "",
     "comment2": "緑or白で12.96ぐらいありそう",
     "splv": "12"
@@ -10978,6 +11500,7 @@
     "video2": "",
     "pending": "",
     "insane": "5",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -10999,6 +11522,7 @@
     "video2": "",
     "pending": "",
     "insane": "16",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -11020,6 +11544,7 @@
     "video2": "",
     "pending": "",
     "insane": "9",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -11041,6 +11566,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -11062,6 +11588,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -11083,6 +11610,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -11104,6 +11632,7 @@
     "video2": "",
     "pending": "",
     "insane": "8",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -11125,6 +11654,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -11146,6 +11676,7 @@
     "video2": "",
     "pending": "",
     "insane": "3",
+    "hardlevel": "12.97",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -11167,6 +11698,7 @@
     "video2": "https://www.youtube.com/watch?v=K-vIi35Hmic",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -11188,6 +11720,7 @@
     "video2": "",
     "pending": "",
     "insane": "17",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -11209,6 +11742,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -11230,6 +11764,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -11251,6 +11786,7 @@
     "video2": "",
     "pending": "",
     "insane": "1",
+    "hardlevel": "",
     "comment1": "発狂まで12.97だが回復が間に合う",
     "comment2": "",
     "splv": "12"
@@ -11272,6 +11808,7 @@
     "video2": "https://www.youtube.com/watch?v=MWHdAkrD9fc",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -11293,6 +11830,7 @@
     "video2": "",
     "pending": "",
     "insane": "3",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -11314,6 +11852,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -11335,6 +11874,7 @@
     "video2": "",
     "pending": "",
     "insane": "19",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -11356,6 +11896,7 @@
     "video2": "",
     "pending": "",
     "insane": "14",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "R.I.P. 多分99はあった",
     "splv": "12"
@@ -11377,6 +11918,7 @@
     "video2": "",
     "pending": "",
     "insane": "3",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -11398,6 +11940,7 @@
     "video2": "https://www.youtube.com/watch?v=g623C0P54do",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -11419,6 +11962,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "12.96",
     "comment1": "挑戦レベルだと最後まではゲームにならない(最後でなんとか回復してクリアする)",
     "comment2": "",
     "splv": "12"
@@ -11440,6 +11984,7 @@
     "video2": "",
     "pending": "",
     "insane": "14",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -11461,6 +12006,7 @@
     "video2": "",
     "pending": "",
     "insane": "6",
+    "hardlevel": "12.99",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -11482,6 +12028,7 @@
     "video2": "",
     "pending": "",
     "insane": "17",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -11503,6 +12050,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -11524,6 +12072,7 @@
     "video2": "",
     "pending": "",
     "insane": "7",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -11545,6 +12094,7 @@
     "video2": "https://www.youtube.com/watch?v=R331XUlB7Es",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -11566,6 +12116,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -11587,6 +12138,7 @@
     "video2": "",
     "pending": "",
     "insane": "12",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -11608,6 +12160,7 @@
     "video2": "",
     "pending": "",
     "insane": "3",
+    "hardlevel": "12.97",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -11629,6 +12182,7 @@
     "video2": "",
     "pending": "",
     "insane": "20",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -11650,6 +12204,7 @@
     "video2": "",
     "pending": "",
     "insane": "18",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -11671,6 +12226,7 @@
     "video2": "",
     "pending": "",
     "insane": "16",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -11692,6 +12248,7 @@
     "video2": "",
     "pending": "",
     "insane": "5",
+    "hardlevel": "12.96",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -11713,6 +12270,7 @@
     "video2": "",
     "pending": "",
     "insane": "12",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -11734,6 +12292,7 @@
     "video2": "",
     "pending": "",
     "insane": "15",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -11755,6 +12314,7 @@
     "video2": "",
     "pending": "",
     "insane": "2",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -11776,6 +12336,7 @@
     "video2": "",
     "pending": "",
     "insane": "2",
+    "hardlevel": "12.95",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -11797,6 +12358,7 @@
     "video2": "",
     "pending": "",
     "insane": "12",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -11818,6 +12380,7 @@
     "video2": "",
     "pending": "",
     "insane": "4",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -11839,6 +12402,7 @@
     "video2": "",
     "pending": "",
     "insane": "5",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -11860,6 +12424,7 @@
     "video2": "",
     "pending": "",
     "insane": "13",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -11881,6 +12446,7 @@
     "video2": "",
     "pending": "",
     "insane": "12",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -11902,6 +12468,7 @@
     "video2": "",
     "pending": "",
     "insane": "18",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -11923,6 +12490,7 @@
     "video2": "",
     "pending": "",
     "insane": "8",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -11944,6 +12512,7 @@
     "video2": "",
     "pending": "",
     "insane": "13",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -11965,6 +12534,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -11986,6 +12556,7 @@
     "video2": "",
     "pending": "",
     "insane": "14",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -12007,6 +12578,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -12015,7 +12587,7 @@
     "ver": "21",
     "level": "12.97",
     "title": "轟け！恋のビーンボール！！(A)",
-    "video": "https://www.youtube.com/watch?v=y9lyFESjnOs",
+    "video": "https://www.youtube.com/watch?v=sln2Gx0VdUY",
     "textageid": "_todorok",
     "notes": "1834",
     "scratch": "125",
@@ -12028,6 +12600,7 @@
     "video2": "",
     "pending": "",
     "insane": "7",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -12049,6 +12622,7 @@
     "video2": "https://www.youtube.com/watch?v=0DNT5j17V_g",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -12070,6 +12644,7 @@
     "video2": "",
     "pending": "",
     "insane": "12",
+    "hardlevel": "12.99",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -12091,6 +12666,7 @@
     "video2": "",
     "pending": "",
     "insane": "9",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -12112,6 +12688,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -12133,6 +12710,7 @@
     "video2": "",
     "pending": "12.88",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -12154,6 +12732,7 @@
     "video2": "",
     "pending": "",
     "insane": "2",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -12175,6 +12754,7 @@
     "video2": "https://www.youtube.com/watch?v=l0TSzOIBNOk",
     "pending": "12.90でいい",
     "insane": "",
+    "hardlevel": "12.97",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -12196,6 +12776,7 @@
     "video2": "",
     "pending": "",
     "insane": "11",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -12216,7 +12797,8 @@
     "infpack": "BIT",
     "video2": "",
     "pending": "",
-    "insane": "6",
+    "insane": "7",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -12238,6 +12820,7 @@
     "video2": "",
     "pending": "",
     "insane": "19",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -12259,6 +12842,7 @@
     "video2": "",
     "pending": "",
     "insane": "18",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -12280,6 +12864,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -12301,6 +12886,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -12322,6 +12908,7 @@
     "video2": "",
     "pending": "12.82",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -12343,6 +12930,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -12364,6 +12952,7 @@
     "video2": "",
     "pending": "90-91",
     "insane": "",
+    "hardlevel": "12.96",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -12385,6 +12974,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -12406,6 +12996,7 @@
     "video2": "",
     "pending": "",
     "insane": "9",
+    "hardlevel": "12.99",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -12427,6 +13018,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -12448,6 +13040,7 @@
     "video2": "",
     "pending": "",
     "insane": "7",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -12469,6 +13062,7 @@
     "video2": "",
     "pending": "",
     "insane": "11",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -12490,6 +13084,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -12511,6 +13106,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -12532,6 +13128,7 @@
     "video2": "",
     "pending": "",
     "insane": "7",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -12553,6 +13150,7 @@
     "video2": "",
     "pending": "",
     "insane": "10",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -12574,6 +13172,7 @@
     "video2": "",
     "pending": "",
     "insane": "1",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -12595,6 +13194,7 @@
     "video2": "",
     "pending": "",
     "insane": "5",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -12616,6 +13216,7 @@
     "video2": "",
     "pending": "",
     "insane": "16",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -12637,6 +13238,7 @@
     "video2": "",
     "pending": "",
     "insane": "4",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -12658,6 +13260,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -12679,6 +13282,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -12700,6 +13304,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -12721,6 +13326,7 @@
     "video2": "",
     "pending": "",
     "insane": "18",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -12742,6 +13348,7 @@
     "video2": "",
     "pending": "",
     "insane": "6",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -12763,6 +13370,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -12784,6 +13392,7 @@
     "video2": "",
     "pending": "",
     "insane": "18",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -12805,6 +13414,7 @@
     "video2": "",
     "pending": "",
     "insane": "18",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -12826,6 +13436,7 @@
     "video2": "",
     "pending": "",
     "insane": "8",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -12847,6 +13458,7 @@
     "video2": "",
     "pending": "",
     "insane": "17",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -12868,6 +13480,7 @@
     "video2": "",
     "pending": "",
     "insane": "19",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -12889,6 +13502,7 @@
     "video2": "",
     "pending": "92-93",
     "insane": "2",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -12910,6 +13524,7 @@
     "video2": "",
     "pending": "12.89",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -12931,6 +13546,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "軸の位置による",
     "comment2": "",
     "splv": "12"
@@ -12952,6 +13568,7 @@
     "video2": "",
     "pending": "12.93",
     "insane": "4",
+    "hardlevel": "12.97",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -12973,6 +13590,7 @@
     "video2": "",
     "pending": "",
     "insane": "13",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -12994,6 +13612,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -13015,6 +13634,7 @@
     "video2": "https://www.youtube.com/watch?v=Rwc5JUVs5DA",
     "pending": "",
     "insane": "2",
+    "hardlevel": "12.95",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -13036,6 +13656,7 @@
     "video2": "",
     "pending": "",
     "insane": "10",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -13057,6 +13678,7 @@
     "video2": "",
     "pending": "",
     "insane": "7",
+    "hardlevel": "12.97",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -13078,6 +13700,7 @@
     "video2": "",
     "pending": "",
     "insane": "14",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -13099,6 +13722,7 @@
     "video2": "",
     "pending": "",
     "insane": "18",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -13120,6 +13744,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -13141,6 +13766,7 @@
     "video2": "https://www.youtube.com/watch?v=3QnKYmfMOjQ",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -13162,6 +13788,7 @@
     "video2": "",
     "pending": "",
     "insane": "6",
+    "hardlevel": "12.97",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -13183,6 +13810,7 @@
     "video2": "",
     "pending": "",
     "insane": "12",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -13204,6 +13832,7 @@
     "video2": "",
     "pending": "",
     "insane": "8",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -13225,6 +13854,7 @@
     "video2": "",
     "pending": "",
     "insane": "17",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -13246,6 +13876,7 @@
     "video2": "",
     "pending": "",
     "insane": "10",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -13267,6 +13898,7 @@
     "video2": "",
     "pending": ".94-",
     "insane": "5",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -13288,6 +13920,7 @@
     "video2": "",
     "pending": "",
     "insane": "4",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -13309,6 +13942,7 @@
     "video2": "",
     "pending": "",
     "insane": "14",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -13330,6 +13964,7 @@
     "video2": "",
     "pending": "",
     "insane": "8",
+    "hardlevel": "12.97",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -13351,6 +13986,7 @@
     "video2": "",
     "pending": "",
     "insane": "6",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -13372,6 +14008,7 @@
     "video2": "https://www.youtube.com/watch?v=r9AHh6JoqF8",
     "pending": "",
     "insane": "",
+    "hardlevel": "12.96",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -13393,6 +14030,7 @@
     "video2": "",
     "pending": "",
     "insane": "16",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -13401,7 +14039,7 @@
     "ver": "30",
     "level": "12.95",
     "title": "恋愛=精度×認識力(A)",
-    "video": "https://www.youtube.com/watch?v=ImQWUvi_oy4",
+    "video": "https://www.youtube.com/watch?v=IZ_PTBhEavA",
     "textageid": "_r_s_x_n",
     "notes": "1756",
     "scratch": "107",
@@ -13414,6 +14052,7 @@
     "video2": "",
     "pending": "",
     "insane": "4",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -13435,6 +14074,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -13456,6 +14096,7 @@
     "video2": "",
     "pending": "",
     "insane": "14",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -13477,6 +14118,7 @@
     "video2": "",
     "pending": "",
     "insane": "18",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -13498,6 +14140,7 @@
     "video2": "",
     "pending": "93-",
     "insane": "5",
+    "hardlevel": "12.97",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -13519,6 +14162,7 @@
     "video2": "",
     "pending": "",
     "insane": "14",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -13540,6 +14184,7 @@
     "video2": "",
     "pending": "",
     "insane": "20",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -13561,6 +14206,7 @@
     "video2": "https://www.youtube.com/watch?v=dxOopptsJrU",
     "pending": "90と91で悩む",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -13582,6 +14228,7 @@
     "video2": "",
     "pending": "",
     "insane": "12",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -13603,6 +14250,7 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -13624,6 +14272,7 @@
     "video2": "https://www.youtube.com/watch?v=mkBmPSALdFA",
     "pending": "89-90",
     "insane": "",
+    "hardlevel": "",
     "comment1": "練習にはなるけどラストの8小節だけ難易度高くてクリア難易度はもっと上だと思う",
     "comment2": ".89?",
     "splv": "12"
@@ -13645,6 +14294,7 @@
     "video2": "",
     "pending": "",
     "insane": "11",
+    "hardlevel": "12.98",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -13666,40 +14316,64 @@
     "video2": "",
     "pending": "",
     "insane": "",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
   },
   {
     "ver": "12",
-    "level": "",
+    "level": "12.96",
     "title": "CaptivAte～浄化～(L)",
     "video": "https://www.youtube.com/watch?v=K2tK8w4dgBU",
     "textageid": "captive",
     "notes": "1738",
     "scratch": "105",
     "bpm": "160",
-    "recommend": "",
+    "recommend": "○",
     "inf": "",
     "acdelete": "",
-    "comment": "",
+    "comment": "ラス殺し",
     "infpack": "",
     "video2": "",
     "pending": "",
-    "insane": "",
+    "insane": "6",
+    "hardlevel": "12.97",
     "comment1": "",
     "comment2": "",
     "splv": "12"
   },
   {
     "ver": "12",
-    "level": "",
+    "level": "12.91",
     "title": "garden(L)",
     "video": "https://www.youtube.com/watch?v=0Dmv-5-Rx9c",
     "textageid": "gardenhs",
     "notes": "1583",
     "scratch": "118",
     "bpm": "220",
+    "recommend": "◎",
+    "inf": "",
+    "acdelete": "",
+    "comment": "ラス殺し",
+    "infpack": "",
+    "video2": "",
+    "pending": "",
+    "insane": "",
+    "hardlevel": "12.93",
+    "comment1": "",
+    "comment2": "",
+    "splv": "12"
+  },
+  {
+    "ver": "25",
+    "level": "",
+    "title": "ChaserXX(L)",
+    "video": "",
+    "textageid": "chaserxx",
+    "notes": "2000",
+    "scratch": "84",
+    "bpm": "140",
     "recommend": "",
     "inf": "",
     "acdelete": "",
@@ -13707,7 +14381,8 @@
     "infpack": "",
     "video2": "",
     "pending": "",
-    "insane": "",
+    "insane": "15",
+    "hardlevel": "",
     "comment1": "",
     "comment2": "",
     "splv": "12"
@@ -14092,7 +14767,7 @@
   },
   {
     "ver": "20",
-    "level": "12.81",
+    "level": "12.82",
     "title": "405nm (Ryu☆mix)(A)",
     "video": "",
     "textageid": "405nm",
@@ -14200,17 +14875,17 @@
   },
   {
     "ver": "25",
-    "level": "",
+    "level": "12.84",
     "title": "Abraxas(A)",
     "video": "",
     "textageid": "abraxas",
     "notes": "1241",
     "scratch": "150",
     "bpm": "165",
-    "recommend": "",
-    "inf": "",
+    "recommend": "△",
+    "inf": "○",
     "acdelete": "",
-    "comment": "",
+    "comment": "CN絡み 終盤難",
     "infpack": "",
     "pending": "",
     "video2": "",
@@ -15498,7 +16173,7 @@
     "ver": "15",
     "level": "12.86",
     "title": "Be OK(L)",
-    "video": "",
+    "video": "https://www.youtube.com/watch?v=Pqeob3Lew8M",
     "textageid": "be_ok",
     "notes": "1679",
     "scratch": "91",
@@ -15658,18 +16333,18 @@
   },
   {
     "ver": "18",
-    "level": "",
+    "level": "12.82",
     "title": "Believe In Me(A)",
-    "video": "",
+    "video": "https://www.youtube.com/watch?v=UOlAxni39P8",
     "textageid": "believme",
     "notes": "1213",
     "scratch": "56",
     "bpm": "170",
-    "recommend": "",
-    "inf": "",
+    "recommend": "○",
+    "inf": "○",
     "acdelete": "",
     "comment": "",
-    "infpack": "",
+    "infpack": "BIT",
     "pending": "",
     "video2": "",
     "ラス殺し": "",
@@ -18088,18 +18763,18 @@
   },
   {
     "ver": "12",
-    "level": "",
+    "level": "12.85",
     "title": "EDEN(L)",
     "video": "https://www.youtube.com/watch?v=Ww9crmWb2Zk",
     "textageid": "eden",
     "notes": "1637",
     "scratch": "79",
     "bpm": "200",
-    "recommend": "",
-    "inf": "",
+    "recommend": "☆",
+    "inf": "○",
     "acdelete": "",
-    "comment": "",
-    "infpack": "",
+    "comment": "同時押し",
+    "infpack": "BIT",
     "pending": "",
     "video2": "",
     "ラス殺し": "",
@@ -19629,7 +20304,7 @@
     "ver": "23",
     "level": "12.85",
     "title": "GOBBLE(A)",
-    "video": "",
+    "video": "https://www.youtube.com/watch?v=XGmDw8HoUxM",
     "textageid": "gobblecp",
     "notes": "866",
     "scratch": "48",
@@ -20059,18 +20734,18 @@
   },
   {
     "ver": "24",
-    "level": "",
+    "level": "12.79",
     "title": "Honey Trap(A)",
     "video": "",
     "textageid": "honeytrp",
     "notes": "1284",
     "scratch": "148",
     "bpm": "160",
-    "recommend": "",
-    "inf": "",
+    "recommend": "○",
+    "inf": "○",
     "acdelete": "",
     "comment": "",
-    "infpack": "",
+    "infpack": "PK13",
     "pending": "",
     "video2": "",
     "ラス殺し": "",
@@ -20329,7 +21004,7 @@
   },
   {
     "ver": "26",
-    "level": "12.60",
+    "level": "12.54",
     "title": "IDC feat.REVERBEE (Mo'Cuts Ver)(A)",
     "video": "",
     "textageid": "idc",
@@ -20466,7 +21141,7 @@
     "ver": "32",
     "level": "",
     "title": "IN BETWEEN(A)",
-    "video": "",
+    "video": "https://www.youtube.com/watch?v=xlCfTXLjpxU",
     "textageid": "inbetwen",
     "notes": "1201",
     "scratch": "87",
@@ -21679,18 +22354,18 @@
   },
   {
     "ver": "24",
-    "level": "",
+    "level": "12.82",
     "title": "Lost wing at.0(A)",
     "video": "",
     "textageid": "lostwing",
     "notes": "1261",
     "scratch": "72",
     "bpm": "185",
-    "recommend": "",
-    "inf": "",
+    "recommend": "△",
+    "inf": "○",
     "acdelete": "",
-    "comment": "",
-    "infpack": "",
+    "comment": "CN",
+    "infpack": "PK13",
     "pending": "",
     "video2": "",
     "ラス殺し": "",
@@ -21841,7 +22516,7 @@
   },
   {
     "ver": "21",
-    "level": "",
+    "level": "12.87",
     "title": "m1dy Deluxe(A)",
     "video": "https://www.youtube.com/watch?v=Kwb3KARCLWw",
     "textageid": "m1dy_dx",
@@ -21849,10 +22524,10 @@
     "scratch": "155",
     "bpm": "205",
     "recommend": "",
-    "inf": "",
+    "inf": "○",
     "acdelete": "",
-    "comment": "",
-    "infpack": "",
+    "comment": "二重トリル 軸",
+    "infpack": "PK7",
     "pending": "",
     "video2": "",
     "ラス殺し": "",
@@ -22121,7 +22796,7 @@
     "recommend": "◎",
     "inf": "○",
     "acdelete": "",
-    "comment": "",
+    "comment": "前半難",
     "infpack": "BIT",
     "pending": "",
     "video2": "",
@@ -23542,18 +24217,18 @@
   },
   {
     "ver": "21",
-    "level": "",
+    "level": "12.82",
     "title": "Pharaoh(A)",
     "video": "",
     "textageid": "pharaoh",
     "notes": "1242",
     "scratch": "97",
     "bpm": "180",
-    "recommend": "",
-    "inf": "",
+    "recommend": "△",
+    "inf": "○",
     "acdelete": "",
-    "comment": "",
-    "infpack": "",
+    "comment": "局所難",
+    "infpack": "PK7",
     "pending": "",
     "video2": "",
     "ラス殺し": "",
@@ -23812,17 +24487,17 @@
   },
   {
     "ver": "32",
-    "level": "",
+    "level": "12.80",
     "title": "PopなEDEN(A)",
     "video": "",
     "textageid": "pop_eden",
     "notes": "1235",
     "scratch": "28",
     "bpm": "305",
-    "recommend": "",
+    "recommend": "○",
     "inf": "",
     "acdelete": "",
-    "comment": "",
+    "comment": "終盤難",
     "infpack": "",
     "pending": "12.8",
     "video2": "",
@@ -24030,14 +24705,14 @@
     "ver": "16",
     "level": "",
     "title": "Punch Love♡仮面(L)",
-    "video": "",
+    "video": "https://www.youtube.com/watch?v=IhhNs3wvA28",
     "textageid": "punch_lv",
     "notes": "1636",
     "scratch": "53",
     "bpm": "172",
     "recommend": "",
     "inf": "",
-    "acdelete": "○",
+    "acdelete": "",
     "comment": "",
     "infpack": "",
     "pending": "",
@@ -25270,18 +25945,18 @@
   },
   {
     "ver": "22",
-    "level": "",
+    "level": "12.82",
     "title": "Sakura Mirage(A)",
     "video": "",
     "textageid": "sakuramr",
     "notes": "1190",
     "scratch": "106",
     "bpm": "187",
-    "recommend": "",
-    "inf": "",
+    "recommend": "○",
+    "inf": "○",
     "acdelete": "",
     "comment": "",
-    "infpack": "",
+    "infpack": "BIT",
     "pending": "",
     "video2": "",
     "ラス殺し": "",
@@ -25486,18 +26161,18 @@
   },
   {
     "ver": "22",
-    "level": "",
+    "level": "12.82",
     "title": "Scarlet Moon(A)",
     "video": "",
     "textageid": "scarmoon",
     "notes": "1389",
     "scratch": "84",
     "bpm": "180",
-    "recommend": "○",
-    "inf": "",
+    "recommend": "△",
+    "inf": "○",
     "acdelete": "",
-    "comment": "",
-    "infpack": "",
+    "comment": "CN",
+    "infpack": "TH1",
     "pending": "",
     "video2": "",
     "ラス殺し": "",
@@ -25648,7 +26323,7 @@
   },
   {
     "ver": "14",
-    "level": "",
+    "level": "12.82",
     "title": "Second Heaven(A)",
     "video": "",
     "textageid": "secondhv",
@@ -25656,9 +26331,9 @@
     "scratch": "55",
     "bpm": "149",
     "recommend": "",
-    "inf": "",
+    "inf": "○",
     "acdelete": "",
-    "comment": "",
+    "comment": "縦連打 ラス殺し",
     "infpack": "",
     "pending": "",
     "video2": "",
@@ -25866,7 +26541,7 @@
     "ver": "17",
     "level": "12.85",
     "title": "Session 1 -Genesis-(A)",
-    "video": "",
+    "video": "https://www.youtube.com/watch?v=Cw7fMseMP0w",
     "textageid": "session1",
     "notes": "1240",
     "scratch": "39",
@@ -26296,18 +26971,18 @@
   },
   {
     "ver": "15",
-    "level": "",
+    "level": "12.82",
     "title": "SOUND OF GIALLARHORN(A)",
     "video": "",
     "textageid": "sgiallar",
     "notes": "1668",
     "scratch": "61",
     "bpm": "184",
-    "recommend": "",
-    "inf": "",
+    "recommend": "△",
+    "inf": "○",
     "acdelete": "",
-    "comment": "",
-    "infpack": "",
+    "comment": "体力 中盤難",
+    "infpack": "BIT",
     "pending": "",
     "video2": "",
     "ラス殺し": "",
@@ -27025,18 +27700,18 @@
   },
   {
     "ver": "28",
-    "level": "",
+    "level": "12.82",
     "title": "Swarm Of Scarabs(A)",
-    "video": "",
+    "video": "https://www.youtube.com/watch?v=HvZ0-V8T2hk",
     "textageid": "swarmofs",
     "notes": "1212",
     "scratch": "174",
     "bpm": "110",
-    "recommend": "",
-    "inf": "",
+    "recommend": "△",
+    "inf": "○",
     "acdelete": "",
-    "comment": "",
-    "infpack": "",
+    "comment": "局所難 6個押し有 速い同時押し",
+    "infpack": "PK21",
     "pending": "",
     "video2": "",
     "ラス殺し": "",
@@ -27675,7 +28350,7 @@
     "ver": "31",
     "level": "",
     "title": "This Is Club Muzik feat. 大久保紅葉(A)",
-    "video": "",
+    "video": "https://www.youtube.com/watch?v=gtKqMwlHbZA",
     "textageid": "tclubmzk",
     "notes": "1343",
     "scratch": "159",
@@ -27835,17 +28510,17 @@
   },
   {
     "ver": "31",
-    "level": "",
+    "level": "12.84",
     "title": "TRIP THE DEEP(A)",
     "video": "",
     "textageid": "tripdeep",
     "notes": "1289",
     "scratch": "239",
     "bpm": "135",
-    "recommend": "",
+    "recommend": "◎",
     "inf": "",
     "acdelete": "",
-    "comment": "",
+    "comment": "中盤難",
     "infpack": "",
     "pending": "",
     "video2": "",
@@ -29266,18 +29941,18 @@
   },
   {
     "ver": "26",
-    "level": "",
+    "level": "12.84",
     "title": "ZENDEGI DANCE(A)",
     "video": "",
     "textageid": "zendegi",
     "notes": "1393",
     "scratch": "39",
     "bpm": "160",
-    "recommend": "",
-    "inf": "",
+    "recommend": "○",
+    "inf": "○",
     "acdelete": "",
-    "comment": "",
-    "infpack": "",
+    "comment": "ラス殺し",
+    "infpack": "PK17",
     "pending": "",
     "video2": "",
     "ラス殺し": "",
@@ -29347,18 +30022,18 @@
   },
   {
     "ver": "7",
-    "level": "",
+    "level": "12.87",
     "title": "ZERO-ONE(L)",
     "video": "https://www.youtube.com/watch?v=hT2f4IuXlV0",
     "textageid": "zeroone",
     "notes": "1448",
     "scratch": "21",
     "bpm": "160",
-    "recommend": "",
-    "inf": "",
+    "recommend": "◎",
+    "inf": "○",
     "acdelete": "",
     "comment": "",
-    "infpack": "",
+    "infpack": "BIT",
     "pending": "",
     "video2": "",
     "ラス殺し": "",
@@ -29376,7 +30051,7 @@
     "ver": "18",
     "level": "12.83",
     "title": "ZETA～素数の世界と超越者～(A)",
-    "video": "",
+    "video": "https://www.youtube.com/watch?v=3bwY_Dr6JZY",
     "textageid": "zeta",
     "notes": "1583",
     "scratch": "55",
@@ -29536,18 +30211,18 @@
   },
   {
     "ver": "25",
-    "level": "",
+    "level": "12.77",
     "title": "うさ☆かめ 大戦争！(A)",
     "video": "",
     "textageid": "_usakame",
     "notes": "1276",
     "scratch": "129",
     "bpm": "210",
-    "recommend": "",
-    "inf": "",
+    "recommend": "○",
+    "inf": "○",
     "acdelete": "",
     "comment": "",
-    "infpack": "",
+    "infpack": "PK15",
     "pending": "",
     "video2": "",
     "ラス殺し": "",
@@ -30184,18 +30859,18 @@
   },
   {
     "ver": "22",
-    "level": "",
+    "level": "12.84",
     "title": "ドッキン☆サマーあばんちゅーる(A)",
     "video": "https://www.youtube.com/watch?v=tkSmSsv6D8Y",
     "textageid": "_dsummer",
     "notes": "1447",
     "scratch": "157",
     "bpm": "180",
-    "recommend": "",
-    "inf": "",
+    "recommend": "△",
+    "inf": "○",
     "acdelete": "",
-    "comment": "",
-    "infpack": "",
+    "comment": "中盤難",
+    "infpack": "BIT",
     "pending": "",
     "video2": "",
     "ラス殺し": "",
@@ -31804,17 +32479,17 @@
   },
   {
     "ver": "32",
-    "level": "",
+    "level": "12.84",
     "title": "断罪の一花(A)",
     "video": "https://www.youtube.com/watch?v=Q-54L5i93fU",
     "textageid": "_danzai1",
     "notes": "1296",
     "scratch": "59",
     "bpm": "185",
-    "recommend": "",
+    "recommend": "○",
     "inf": "",
     "acdelete": "",
-    "comment": "",
+    "comment": "CN複合有 終盤難",
     "infpack": "",
     "pending": "",
     "video2": "",
@@ -32074,18 +32749,18 @@
   },
   {
     "ver": "21",
-    "level": "",
+    "level": "12.80",
     "title": "牧神笛吹きて(A)",
     "video": "",
     "textageid": "_aigipan",
     "notes": "1044",
     "scratch": "43",
     "bpm": "157",
-    "recommend": "",
-    "inf": "",
+    "recommend": "○",
+    "inf": "○",
     "acdelete": "",
-    "comment": "",
-    "infpack": "",
+    "comment": "ラス殺し",
+    "infpack": "PK6",
     "pending": "",
     "video2": "",
     "ラス殺し": "",
@@ -32182,17 +32857,17 @@
   },
   {
     "ver": "32",
-    "level": "",
+    "level": "12.83",
     "title": "無双(A)",
     "video": "http://youtube.com/watch?v=m55oPbOIPeQ",
     "textageid": "_musou",
     "notes": "1677",
     "scratch": "83",
     "bpm": "180",
-    "recommend": "",
+    "recommend": "○",
     "inf": "",
     "acdelete": "",
-    "comment": "",
+    "comment": "中盤難",
     "infpack": "",
     "pending": "",
     "video2": "",
@@ -32263,14 +32938,14 @@
   },
   {
     "ver": "31",
-    "level": "",
+    "level": "12.80",
     "title": "勇者(A)",
     "video": "",
     "textageid": "_yuusha",
     "notes": "1245",
     "scratch": "30",
     "bpm": "210",
-    "recommend": "",
+    "recommend": "☆",
     "inf": "",
     "acdelete": "",
     "comment": "",
@@ -32560,18 +33235,18 @@
   },
   {
     "ver": "22",
-    "level": "",
+    "level": "12.81",
     "title": "恋は白帯、サンシロー(L)",
     "video": "",
     "textageid": "_koisiro",
     "notes": "1395",
     "scratch": "73",
     "bpm": "175",
-    "recommend": "",
+    "recommend": "○",
     "inf": "○",
     "acdelete": "",
-    "comment": "",
-    "infpack": "",
+    "comment": "同時押し",
+    "infpack": "PK8",
     "pending": "",
     "video2": "",
     "ラス殺し": "",
@@ -33055,7 +33730,7 @@
   },
   {
     "ver": "25",
-    "level": "12.64",
+    "level": "12.70",
     "title": "1001 -ESCAPE-(A)",
     "video": "https://www.youtube.com/watch?v=Zqx9qmpF3kE",
     "textageid": "1001escp",
@@ -39255,7 +39930,7 @@
   },
   {
     "ver": "28",
-    "level": "12.57",
+    "level": "12.62",
     "title": "Explorer feat. ぷにぷに電機(A)",
     "video": "",
     "textageid": "explorer",
@@ -45238,10 +45913,10 @@
     "scratch": "51",
     "bpm": "199",
     "recommend": "",
-    "inf": "",
+    "inf": "○",
     "acdelete": "",
     "comment": "",
-    "infpack": "",
+    "infpack": "PK2",
     "pending": "",
     "video2": "",
     "ラス殺し": "",
@@ -46930,7 +47605,7 @@
   },
   {
     "ver": "20",
-    "level": "12.64",
+    "level": "12.70",
     "title": "portal(A)",
     "video": "",
     "textageid": "portal",
@@ -47432,7 +48107,7 @@
     "ver": "9",
     "level": "",
     "title": "Quickening(A)",
-    "video": "",
+    "video": "https://www.youtube.com/watch?v=phcAmOCnyvc",
     "textageid": "quicken",
     "notes": "1062",
     "scratch": "25",
@@ -47655,18 +48330,18 @@
   },
   {
     "ver": "25",
-    "level": "",
+    "level": "12.74",
     "title": "Rampage(H)",
     "video": "",
     "textageid": "rampage",
     "notes": "1257",
     "scratch": "124",
     "bpm": "195",
-    "recommend": "",
-    "inf": "",
+    "recommend": "○",
+    "inf": "○",
     "acdelete": "",
     "comment": "",
-    "infpack": "",
+    "infpack": "PK14",
     "pending": "",
     "video2": "",
     "ラス殺し": "",
@@ -56907,7 +57582,7 @@
     "ver": "25",
     "level": "",
     "title": "ラストセンチュリーメランコリック(A)",
-    "video": "",
+    "video": "https://www.youtube.com/watch?v=2R-Dn8Hnl4o",
     "textageid": "_lastcen",
     "notes": "1108",
     "scratch": "98",
@@ -58480,7 +59155,7 @@
   },
   {
     "ver": "22",
-    "level": "12.62",
+    "level": "12.66",
     "title": "少年は空を辿る(H)",
     "video": "",
     "textageid": "_soratad",
@@ -59955,18 +60630,18 @@
   },
   {
     "ver": "26",
-    "level": "",
+    "level": "12.66",
     "title": "龍王の霊廟(Mausoleum Of The Primal Dragon)(H)",
     "video": "",
     "textageid": "_mausole",
     "notes": "1190",
     "scratch": "13",
     "bpm": "144",
-    "recommend": "☆",
-    "inf": "",
+    "recommend": "◎",
+    "inf": "○",
     "acdelete": "",
-    "comment": "",
-    "infpack": "",
+    "comment": "序盤CN 中盤同時混じり乱打 終盤単鍵16分乱打",
+    "infpack": "PK16",
     "pending": "",
     "video2": "",
     "ラス殺し": "",
@@ -60677,10 +61352,10 @@
     "scratch": "33",
     "bpm": "177",
     "recommend": "",
-    "inf": "",
+    "inf": "○",
     "acdelete": "",
     "comment": "",
-    "infpack": "",
+    "infpack": "PK4",
     "oldlevel": "",
     "splv": "9"
   },
@@ -61298,7 +61973,7 @@
   },
   {
     "ver": "13",
-    "level": "12.66",
+    "level": "12.60",
     "title": "Apocalypse ～dirge of swans～(H)",
     "video": "",
     "textageid": "apocalps",
@@ -62054,10 +62729,10 @@
     "scratch": "55",
     "bpm": "160",
     "recommend": "",
-    "inf": "",
+    "inf": "○",
     "acdelete": "",
     "comment": "",
-    "infpack": "",
+    "infpack": "BIT",
     "oldlevel": "",
     "splv": "9"
   },
@@ -63967,18 +64642,18 @@
   },
   {
     "ver": "21",
-    "level": "",
+    "level": "12.40",
     "title": "Elektrick U-Phoria(H)",
     "video": "",
     "textageid": "euphoria",
     "notes": "1004",
     "scratch": "69",
     "bpm": "180",
-    "recommend": "",
-    "inf": "",
+    "recommend": "○",
+    "inf": "○",
     "acdelete": "",
-    "comment": "",
-    "infpack": "",
+    "comment": "8分 付点8分の2個同時 たまに短い16分",
+    "infpack": "PK6",
     "oldlevel": "",
     "splv": "9"
   },
@@ -64970,7 +65645,7 @@
   },
   {
     "ver": "26",
-    "level": "12.64",
+    "level": "12.68",
     "title": "Glory(A)",
     "video": "",
     "textageid": "glory",
@@ -67605,17 +68280,17 @@
   },
   {
     "ver": "11",
-    "level": "",
+    "level": "12.62",
     "title": "NEBULA GRASPER(H)",
     "video": "",
     "textageid": "nebula_g",
     "notes": "1029",
     "scratch": "22",
     "bpm": "152-153",
-    "recommend": "",
+    "recommend": "◎",
     "inf": "○",
     "acdelete": "",
-    "comment": "",
+    "comment": "序盤と終盤はひたすら乱打 後半は1.25重乱打→単鍵乱打を一拍おきに繰り返す。",
     "infpack": "BIT",
     "oldlevel": "8",
     "splv": "9"
@@ -68387,18 +69062,18 @@
   },
   {
     "ver": "12",
-    "level": "",
+    "level": "12.68",
     "title": "PLASMA(A)",
     "video": "",
     "textageid": "plasma",
     "notes": "1145",
     "scratch": "11",
     "bpm": "148",
-    "recommend": "",
-    "inf": "",
+    "recommend": "○",
+    "inf": "○",
     "acdelete": "",
-    "comment": "",
-    "infpack": "",
+    "comment": "乱打→トリル→同時→長い乱打→同時→トリルの構成",
+    "infpack": "BIT",
     "oldlevel": "",
     "splv": "9"
   },
@@ -68863,18 +69538,18 @@
   },
   {
     "ver": "8",
-    "level": "",
+    "level": "12.57",
     "title": "rainbow flyer(H)",
     "video": "",
     "textageid": "rbwflyer",
     "notes": "859",
     "scratch": "28",
     "bpm": "148",
-    "recommend": "",
-    "inf": "",
+    "recommend": "○",
+    "inf": "○",
     "acdelete": "",
-    "comment": "",
-    "infpack": "",
+    "comment": "終盤は1.25重乱打が続く",
+    "infpack": "BIT",
     "oldlevel": "",
     "splv": "9"
   },
@@ -69373,18 +70048,18 @@
   },
   {
     "ver": "17",
-    "level": "",
+    "level": "12.54",
     "title": "Roots of my way!(A)",
     "video": "",
     "textageid": "rootsof",
     "notes": "1025",
     "scratch": "58",
     "bpm": "158",
-    "recommend": "",
-    "inf": "",
+    "recommend": "○",
+    "inf": "○",
     "acdelete": "",
-    "comment": "",
-    "infpack": "",
+    "comment": "同時押し練習用",
+    "infpack": "BIT",
     "oldlevel": "",
     "splv": "9"
   },
@@ -72399,18 +73074,18 @@
   },
   {
     "ver": "13",
-    "level": "",
+    "level": "12.60",
     "title": "WISH(EUROBEAT MIX)(A)",
     "video": "",
     "textageid": "wisheuro",
     "notes": "990",
     "scratch": "38",
     "bpm": "155",
-    "recommend": "",
-    "inf": "",
+    "recommend": "○",
+    "inf": "○",
     "acdelete": "",
-    "comment": "",
-    "infpack": "",
+    "comment": "中盤乱打 同時押しメイン トリル少々",
+    "infpack": "BIT",
     "oldlevel": "",
     "splv": "9"
   },
@@ -78621,17 +79296,17 @@
   },
   {
     "ver": "12",
-    "level": "",
+    "level": "12.66",
     "title": "GREEN EYES(H)",
     "video": "",
     "textageid": "greeneye",
     "notes": "827",
     "scratch": "47",
     "bpm": "170",
-    "recommend": "",
+    "recommend": "○",
     "inf": "○",
     "acdelete": "",
-    "comment": "",
+    "comment": "ラス殺し気味",
     "infpack": "BIT",
     "oldlevel": "9",
     "splv": "8"
@@ -84605,18 +85280,18 @@
   },
   {
     "ver": "13",
-    "level": "",
+    "level": "12.45",
     "title": "WISH(EUROBEAT MIX)(H)",
     "video": "",
     "textageid": "wisheuro",
     "notes": "824",
     "scratch": "31",
     "bpm": "155",
-    "recommend": "",
-    "inf": "",
+    "recommend": "○",
+    "inf": "○",
     "acdelete": "",
     "comment": "",
-    "infpack": "",
+    "infpack": "BIT",
     "oldlevel": "",
     "splv": "8"
   },
@@ -85659,18 +86334,18 @@
   },
   {
     "ver": "16",
-    "level": "",
+    "level": "12.64",
     "title": "ハリツヤランデヴー(H)",
     "video": "",
     "textageid": "_haritya",
     "notes": "1078",
     "scratch": "36",
     "bpm": "143",
-    "recommend": "",
-    "inf": "",
+    "recommend": "○",
+    "inf": "○",
     "acdelete": "",
     "comment": "",
-    "infpack": "",
+    "infpack": "BIT",
     "oldlevel": "",
     "splv": "8"
   },
@@ -87410,7 +88085,7 @@
   },
   {
     "ver": "10",
-    "level": "",
+    "level": "11.60",
     "title": "ALIEN TEMPLE(H)",
     "video": "",
     "textageid": "atemple",
@@ -87767,31 +88442,31 @@
   },
   {
     "ver": "10",
-    "level": "",
+    "level": "12.10",
     "title": "BABY LOVE(H)",
     "video": "",
     "textageid": "babylove",
     "notes": "865",
     "scratch": "68",
     "bpm": "160",
-    "recommend": "",
-    "inf": "",
+    "recommend": "◎",
+    "inf": "○",
     "acdelete": "",
     "comment": "",
-    "infpack": "",
+    "infpack": "BIT",
     "oldlevel": "",
     "splv": "7"
   },
   {
     "ver": "10",
-    "level": "",
+    "level": "12.20",
     "title": "Back Into The Light(H)",
     "video": "",
     "textageid": "backinto",
     "notes": "835",
     "scratch": "8",
     "bpm": "144",
-    "recommend": "",
+    "recommend": "☆",
     "inf": "○",
     "acdelete": "",
     "comment": "",
@@ -88515,14 +89190,14 @@
   },
   {
     "ver": "10",
-    "level": "",
+    "level": "11.80",
     "title": "CARRY ON NIGHT(English version)(H)",
     "video": "",
     "textageid": "carryon",
     "notes": "702",
     "scratch": "63",
     "bpm": "158",
-    "recommend": "",
+    "recommend": "○",
     "inf": "",
     "acdelete": "",
     "comment": "",
@@ -90130,7 +90805,7 @@
   },
   {
     "ver": "9",
-    "level": "",
+    "level": "12.10",
     "title": "fun(H)",
     "video": "",
     "textageid": "fun30",
@@ -90138,10 +90813,10 @@
     "scratch": "71",
     "bpm": "100-200",
     "recommend": "",
-    "inf": "",
+    "inf": "○",
     "acdelete": "",
-    "comment": "",
-    "infpack": "",
+    "comment": "ギアチェン推奨",
+    "infpack": "BIT",
     "oldlevel": "",
     "splv": "7"
   },
@@ -90997,17 +91672,17 @@
   },
   {
     "ver": "9",
-    "level": "",
+    "level": "11.80",
     "title": "I Was The One (80's EUROBEAT STYLE)(A)",
     "video": "",
     "textageid": "iwas_r",
     "notes": "727",
     "scratch": "60",
     "bpm": "142",
-    "recommend": "",
+    "recommend": "○",
     "inf": "",
     "acdelete": "",
-    "comment": "",
+    "comment": "局所難",
     "infpack": "",
     "oldlevel": "",
     "splv": "7"
@@ -93955,7 +94630,7 @@
   },
   {
     "ver": "9",
-    "level": "",
+    "level": "12.10",
     "title": "SNOW(H)",
     "video": "",
     "textageid": "snow_djt",
@@ -93963,10 +94638,10 @@
     "scratch": "1",
     "bpm": "180",
     "recommend": "",
-    "inf": "",
+    "inf": "○",
     "acdelete": "",
-    "comment": "",
-    "infpack": "",
+    "comment": "前半難",
+    "infpack": "BIT",
     "oldlevel": "",
     "splv": "7"
   },
@@ -96114,18 +96789,18 @@
   },
   {
     "ver": "10",
-    "level": "",
+    "level": "12.00",
     "title": "システムロマンス(H)",
     "video": "",
     "textageid": "_sysroma",
     "notes": "901",
     "scratch": "26",
     "bpm": "148",
-    "recommend": "",
-    "inf": "",
+    "recommend": "△",
+    "inf": "○",
     "acdelete": "",
     "comment": "",
-    "infpack": "",
+    "infpack": "BIT",
     "oldlevel": "",
     "splv": "7"
   },
@@ -98443,7 +99118,7 @@
   },
   {
     "ver": "8",
-    "level": "11.40",
+    "level": "11.20",
     "title": "Blame(N)",
     "video": "",
     "textageid": "blame",
@@ -98460,17 +99135,17 @@
   },
   {
     "ver": "7",
-    "level": "",
+    "level": "11.00",
     "title": "Cheer Train(H)",
     "video": "",
     "textageid": "cheertra",
     "notes": "623",
     "scratch": "95",
     "bpm": "120",
-    "recommend": "",
+    "recommend": "○",
     "inf": "",
     "acdelete": "",
-    "comment": "",
+    "comment": "前半難",
     "infpack": "",
     "oldlevel": "3",
     "splv": "6"
@@ -98511,14 +99186,14 @@
   },
   {
     "ver": "12",
-    "level": "",
+    "level": "11.20",
     "title": "EDEN(N)",
     "video": "",
     "textageid": "eden",
     "notes": "660",
     "scratch": "33",
     "bpm": "200",
-    "recommend": "",
+    "recommend": "○",
     "inf": "○",
     "acdelete": "",
     "comment": "",
@@ -98528,14 +99203,14 @@
   },
   {
     "ver": "9",
-    "level": "",
+    "level": "11.60",
     "title": "e-motion 2003 -romantic extra-(N)",
     "video": "",
     "textageid": "emo2003",
     "notes": "671",
     "scratch": "10",
     "bpm": "145",
-    "recommend": "",
+    "recommend": "○",
     "inf": "○",
     "acdelete": "",
     "comment": "",
@@ -98545,14 +99220,14 @@
   },
   {
     "ver": "11",
-    "level": "",
+    "level": "11.20",
     "title": "Fly Away To India(H)",
     "video": "",
     "textageid": "flyindia",
     "notes": "562",
     "scratch": "33",
     "bpm": "133",
-    "recommend": "",
+    "recommend": "△",
     "inf": "",
     "acdelete": "",
     "comment": "",
@@ -98562,14 +99237,14 @@
   },
   {
     "ver": "1",
-    "level": "",
+    "level": "11.40",
     "title": "GRADIUSIC CYBER(H)",
     "video": "",
     "textageid": "gracyber",
     "notes": "508",
     "scratch": "11",
     "bpm": "159-167",
-    "recommend": "",
+    "recommend": "△",
     "inf": "○",
     "acdelete": "",
     "comment": "",
@@ -98579,17 +99254,17 @@
   },
   {
     "ver": "8",
-    "level": "",
+    "level": "11.20",
     "title": "LOVE IS ORANGE(H)",
     "video": "",
     "textageid": "lvorange",
     "notes": "519",
     "scratch": "19",
     "bpm": "180",
-    "recommend": "",
+    "recommend": "○",
     "inf": "○",
     "acdelete": "",
-    "comment": "",
+    "comment": "後半難",
     "infpack": "BIT",
     "oldlevel": "3",
     "splv": "6"
@@ -99033,6 +99708,57 @@
     "acdelete": "",
     "comment": "",
     "infpack": "PK8",
+    "oldlevel": "",
+    "splv": "6"
+  },
+  {
+    "ver": "20",
+    "level": "",
+    "title": "neu(N)",
+    "video": "",
+    "textageid": "neu",
+    "notes": "504",
+    "scratch": "9",
+    "bpm": "95",
+    "recommend": "",
+    "inf": "○",
+    "acdelete": "",
+    "comment": "",
+    "infpack": "PK2",
+    "oldlevel": "",
+    "splv": "6"
+  },
+  {
+    "ver": "6",
+    "level": "",
+    "title": "こっちを向いてよ(H)",
+    "video": "",
+    "textageid": "_kotti",
+    "notes": "667",
+    "scratch": "18",
+    "bpm": "128",
+    "recommend": "",
+    "inf": "○",
+    "acdelete": "",
+    "comment": "",
+    "infpack": "",
+    "oldlevel": "",
+    "splv": "6"
+  },
+  {
+    "ver": "13",
+    "level": "",
+    "title": "Ganymede(N)",
+    "video": "",
+    "textageid": "ganymede",
+    "notes": "571",
+    "scratch": "13",
+    "bpm": "72-82",
+    "recommend": "",
+    "inf": "○",
+    "acdelete": "",
+    "comment": "",
+    "infpack": "BIT",
     "oldlevel": "",
     "splv": "6"
   },
@@ -99657,6 +100383,40 @@
     "notes": "505",
     "scratch": "17",
     "bpm": "192",
+    "recommend": "",
+    "inf": "○",
+    "acdelete": "",
+    "comment": "",
+    "infpack": "",
+    "oldlevel": "",
+    "splv": "5"
+  },
+  {
+    "ver": "20",
+    "level": "",
+    "title": "405nm (Ryu☆mix)(N)",
+    "video": "",
+    "textageid": "405nm",
+    "notes": "467",
+    "scratch": "26",
+    "bpm": "177",
+    "recommend": "",
+    "inf": "○",
+    "acdelete": "",
+    "comment": "",
+    "infpack": "PK4",
+    "oldlevel": "",
+    "splv": "5"
+  },
+  {
+    "ver": "6",
+    "level": "",
+    "title": "こっちを向いてよ(N)",
+    "video": "",
+    "textageid": "_kotti",
+    "notes": "438",
+    "scratch": "17",
+    "bpm": "128",
     "recommend": "",
     "inf": "○",
     "acdelete": "",
