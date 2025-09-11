@@ -108,7 +108,7 @@
     }
     
     .inner-rule-box {
-      padding: 0 1.5rem;
+      padding-left: 1.5rem;
     }
   </style>
 </head>
@@ -144,7 +144,7 @@
     「曲名+譜面難易度（H、Aなど）」と「レベル」だけでも記載していただければ、それだけ難易度表が充実していきます。<br>
     ぜひご協力をお願いします！</p>
 
-    <p><b>DBRでプレイすることができる全ての譜面</b>に対してレベル付けをすることができます！<br>
+    <p><b>DBRでプレーすることができる全ての譜面</b>に対してレベル付けをすることができます！<br>
     CS、INFINITAS限定の曲、現行AC作品で削除済の曲も提案可能です。<br>
     ※現仕様のDBRを使用する方法がないCS8th、AC9thまでにしか収録されていない曲については、提案不可とします。</p>
   </div>
@@ -305,7 +305,7 @@
       <li>BPM：譜面のBPMです。ソフランがある場合、表記は「最小値-最大値」となります。</li>
       <li>ノーツ数：譜面の全ノーツ数からスクラッチの数を引いた、実質ノーツ数です。スクラッチ数のデータが未登録の場合、全ノーツ数を括弧付きで表示します。</li>
       <li>SPLv：譜面のSPにおけるレベルです。</li>
-      <li>動画：譜面確認用のプレイ動画です。掲載にご協力いただける方は、<a href="https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?usp=sharing" target="_blank">管理用スプレッドシート</a>の<a href="https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?gid=1133259776#gid=1133259776" target="_blank">「修正依頼」シート</a>に記載いただくか、<a href="https://twitter.com/DBR_Difficulty" target="_blank">＠DBR_Difficulty</a>宛にDMをお送りください。</li>
+      <li>動画：譜面確認用のプレー動画です。掲載にご協力いただける方は、<a href="https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?usp=sharing" target="_blank">管理用スプレッドシート</a>の<a href="https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?gid=1133259776#gid=1133259776" target="_blank">「修正依頼」シート</a>に記載いただくか、<a href="https://twitter.com/DBR_Difficulty" target="_blank">＠DBR_Difficulty</a>宛にDMをお送りください。</li>
       <li>TexTage：譜面確認用のTexTageリンクです。表読み込み時に乱数生成しているため、画面のリロードまで同じ譜面は同じ配置のURLになります。</li>
       <li>ゲージ増加量：NORMAL以下のゲージでGREAT以上を出した際の、1ノーツあたりのゲージ増加量です。（<a href="https://zenn.dev/waisky/articles/b97a35fe042b51" target="_blank">参考</a>）</li>
       <li>平均密度：ノーツ数/演奏時間で算出される、1秒あたりの平均ノーツ数です。小数第二位まで表示します。休憩や密度が薄い地帯の長さによっては、値がレベルの実態とそぐわない場合があります。</li>
@@ -428,7 +428,7 @@
 
   <div class="section-box">
     <h2 id="modal-new">【モーダル：新規提案】</h2>
-    <p>難易度表への新規提案を行えます。プレイ済みであればどんな譜面でも構いません。<br>
+    <p>難易度表への新規提案を行えます。プレー済みであればどんな譜面でも構いません。<br>
     表にある譜面全てが新規提案可能です。</p>
 
     <div style="max-width: 600px;">
@@ -467,7 +467,7 @@
     <ul>
       <li>SP総ノーツ数（任意）：提案する譜面の、SP譜面としての総ノーツ数です。</li>
       <li>SP皿枚数（任意）：提案する譜面の、SP譜面としての総スクラッチノーツ数です。</li>
-      <li>BPM（任意）：提案する譜面のBPMです。ソフランする場合「最小値-最大値」で記載してください（例：95-210）、</li>
+      <li>BPM（任意）：提案する譜面のBPMです。ソフランする場合「最小値-最大値」で記載してください（例：95-210）。</li>
       <li>TexTageID（任意）：TexTageで提案する曲を表示した際のURLから、「https://textage.cc/score/バージョン/（ここを入力してください）.html」</li>
       <li>動画URL（任意）：提案する譜面の動画URLを入力してください。提案者ご自身の動画か掲載許可を得た動画URLでお願いします。<br>
         この項目が既に記載されている場合は、そのまま送信してください。2動画以上掲載したい場合は、送信後に備考欄へ追記してください。</li>
@@ -531,7 +531,7 @@
         <div style="text-align: center; font-size: 0.9em; margin-top: 0.25rem;"><a href="dbr_table_extend.html">拡張機能</a>使用時の追加列にも対応</div>
     </div>
 
-    <p>拡張機能と併用する場合は、表更新時の最新化が二度手間になってしまうため、プレイ履歴の管理は拡張機能側で行うことを強く推奨します。<br></p>
+    <p>拡張機能と併用する場合は、表更新時の最新化が二度手間になってしまうため、プレー履歴の管理は拡張機能側で行うことを強く推奨します。<br></p>
   </div>  
   <strong><span style="font-size: 2.33rem;">プレイヤー補助ツール</span></strong><br>
   <div class="section-box">
