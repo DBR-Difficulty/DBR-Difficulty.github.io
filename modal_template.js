@@ -699,7 +699,7 @@ function setupModal(columnsToShow) {
                     data["BPM"] = formData.bpm;
                     data["おすすめ度"] = formData.recommend_new;
                     data["INF有無"] =  "";
-                    data["ACプレイ不可"] = modalData.level.startsWith("†") ? "○" : ""
+                    data["ACプレー不可"] = modalData.level.startsWith("†") ? "○" : ""
                     data["コメント"] = formData.comment_new;
                     data["INF解禁区分"] = "";
 
@@ -795,7 +795,7 @@ function sendNewProposalToSheet(proposalData, submitButton, loadingElement) {
         proposalData["BPM"],
         proposalData["おすすめ度"],
         proposalData["INF有無"],
-        proposalData["ACプレイ不可"],
+        proposalData["ACプレー不可"],
         proposalData["コメント"],
         proposalData["INF解禁区分"]
     ];

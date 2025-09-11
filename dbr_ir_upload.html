@@ -9,7 +9,7 @@
     <link rel="manifest" href="/manifest.json" />
 
     <meta charset="UTF-8" />
-    <title>DBR IR プレイデータアップロード</title>
+    <title>DBR IR プレーデータアップロード</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link href="style/style.css" rel="stylesheet">
     <script src="style/jquery-2.0.2.min.js"></script>
@@ -128,12 +128,12 @@
   </style>
   <body>
     <center>
-        <strong><span style="font-size: 2rem;">DBR IR プレイデータアップロード</span></strong><br>
+        <strong><span style="font-size: 2rem;">DBR IR プレーデータアップロード</span></strong><br>
 
         <!-- ここに注意書きの枠を追加 -->
         <div class="notice-box">
           <ul>
-            <li>DBR IRにプレイデータを登録します <a href="dbr_table_extend.html">拡張機能</a>でエクスポートしたJSONファイルをアップロードしてください</li>
+            <li>DBR IRにプレーデータを登録します <a href="dbr_table_extend.html">拡張機能</a>でエクスポートしたJSONファイルをアップロードしてください</li>
             <li>Googleアカウントでログインしてください</li>
             <li>一度アップロードすると12時間が経過するまで再登録ができません ご注意ください</li>
             <li><a href="./dbralle_misatei_experimental.html" target="_self">仮設閲覧用リンク</a></li>
@@ -147,7 +147,7 @@
 
         <div id="loading" style="display: none;">
           <div class="spinner"></div>
-          <div class="loading-text">プレイデータをアップロードしています。<br>しばらくお待ちください……</div>
+          <div class="loading-text">プレーデータをアップロードしています。<br>しばらくお待ちください……</div>
         </div>
 
         <div class="top-section-box">
@@ -163,7 +163,7 @@
       <label>表示するユーザー名: <input type="text" id="displayName" maxlength="30" /></label><br />
       <label><input type="checkbox" id="anonymousCheck" /> 匿名希望</label><br />
       <button id="saveProfileBtn" disabled>プロフィール保存</button>
-      <a id="playerDataLink" class="button label-disabled" style="margin-left: 1.125rem;">自分のプレイデータを見る</a><br /><br />
+      <a id="playerDataLink" class="button label-disabled" style="margin-left: 1.125rem;">自分のプレーデータを見る</a><br /><br />
 
       <!-- 隠し file input -->
       <input type="file" id="jsonFileInput" accept=".json" style="display: none;">
@@ -390,7 +390,7 @@
           return;
         }
 
-        setLoading(true, "プレイデータをアップロードしています。<br>しばらくお待ちください……");
+        setLoading(true, "プレーデータをアップロードしています。<br>しばらくお待ちください……");
 
         try {
           const text = await file.text();
@@ -480,7 +480,7 @@
           }
 
           const summary = [
-            `${count}件の譜面データをアップロードしました。`,
+            `${count}件のプレーデータをアップロードしました。`,
             skipped > 0 ? `（${skipped}件は12時間以内の再登録のため、スキップされました）` : ""
           ].join(" ");
 
