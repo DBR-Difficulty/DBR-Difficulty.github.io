@@ -174,6 +174,7 @@
     ["LOVE IS ORANGE", "H"],
     ["Fly Away To India", "H"],
     ["GRADIUSIC CYBER", "H"],
+    ["スパークリング☆彡ハイパーチューン！！", "N"],
   ];
 
   const lampData = {};
