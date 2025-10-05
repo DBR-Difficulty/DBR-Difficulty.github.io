@@ -1,0 +1,8 @@
+/old/
+/node_modules/
+_ローカルJSON取得用.py
+package.json
+package-lock.json
+_TexTageリンクチェック.js
+scrape_progress.json
+textage_mismatch.xlsx
