@@ -26,6 +26,7 @@
                     <li>☆12.92を☆☆1とした難易度表です</li>
                     <li>管理側約一名が適正外まで作成したので、妥当性はないものとお考えください</li>
                     <li>GASでスプレッドシートから自動生成せずサイトに生成後のjsonを置いて読み込んでいます</li>
+                    <li id="lastUpdated">難易度表データの最終生成日は です</li>
                 </ul>
             </div>
 
@@ -73,6 +74,18 @@
 
                                 // 本文中の日付を書き換える（.page-date 全部）
                                 $(".page-date").text(yyyymmdd);
+                            }
+
+                            // ▼ 日付整形して最終生成日に反映
+                            if (header.last_updated && /^\d{8}$/.test(header.last_updated)) {
+                                const y = header.last_updated.slice(0, 4);
+                                const m = header.last_updated.slice(4, 6);
+                                const d = header.last_updated.slice(6, 8);
+                                const formatted = `${y}/${m}/${d}`;
+                                const elem = document.getElementById("lastUpdated");
+                                if (elem) {
+                                elem.innerHTML = `表データの最終生成日は <b>${formatted}</b> です`;
+                                }
                             }
                         })
                         .catch(err => {
