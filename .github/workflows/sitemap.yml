@@ -2,7 +2,7 @@ name: Generate sitemap.xml
 
 on:
   push:
-    branches: [ master ]   # メインブランチへの push 時
+    branches: [ main ]   # メインブランチへの push 時
   workflow_dispatch:     # 手動実行も可能
 
 jobs:
