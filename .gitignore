@@ -6,3 +6,5 @@ package-lock.json
 _TexTageリンクチェック.js
 scrape_progress.json
 textage_mismatch.xlsx
+sitemap_generator.py
+sitemap_list.txt
