@@ -213,8 +213,6 @@
         getAuth,
         GoogleAuthProvider,
         signInWithPopup,
-        signInWithRedirect,
-        getRedirectResult,
         signOut,
         onAuthStateChanged
       } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
@@ -252,12 +250,11 @@
 
       let currentUserUid = null;
 
-      loginBtn.onclick = async () => {
-        try {
-          await signInWithRedirect(auth, provider);
-        } catch (e) {
-          alert("ログインに失敗しました: " + e.message);
-        }
+      loginBtn.onclick = () => {
+        signInWithPopup(auth, provider)
+          .catch((e) => {
+            alert("ログインに失敗しました: " + e.message);
+          });
       };
 
       logoutBtn.onclick = () => {
@@ -300,18 +297,6 @@
           fileLabel.classList.remove("label-disabled");
         }
       }
-
-      window.addEventListener("load", async () => {
-        try {
-          const result = await getRedirectResult(auth);
-          if (result?.user) {
-            console.log("ログイン成功:", result.user);
-            // Firestoreユーザー作成などは onAuthStateChanged 内で既に行われるためここでは不要
-          }
-        } catch (e) {
-          console.error("リダイレクト後の処理でエラー:", e);
-        }
-      });
 
       onAuthStateChanged(auth, async (user) => {
         if (user) {
