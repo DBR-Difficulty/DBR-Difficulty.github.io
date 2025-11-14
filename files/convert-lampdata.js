@@ -124,7 +124,8 @@
     "fffff": "ƒƒƒƒƒ",
     "Nothing But Theory": "Nothing but Theory",
     "パラドキシカル・タイムリープトライアル(Short.Ver)": "パラドキシカル・タイムリープトライアル(Short Ver.)",
-    "VR - Virtual Reality(prod.by Snail's House)": "VR - Virtual Reality (prod.by Snail's House)"
+    "VR - Virtual Reality(prod.by Snail's House)": "VR - Virtual Reality (prod.by Snail's House)",
+    "COUNTING SHEEP ft.Kanae Asaba": "COUNTING SHEEP ft. Kanae Asaba"
 
     // 必要に応じてここに追加
     // 'クリアランプマネージャー側表記': 'DBR難易度表側表記',
