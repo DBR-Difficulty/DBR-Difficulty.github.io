@@ -134,8 +134,8 @@
       margin: 0.5rem;
     }
 
-    .authInput #email {
-      margin-bottom: 0.5rem;
+    .authInput {
+      margin-bottom: 2.5rem;
     }
   </style>
   <body>
@@ -150,8 +150,8 @@
         <!-- ここに注意書きの枠を追加 -->
         <div class="notice-box">
           <ul>
-            <li>DBR IRにプレーデータを登録します</li>
-            <li><a href="dbr_table_extend.html">拡張機能</a>でエクスポートしたJSONファイルをアップロードしてください</li>
+            <li>DBR IRにプレーデータを登録します <a href="dbr_table_extend.html">拡張機能</a>でエクスポートしたJSONファイルをアップロードしてください</li>
+            <li>Googleアカウントでログインしてください</li>
             <li>一度アップロードすると12時間が経過するまで再登録ができません ご注意ください</li>
             <li><a href="./dbralle_misatei_experimental.html" target="_self">仮設閲覧用リンク</a></li>
           </ul>
@@ -168,15 +168,15 @@
         </div>
 
         <div class="top-section-box">
-          <div class="authSection">
-            <div class="authInput">
+          <div id="loginForm">
+            <div id="authInput">
               <input type="email" id="email" placeholder="メールアドレス"><br>
               <input type="password" id="password" placeholder="パスワード"><br>
             </div>
             <button id="loginBtn">ログイン</button>
-            <button id="logoutBtn" style=　　"display:none;">ログアウト</button>
+            <button id="logoutBtn" style="display:none;">ログアウト</button>
             <p id="userInfo">ログアウト中</p>
-            <p><a href="dbr_ir_register.html">新規登録はこちら</a></p>
+            <p><a href="register.html">新規登録はこちら</a></p>
           </div>
         </div>
 
