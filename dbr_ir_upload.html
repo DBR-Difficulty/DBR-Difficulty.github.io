@@ -134,8 +134,8 @@
       margin: 0.5rem;
     }
 
-    .authInput {
-      margin-bottom: 2.5rem;
+    .authInput #email {
+      margin-bottom: 0.5rem;
     }
   </style>
   <body>
@@ -176,7 +176,7 @@
             <button id="loginBtn">ログイン</button>
             <button id="logoutBtn" style="display:none;">ログアウト</button>
             <p id="userInfo">ログアウト中</p>
-            <p><a href="register.html">新規登録はこちら</a></p>
+            <p><a href="register.html" id="registerLink">新規登録はこちら</a></p>
           </div>
         </div>
 
@@ -284,7 +284,8 @@
 
       onAuthStateChanged(auth, async (user) => {
         if (user) {
-          document.getElementById("loginForm").style.display = "none";
+          document.getElementById("authInput").style.display = "none";
+          document.getElementById("registerLink").style.display = "none";
           currentUserUid = user.uid;
           loginBtn.style.display = "none";
           logoutBtn.style.display = "inline";
@@ -301,7 +302,7 @@
             displayNameInput.value = profileData.displayName || user.displayName || user.email || "";
             anonymousCheck.checked = profileData.anonymous || false;
           } else {
-            document.getElementById("loginForm").style.display = "block";
+            document.getElementById("authInput").style.display = "block";
             displayNameInput.value = user.displayName || user.email || "";
             anonymousCheck.checked = false;
             await setDoc(userDocRef, {
