@@ -134,7 +134,7 @@
       margin: 0.5rem;
     }
 
-    .authInput #email {
+    #authInput #email {
       margin-bottom: 0.5rem;
     }
   </style>
@@ -150,8 +150,8 @@
         <!-- ここに注意書きの枠を追加 -->
         <div class="notice-box">
           <ul>
-            <li>DBR IRにプレーデータを登録します <a href="dbr_table_extend.html">拡張機能</a>でエクスポートしたJSONファイルをアップロードしてください</li>
-            <li>Googleアカウントでログインしてください</li>
+            <li>DBR IRにプレーデータを登録します</li>
+            <li>ログイン後、<a href="dbr_table_extend.html">拡張機能</a>でエクスポートしたJSONファイルをアップロードしてください</li>
             <li>一度アップロードすると12時間が経過するまで再登録ができません ご注意ください</li>
             <li><a href="./dbralle_misatei_experimental.html" target="_self">仮設閲覧用リンク</a></li>
           </ul>
@@ -168,16 +168,14 @@
         </div>
 
         <div class="top-section-box">
-          <div id="loginForm">
-            <div id="authInput">
-              <input type="email" id="email" placeholder="メールアドレス"><br>
-              <input type="password" id="password" placeholder="パスワード"><br>
-            </div>
-            <button id="loginBtn">ログイン</button>
-            <button id="logoutBtn" style="display:none;">ログアウト</button>
-            <p id="userInfo">ログアウト中</p>
-            <p><a href="register.html" id="registerLink">新規登録はこちら</a></p>
+          <div id="authInput">
+            <input type="email" id="email" placeholder="メールアドレス"><br>
+            <input type="password" id="password" placeholder="パスワード"><br>
           </div>
+          <button id="loginBtn">ログイン</button>
+          <button id="logoutBtn" style="display:none;">ログアウト</button>
+          <p id="userInfo">ログアウト中</p>
+          <p><a href="dbr_ir_register.html" id="registerLink">新規登録はこちら</a></p>
         </div>
 
     </center>
@@ -303,6 +301,7 @@
             anonymousCheck.checked = profileData.anonymous || false;
           } else {
             document.getElementById("authInput").style.display = "block";
+            document.getElementById("registerLink").style.display = "block";
             displayNameInput.value = user.displayName || user.email || "";
             anonymousCheck.checked = false;
             await setDoc(userDocRef, {
@@ -319,7 +318,9 @@
           playerDataLink.href = `dbr_ir_playerdata.html?uid=${currentUserUid}`;
           playerDataLink.classList.remove("label-disabled");
         } else {
-          currentUserUid = null;
+          currentUserUid = null;          
+          document.getElementById("authInput").style.display = "block";
+          document.getElementById("registerLink").style.display = "block";
           loginBtn.style.display = "inline";
           logoutBtn.style.display = "none";
           userInfo.textContent = "ログアウト中";
