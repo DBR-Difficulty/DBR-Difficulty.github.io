@@ -168,19 +168,26 @@
     </center>
 
     <script type="module">
-      import { auth, createUserWithEmailAndPassword } from "./main.js";
+      import { auth, createUserWithEmailAndPassword, sendEmailVerification } from "./main.js";
 
       document.getElementById("registerBtn").onclick = async () => {
         const email = document.getElementById("email").value.trim();
         const password = document.getElementById("password").value.trim();
         if (!email || !password) return alert("メールアドレスとパスワードを入力してください");
 
-        try {
-          await createUserWithEmailAndPassword(auth, email, password);
-          alert("登録が完了しました。ログインしてください。");
-          location.href = "login.html";
+         try {
+          const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+
+          // メールアドレス確認メール送信
+          await sendEmailVerification(userCredential.user);
+
+          alert("確認メールを送信しました。メール内のリンクをクリックして登録を完了してください。");
+
+          // パスワード入力画面へ誘導する（ログインはまだ不可）
+          location.href = "dbr_ir_upload.html";
+
         } catch (e) {
-          alert("登録失敗: " + e.message);
+          alert("登録に失敗しました。: " + e.message);
         }
       };
     </script>
