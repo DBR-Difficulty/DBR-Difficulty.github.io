@@ -317,17 +317,11 @@
             displayNameInput.value = profileData.displayName || user.displayName || user.email || "";
             anonymousCheck.checked = profileData.anonymous || false;
           } else {
-            document.getElementById("authInput").style.display = "block";
-            document.getElementById("registerLink").style.display = "block";
-
-            displayNameInput.disabled = true;
-            anonymousCheck.disabled = true;
-
-            displayNameLabel.style.pointerEvents = "none";  // クリック不可
-            anonymousLabel.style.pointerEvents = "none";
-
             displayNameInput.value = user.displayName || user.email || "";
             anonymousCheck.checked = false;
+
+            document.getElementById("authInput").style.display = "block";
+            document.getElementById("registerLink").style.display = "block";
             await setDoc(userDocRef, {
               displayName: displayNameInput.value,
               anonymous: false
