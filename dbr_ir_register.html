@@ -168,7 +168,7 @@
     </center>
 
     <script type="module">
-      import { auth, createUserWithEmailAndPassword, sendEmailVerification } from "./main.js";
+      import { auth, signOut, createUserWithEmailAndPassword, sendEmailVerification } from "./main.js";
 
       document.getElementById("registerBtn").onclick = async () => {
         const email = document.getElementById("email").value.trim();
@@ -180,6 +180,9 @@
 
           // メールアドレス確認メール送信
           await sendEmailVerification(userCredential.user);
+
+          // 一旦ログアウト
+          await auth.signOut();
 
           alert("確認メールを送信しました。メール内のリンクをクリックして登録を完了してください。");
 
