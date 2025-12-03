@@ -151,7 +151,7 @@
         <div class="notice-box">
           <ul>
             <li>DBR IRにプレーデータを登録します</li>
-            <li>ログイン後、<a href="dbr_table_extend.html">拡張機能</a>でエクスポートしたJSONファイルをアップロードしてください</li>
+            <li>ログイン後、<b><a href="dbr_table_extend.html">拡張機能</a>でエクスポートしたJSONファイル</b>をアップロードしてください</li>
             <li>一度アップロードすると12時間が経過するまで再登録ができません ご注意ください</li>
             <li><a href="./dbralle_misatei_experimental.html" target="_self">仮設閲覧用リンク</a></li>
           </ul>
@@ -245,14 +245,14 @@
             return;
           }
         } catch (e) {
-          alert("ログインに失敗しました: " + translateAuthError(e));
+          alert("ログインに失敗しました。: " + translateAuthError(e));
         }
       };
 
       logoutBtn.onclick = () => {
         signOut(auth)
           .catch((e) => {
-            alert("ログアウトに失敗しました: " + e.message);
+            alert("ログアウトに失敗しました。: " + e.message);
           });
       };
 
@@ -370,7 +370,7 @@
 
       saveProfileBtn.onclick = async () => {
         if (!currentUserUid) {
-          alert("ログインしてください");
+          alert("ログインしてください。");
           return;
         }
         const displayName = displayNameInput.value.trim();
@@ -391,9 +391,9 @@
             displayName,
             anonymous
           }, { merge: true });
-          alert("プロフィールを保存しました");
+          alert("プロフィールを保存しました。");
         } catch (e) {
-          alert("保存に失敗しました: " + e.message);
+          alert("保存に失敗しました。: " + e.message);
         }
       };
 
@@ -402,19 +402,19 @@
       }
 
       document.getElementById("jsonFileInput").addEventListener("change", function() {
-        const fileName = this.files[0]?.name || "ファイルが選択されていません";
+        const fileName = this.files[0]?.name || "ファイルが選択されていません。";
         document.getElementById("fileName").textContent = fileName;
       });
 
       uploadBtn.addEventListener("click", async () => {
         if (!currentUserUid) {
-          alert("ログインしてください");
+          alert("ログインしてください。");
           return;
         }
 
         const file = fileInput.files[0];
         if (!file) {
-          alert("JSONファイルを選択してください");
+          alert("JSONファイルを選択してください。");
           return;
         }
 
@@ -426,14 +426,14 @@
 
           const userDocSnap = await getDoc(doc(db, "users", currentUserUid));
           if (!userDocSnap.exists()) {
-            alert("ユーザープロファイルが見つかりません。プロフィールを保存してください");
+            alert("ユーザープロファイルが見つかりません。プロフィールを保存してください。");
             return;
           }
 
           const profile = userDocSnap.data();
           const usernameToUse = profile.anonymous ? "匿名" : (profile.displayName || "");
           if (!usernameToUse) {
-            alert("ユーザー名が設定されていません。プロフィールを保存してください");
+            alert("ユーザー名が設定されていません。プロフィールを保存してください。");
             return;
           }
 
@@ -516,7 +516,7 @@
           fileInput.value = "";
           document.getElementById("fileName").textContent = ""; // 表示名もクリア
         } catch (e) {
-          alert("アップロード中にエラーが発生しました: " + e.message);
+          alert("アップロード中にエラーが発生しました。: " + e.message);
           console.error(e);
         } finally {
           setLoading(false);
@@ -524,7 +524,7 @@
       });
 
       deleteBtn.addEventListener("click", async () => {
-        if (!currentUserUid) return alert("ログインしてください");
+        if (!currentUserUid) return alert("ログインしてください。");
         if (!confirm("本当にすべてのスコアデータを削除しますか？\nこの操作は元に戻せません。")) return;
         if (!confirm("後悔しませんね？")) return;
 
