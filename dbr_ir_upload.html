@@ -223,6 +223,7 @@
       
       const deleteBtn = document.getElementById("deleteAllBtn");
       const deleteStatus = document.getElementById("deleteStatus");
+      const playerDataLink = document.getElementById("playerDataLink");
 
       const loadingDiv = document.getElementById("loading");
 
@@ -281,8 +282,10 @@
         const fileLabel = document.querySelector('label[for="jsonFileInput"]');
         if (show) {
           fileLabel.classList.add("label-disabled");
+          playerDataLink.classList.add("label-disabled");
         } else {
           fileLabel.classList.remove("label-disabled");
+          playerDataLink.classList.remove("label-disabled");
         }
       }
 
