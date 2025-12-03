@@ -187,7 +187,7 @@
       document.getElementById("registerBtn").onclick = async () => {
         const email = document.getElementById("email").value.trim();
         const password = document.getElementById("password").value.trim();
-        if (!email || !password) return alert("メールアドレスとパスワードを入力してください");
+        if (!email || !password) return alert("メールアドレスとパスワードを入力してください。");
 
          try {
           const userCredential = await createUserWithEmailAndPassword(auth, email, password);
