@@ -233,7 +233,13 @@
         const password = document.getElementById("password").value;
         if (!email || !password) return alert("メールアドレスとパスワードを入力してください。");
         try {
-          await signInWithEmailAndPassword(auth, email, password);
+          const userCred = await signInWithEmailAndPassword(auth, email, password);
+
+          if (!userCred.user.emailVerified) {
+            await signOut(auth);
+            alert("メールアドレスが確認されていません。メール内のリンクをクリックしてください。");
+            return;
+          }
         } catch (e) {
           alert("ログインに失敗しました: " + e.message);
         }
