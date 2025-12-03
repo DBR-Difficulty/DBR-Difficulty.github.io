@@ -53,6 +53,7 @@ function translateAuthError(error) {
     "auth/user-disabled": "このユーザーアカウントは無効化されています。",
     "auth/wrong-password": "パスワードが間違っています。",
     "auth/weak-password": "パスワードは8文字以上にしてください。",
+    "auth/password-does-not-meet-requirements": "パスワードは8文字以上にしてください。",
     "auth/missing-password": "パスワードが入力されていません。",
 
     // アカウント操作系
