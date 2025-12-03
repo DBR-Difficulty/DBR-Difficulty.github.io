@@ -180,10 +180,10 @@
 
     </center>
     <div class="top-section-box">
-      <label>表示するユーザー名: <input type="text" id="displayName" maxlength="30" /></label><br />
-      <label><input type="checkbox" id="anonymousCheck" /> 匿名希望</label><br />
+      <label id="displayNameLabel">表示するユーザー名: <input type="text" id="displayName" maxlength="30" /></label><br>
+      <label id="anonymousLabel"><input type="checkbox" id="anonymousCheck" /> 匿名希望</label><br>
       <button id="saveProfileBtn" disabled>プロフィール保存</button>
-      <a id="playerDataLink" class="button label-disabled" style="margin-left: 1.125rem;">自分のプレーデータを見る</a><br /><br />
+      <a id="playerDataLink" class="button label-disabled" style="margin-left: 1.125rem;">自分のプレーデータを見る</a><br><br>
 
       <!-- 隠し file input -->
       <input type="file" id="jsonFileInput" accept=".json" style="display: none;">
@@ -207,7 +207,8 @@
       import {
         auth, db,
         signInWithEmailAndPassword, signOut, onAuthStateChanged,
-        doc, getDoc, setDoc, collection, query, where, getDocs, deleteDoc
+        doc, getDoc, setDoc, collection, query, where, getDocs, deleteDoc,
+        translateAuthError
       } from "./main.js";
 
       const loginBtn = document.getElementById("loginBtn");
@@ -216,6 +217,8 @@
 
       const displayNameInput = document.getElementById("displayName");
       const anonymousCheck = document.getElementById("anonymousCheck");
+      const displayNameLabel = document.getElementById("displayNameLabel");
+      const anonymousLabel = document.getElementById("anonymousLabel");
       const saveProfileBtn = document.getElementById("saveProfileBtn");
 
       const fileInput = document.getElementById("jsonFileInput");
@@ -242,7 +245,7 @@
             return;
           }
         } catch (e) {
-          alert("ログインに失敗しました: " + e.message);
+          alert("ログインに失敗しました: " + translateAuthError(e));
         }
       };
 
@@ -301,6 +304,11 @@
           saveProfileBtn.disabled = false;
           uploadBtn.disabled = false;
           deleteBtn.disabled = false;
+          displayNameInput.disabled = false;
+          anonymousCheck.disabled = false;
+
+          displayNameLabel.style.pointerEvents = "auto";
+          anonymousLabel.style.pointerEvents = "auto";
 
           const userDocRef = doc(db, "users", currentUserUid);
           const userDocSnap = await getDoc(userDocRef);
@@ -311,6 +319,13 @@
           } else {
             document.getElementById("authInput").style.display = "block";
             document.getElementById("registerLink").style.display = "block";
+
+            displayNameInput.disabled = true;
+            anonymousCheck.disabled = true;
+
+            displayNameLabel.style.pointerEvents = "none";  // クリック不可
+            anonymousLabel.style.pointerEvents = "none";
+
             displayNameInput.value = user.displayName || user.email || "";
             anonymousCheck.checked = false;
             await setDoc(userDocRef, {
@@ -326,6 +341,10 @@
           // リンクを設定して表示
           playerDataLink.href = `dbr_ir_playerdata.html?uid=${currentUserUid}`;
           playerDataLink.classList.remove("label-disabled");
+
+          // ラベルの見た目も有効化
+          displayNameLabel.classList.remove("label-disabled");
+          anonymousLabel.classList.remove("label-disabled");
         } else {
           currentUserUid = null;          
           document.getElementById("authInput").style.display = "block";
@@ -339,6 +358,11 @@
           saveProfileBtn.disabled = true;
           uploadBtn.disabled = true;
           deleteBtn.disabled = true;
+          displayNameInput.disabled = true;
+          anonymousCheck.disabled = true;
+
+          displayNameLabel.style.pointerEvents = "none";  // クリック不可
+          anonymousLabel.style.pointerEvents = "none";
 
           // 疑似ファイル選択ボタンの有効/無効切り替え
           const fileLabel = document.querySelector('label[for="jsonFileInput"]');
