@@ -151,6 +151,20 @@
         <ul>
           <li>DBR IRにユーザー登録します</li>
           <li>登録にはメールアドレスと8文字以上のパスワードが必要です</li>
+          <li>登録後、 noreply@dbr-ir.firebaseapp.com から確認メールが送信されます メール内のリンクをクリックして登録を完了してください</li>
+          <li>確認メールが届かない場合、迷惑メールフォルダをチェックしてください</li>
+          <details>
+            <summary>メールの文面を確認する</summary>
+            <div style="max-width: 600px;">
+                <img src="picture/mail.png" alt="メール文面" style="max-width:100%; height: auto;">
+            </div>
+                <div style="text-align: left; font-size: 1.1em; margin-top: 0.25rem;">メール内リンクをクリック</div><br>
+            <div style="max-width: 600px;">
+                <img src="picture/ayashii.png" alt="認証画面" style="max-width:100%; height: auto;">
+            </div>
+                <div style="text-align: left; font-size: 1.1em; margin-top: 0.25rem;">[COMPLETE VERIFICATION]をクリック</div>
+          </details>
+        </ul>
       </div>
 
       <div class="toplink-margin">
@@ -168,7 +182,7 @@
     </center>
 
     <script type="module">
-      import { auth, signOut, createUserWithEmailAndPassword, sendEmailVerification } from "./main.js";
+      import { auth, signOut, createUserWithEmailAndPassword, sendEmailVerification, translateAuthError } from "./main.js";
 
       document.getElementById("registerBtn").onclick = async () => {
         const email = document.getElementById("email").value.trim();
@@ -190,7 +204,7 @@
           location.href = "dbr_ir_upload.html";
 
         } catch (e) {
-          alert("登録に失敗しました。: " + e.message);
+          alert("登録に失敗しました。: " + translateAuthError(e));
         }
       };
     </script>
