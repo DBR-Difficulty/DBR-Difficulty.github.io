@@ -298,8 +298,9 @@
       const twitterBtn = document.getElementById("twitter-share");
       const shareUrl = window.location.href;
       const shareText = `${displayName} さんのプレーデータ - DBR IR`;
+      const hashtags = "DBR_IR";
 
-      twitterBtn.href = `https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`;
+      twitterBtn.href = `https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}&hashtags=${encodeURIComponent(hashtags)}`;
 
       const snap = await getDocs(query(collection(db, "scores"), where("userUid", "==", userUid)));
       snap.forEach(doc => {
