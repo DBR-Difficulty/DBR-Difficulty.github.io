@@ -4852,7 +4852,7 @@
   "SHINING☆DANCE(H)": 0,
   "Shooting Star(H)": 0,
   "SPLASH!!!!!!!!!(A)": 115.2,
-  "SPLASH!!!!!!!!!(H)": 0,
+  "SPLASH!!!!!!!!!(H)": 115.2,
   "かわいいだけじゃだめですか？(H)": 0,
   "かわいいだけじゃだめですか？(A)": 109.02,
   "chaplet -IIDX re:build-(A)": 111.44,
@@ -4910,7 +4910,7 @@
   "終末を追う者(H)": 0,
   "insist(H)": 0,
   "Black Apple(H)": 0,
-  "PALETTE(H)": 0,
+  "PALETTE(H)": 124.89,
   "PALETTE(A)": 124.89,
   "HYPER EUROBEAT(2DX style)(H)": 113.48,
   "THE ANCIENT KING IS BACK(A)": 118.87,
@@ -4932,5 +4932,6 @@
   "Lisa-RICCIA(L)": 129.93,
   "Lisa-RICCIA(H)": 127.46,
   "COLOR BURST(A)": 117.15,
-  "COLOR BURST(H)": 0
+  "COLOR BURST(H)": 0,
+  "Catch Me(L)": 101.21
 }

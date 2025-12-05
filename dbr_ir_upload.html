@@ -105,6 +105,12 @@
         transition: background-color 0.3s ease, transform 0.2s ease;
         display: inline-block;
     }
+    
+    .button-delete {
+      background-color: #ff4d4d;     /* 赤 */
+      color: #fff;                  /* 白文字 */
+      border: 1px solid #cc0000;    /* 濃い赤の枠 */
+    }
 
     /* チェックボックスを大きくする */
     input[type="checkbox"] {
@@ -151,7 +157,8 @@
         <div class="notice-box">
           <ul>
             <li>DBR IRにプレーデータを登録します</li>
-            <li>ログイン後、<b><a href="dbr_table_extend.html">拡張機能</a>でエクスポートしたJSONファイル</b>をアップロードしてください</li>
+            <li>ログイン後、<b><a href="dbr_table_extend.html">拡張機能</a>でエクスポートしたJSONファイル</b>をアップロードしてください<br>
+            （<a href="dbr_record.html">DBRプレー記録管理</a>でエクスポートしたJSONファイルには対応していません）</li>
             <li>一度アップロードすると12時間が経過するまで再登録ができません ご注意ください</li>
             <li><a href="./dbralle_misatei_experimental.html" target="_self">仮設閲覧用リンク</a></li>
           </ul>
@@ -201,12 +208,18 @@
       <p class="subtext" id="deleteStatus"></p>
     </div>
 
+    <!-- 追加: 自分のデータを全削除するボタンと処理 -->
+    <div class="top-section-box">
+      <button class="button-delete" id="deleteAccountBtn" disabled>アカウントを削除</button>
+      <p class="subtext" id="deleteAccount"></p>
+    </div>
+
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
 
       import {
         auth, db,
-        signInWithEmailAndPassword, signOut, onAuthStateChanged,
+        signInWithEmailAndPassword, signOut, deleteUser, onAuthStateChanged,
         doc, getDoc, setDoc, collection, query, where, getDocs, deleteDoc,
         translateAuthError
       } from "./main.js";
@@ -225,6 +238,7 @@
       const uploadBtn = document.getElementById("uploadBtn");
       
       const deleteBtn = document.getElementById("deleteAllBtn");
+      const deleteAccountBtn = document.getElementById("deleteAccountBtn");
       const deleteStatus = document.getElementById("deleteStatus");
       const playerDataLink = document.getElementById("playerDataLink");
 
@@ -263,6 +277,7 @@
         saveProfileBtn,
         uploadBtn,
         deleteBtn,
+        deleteAccountBtn,
         displayNameInput,
         anonymousCheck,
         fileInput
@@ -304,6 +319,7 @@
           saveProfileBtn.disabled = false;
           uploadBtn.disabled = false;
           deleteBtn.disabled = false;
+          deleteAccountBtn.disabled = false;
           displayNameInput.disabled = false;
           anonymousCheck.disabled = false;
 
@@ -352,6 +368,7 @@
           saveProfileBtn.disabled = true;
           uploadBtn.disabled = true;
           deleteBtn.disabled = true;
+          deleteAccountBtn.disabled = true;
           displayNameInput.disabled = true;
           anonymousCheck.disabled = true;
 
@@ -547,6 +564,22 @@
         } finally {
           setLoading(false);
         }
+      });
+
+      deleteAccountBtn.addEventListener("click", async () => {
+        if (!currentUserUid) return alert("ログインしてください。");
+        if (!confirm("アカウントを削除しますか？\nこの操作は元に戻せません。")) return;
+        if (!confirm("後悔しませんね？")) return;
+
+        setLoading(true, "アカウントを削除しています。<br>しばらくお待ちください……");
+        // Firestore削除後
+        const user = auth.currentUser;
+        if (!user) {
+          return alert("\nユーザー情報の取得に失敗しました。")
+        }
+
+        await deleteUser(user);
+        return alert("\nアカウントを削除しました。");
       });
     </script>
   </body>
