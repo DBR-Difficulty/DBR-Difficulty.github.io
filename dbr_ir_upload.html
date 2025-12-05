@@ -159,8 +159,8 @@
             <li>DBR IRにプレーデータを登録します</li>
             <li>ログイン後、<b><a href="dbr_table_extend.html">拡張機能</a>でエクスポートしたJSONファイル</b>をアップロードしてください<br>
             （<a href="dbr_record.html">DBRプレー記録管理</a>でエクスポートしたJSONファイルには対応していません）</li>
-            <li>一度アップロードすると12時間が経過するまで再登録ができません ご注意ください</li>
-            <li><a href="./dbralle_misatei_experimental.html" target="_self">仮設閲覧用リンク</a></li>
+            <li>プレーデータ送信後、12時間が経過するまで再送信ができません ご注意ください</li>
+            <li><a href="./dbralle_misatei_experimental.html" target="_self">仮設閲覧用リンク</a>（IR列）</li>
           </ul>
         </div>
 
@@ -330,10 +330,10 @@
           const userDocSnap = await getDoc(userDocRef);
           if (userDocSnap.exists()) {
             const profileData = userDocSnap.data();
-            displayNameInput.value = profileData.displayName || user.displayName || user.email || "";
+            displayNameInput.value = profileData.displayName || user.displayName || "player";
             anonymousCheck.checked = profileData.anonymous || false;
           } else {
-            displayNameInput.value = user.displayName || user.email || "";
+            displayNameInput.value = user.displayName || "player";
             anonymousCheck.checked = false;
 
             document.getElementById("authInput").style.display = "block";
@@ -572,14 +572,20 @@
         if (!confirm("後悔しませんね？")) return;
 
         setLoading(true, "アカウントを削除しています。<br>しばらくお待ちください……");
-        // Firestore削除後
-        const user = auth.currentUser;
-        if (!user) {
-          return alert("\nユーザー情報の取得に失敗しました。")
-        }
 
-        await deleteUser(user);
-        return alert("\nアカウントを削除しました。");
+        try {
+          const user = auth.currentUser;
+          if (!user) {
+            return alert("ユーザー情報の取得に失敗しました。");
+          }
+          await deleteUser(user);
+          return alert("アカウントを削除しました。");
+        } catch (e) {
+          console.error(e);
+          alert("アカウント削除中にエラーが発生しました。");
+        } finally {
+          setLoading(false);
+        }
       });
     </script>
   </body>
