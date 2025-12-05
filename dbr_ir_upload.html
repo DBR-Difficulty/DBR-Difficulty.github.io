@@ -339,7 +339,7 @@
             document.getElementById("authInput").style.display = "block";
             document.getElementById("registerLink").style.display = "block";
             await setDoc(userDocRef, {
-              displayName: displayNameInput.value,
+              displayName: "player",
               anonymous: false
             });
           }
