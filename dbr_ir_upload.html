@@ -585,7 +585,12 @@
             const deleteOps = snapshot.docs.map(docSnap => deleteDoc(docSnap.ref));
             await Promise.all(deleteOps);
           } catch (e) {
-            return alert("アカウント削除中にエラーが発生しました。再度ログインしてからお試しください。");
+            return alert("スコアデータ削除中にエラーが発生しました。再度ログインしてからお試しください。");
+          }
+          try {
+            await deleteDoc(doc(db, "users", user.uid));
+          } catch (e) {
+            return alert("ユーザー情報削除中にエラーが発生しました。再度ログインしてからお試しください。");
           }
           await deleteUser(user);
           return alert("アカウントを削除しました。");
