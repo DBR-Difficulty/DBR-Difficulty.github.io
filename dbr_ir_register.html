@@ -184,11 +184,13 @@
       </div>
       
       <div class="top-section-box">
-        <div class="authInput">
-          <input type="email" id="email" placeholder="メールアドレス" autocomplete="username"><br>
-          <input type="password" id="password" placeholder="パスワード" autocomplete="new-password"><br>
-        </div>
-        <button id="registerBtn">登録</button>
+        <form id="registerForm" onsubmit="return false;">
+          <div class="authInput">
+            <input type="email" id="email" placeholder="メールアドレス" autocomplete="username"><br>
+            <input type="password" id="password" placeholder="パスワード" autocomplete="new-password"><br>
+          </div>
+          <button id="registerBtn">登録</button>
+        </form>
         <p><a href="dbr_ir_upload.html">ログインはこちら</a></p>
       </div>
     </center>
