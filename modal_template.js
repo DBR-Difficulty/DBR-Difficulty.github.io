@@ -481,6 +481,7 @@ function setupModal(columnsToShow) {
                         <option value="スタートアップセレクション 楽曲パック">スタートアップセレクション 楽曲パック</option>
                         <option value="jubeat セレクション 楽曲パック">jubeat セレクション 楽曲パック</option>
                         <option value="SOUND VOLTEX セレクション 楽曲パック">SOUND VOLTEX セレクション 楽曲パック</option>
+                        <option value="GITADORA セレクション 楽曲パック">GITADORA セレクション 楽曲パック</option>
                         <option value="BPL セレクション 楽曲パック">BPL セレクション 楽曲パック</option>
                         <option value="東方Project セレクション 楽曲パック">東方Project セレクション 楽曲パック</option>
                         <option value="ULTIMATE MOBILE セレクション 楽曲パック">ULTIMATE MOBILE セレクション 楽曲パック</option>
@@ -774,6 +775,7 @@ function parseUnlockMethod(formatted) {
         .replace(/pop'n music セレクション 楽曲パック vol\.(\d+)/g, 'PM$1')
         .replace(/jubeat セレクション 楽曲パック vol\.(\d+)/g, 'ju$1')
         .replace(/SOUND VOLTEX セレクション 楽曲パック vol\.(\d+)/g, 'SV$1')
+        .replace(/GITADORA セレクション 楽曲パック vol\.(\d+)/g, 'GD$1')
         .replace(/BPL セレクション 楽曲パック vol\.(\d+)/g, 'BPL$1')
         .replace(/東方Project セレクション 楽曲パック vol\.(\d+)/g, 'TH$1')
         .replace(/ULTIMATE MOBILE セレクション 楽曲パック vol\.(\d+)/g, 'UM$1')
