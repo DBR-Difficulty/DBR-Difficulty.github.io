@@ -176,11 +176,13 @@
         </div>
 
         <div class="top-section-box">
-          <div id="authInput">
-            <input type="email" id="email" placeholder="メールアドレス" autocomplete="username"><br>
-            <input type="password" id="password" placeholder="パスワード" autocomplete="current-password"><br>
-          </div>
-          <button id="loginBtn">ログイン</button>
+          <form id="loginForm" onsubmit="return false;">
+            <div id="authInput">
+              <input type="email" id="email" placeholder="メールアドレス" autocomplete="username"><br>
+              <input type="password" id="password" placeholder="パスワード" autocomplete="current-password"><br>
+            </div>
+            <button id="loginBtn">ログイン</button>
+          </form>
           <button id="logoutBtn" style="display:none;">ログアウト</button>
           <p id="userInfo">ログアウト中</p>
           <p><a href="dbr_ir_register.html" id="registerLink">新規登録はこちら</a></p>

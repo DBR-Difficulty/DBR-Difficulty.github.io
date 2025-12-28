@@ -407,7 +407,9 @@
           if (bpa === null && bpb === null) return 0;
           if (bpa === null) return 1;
           if (bpb === null) return -1;
-          return currentSort.asc ? bpa - bpb : bpb - bpa;
+          // ランプ昇順 → BP 降順
+          // ランプ降順 → BP 昇順
+          return currentSort.asc ? (bpb - bpa) : (bpa - bpb);
         }
 
         if (va === null && vb === null) return 0;
