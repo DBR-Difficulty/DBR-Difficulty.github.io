@@ -312,7 +312,7 @@
 
       onAuthStateChanged(auth, async (user) => {
         if (user) {
-          document.getElementById("authInput").style.display = "none";
+          document.getElementById("loginForm").style.display = "none";
           document.getElementById("registerLink").style.display = "none";
           currentUserUid = user.uid;
           loginBtn.style.display = "none";
@@ -339,7 +339,7 @@
             displayNameInput.value = user.displayName || "player";
             anonymousCheck.checked = false;
 
-            document.getElementById("authInput").style.display = "block";
+            document.getElementById("loginForm").style.display = "block";
             document.getElementById("registerLink").style.display = "block";
             await setDoc(userDocRef, {
               displayName: "player",
@@ -360,7 +360,7 @@
           anonymousLabel.classList.remove("label-disabled");
         } else {
           currentUserUid = null;          
-          document.getElementById("authInput").style.display = "block";
+          document.getElementById("loginForm").style.display = "block";
           document.getElementById("registerLink").style.display = "block";
           loginBtn.style.display = "inline";
           logoutBtn.style.display = "none";
