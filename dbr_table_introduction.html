@@ -148,6 +148,7 @@
     <ul style="list-style: none; padding-left: 1em;">
       <li><a href="#extend">【拡張機能使用時の追加項目】</a></li>
       <li><a href="#dbr-record">【DBRプレー記録管理ページ】</a></li>
+      <li><a href="#dbr-ir">【DBR IR】</a></li>
     </ul>
   </div>
   <div class="section-box">
@@ -611,7 +612,7 @@
     表示する項目や機能も最低限のものになっています。<br>
     上記理由のため難易度表の確認にはおすすめしませんが、拡張機能非対応のブラウザでも使用可能で、ゲームセンターなどの手早く使用したい場面に適しています。</p>
 
-    <p>SPLv順（デフォルト）、難易度表レベル順、バージョン順を自由に切り替えられ、<br>
+    <p>SPLv順（初期表示時）、難易度表レベル順、バージョン順を自由に切り替えられ、<br>
     フォルダごとの開閉、タイトル検索（部分一致）での絞り込みも可能です。<br>
     現行AC作品でプレーできない譜面はグレーで表示されます。（AC用難易度表で†☆となっている譜面）</p>
     
@@ -619,23 +620,71 @@
       <b><li><a href="dbr_record.html">DBRプレー記録管理</a></li></b>
     </ul>
 
-
     <div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: flex-start; max-width: 100%;">
         <div style="max-width: 350px; text-align: center;">
-          <img src="picture/dbr_record_splv.png" alt="SPLv順" style="max-width:100%; height: auto;">        
+          <img src="picture/dbr_record_splv.png" alt="SPLv順" style="max-width:100%; height: auto;">
           <div style="text-align: center; font-size: 0.9em; margin-top: 0.25rem;">SPLv順</div>
         </div>
 
         <div style="max-width: 350px; text-align: center;">
-          <img src="picture/dbr_record_level.png" alt="難易度表レベル順" style="max-width:100%; height: auto;">        
+          <img src="picture/dbr_record_level.png" alt="難易度表レベル順" style="max-width:100%; height: auto;">
           <div style="text-align: center; font-size: 0.9em; margin-top: 0.25rem;">難易度表レベル順</div>
         </div>
 
         <div style="max-width: 350px; text-align: center;">
-          <img src="picture/dbr_record_ver.png" alt="バージョン順" style="max-width:100%; height: auto;">        
+          <img src="picture/dbr_record_ver.png" alt="バージョン順" style="max-width:100%; height: auto;">
           <div style="text-align: center; font-size: 0.9em; margin-top: 0.25rem;">バージョン順</div>
         </div>
     </div>
+  </div>
+
+  <div class="section-box">
+    <h2 id="dbr-ir">【DBR IR】</h2>
+    <p><b><a href="dbr_table_extend.html">拡張機能</a></b>でエクスポートしたJSONファイルをアップロードして参加できます。<br>
+    </p>
+    <ul>
+      <b><li><a href="dbr_ir_upload.html">DBR IR プレーデータアップロード</a></li></b>
+    </ul>
+
+    <div style="max-width: 800px;">
+        <img src="picture/ir_upload.png" alt="DBR IR アップロードページ" style="max-width:100%; height: auto;">
+        <div style="text-align: center; font-size: 0.9em; margin-top: 0.25rem;">アップロード画面</div>
+    </div>
+
+    <ul>
+      <li>プロフィール保存：表示するユーザー名と、匿名希望状態を反映します。</li>
+      <li>自分のプレーデータを見る：自分のプレイヤーデータ画面を開きます。</li>
+      <li>JSONファイルを選択：<a href="dbr_table_extend.html">拡張機能</a></b>でエクスポートしたJSONファイルを選択してください。</li>
+      <li>送信：選択したJSONファイルを送信します。送信後12時間の間は、別のJSONファイルを送信しても更新されません。</li>
+      <li>自分のプレーデータをすべて削除：送信済の全プレーデータを削除します。</li>
+      <li>アカウントを削除：アカウントを削除します。送信済の全プレーデータも削除されます。</li>
+    </ul><br>
+
+    <div style="max-width: 800px;">
+        <img src="picture/ir_mypage.png" alt="DBR IR プレイヤー個別ページ" style="max-width:100%; height: auto;">
+        <div style="text-align: center; font-size: 0.9em; margin-top: 0.25rem;">プレイヤーデータ画面</div>
+    </div>
+
+    <ul>
+      <li>表示レベル範囲：プレーデータを表示するレベル範囲を設定できます。</li>
+      <li>表示SPレベル範囲：プレーデータを表示するSPレベル範囲を設定できます。</li>
+      <li>未査定譜面を表示：難易度表でレベルが未査定の譜面を表示します。（初期表示時はオン）</li>
+      <li>現行AC削除・未収録曲を除く：現行AC作品に存在する譜面のみ表示します。（初期表示時はオフ）</li>
+      <li>INFINITAS収録曲のみ表示：INFINITASに収録されている譜面のみ表示します。レベルが未査定の譜面は管理方法の都合上表示されない場合があります。（初期表示時はオフ）</li>
+      <li>おまけ：片手クリアポイント基準の値を表示：FC:5pt、EXH:4pt、HARD:3pt、NORMAL:2pt、EASY:1ptの合計値を表示します。（初期表示時はオフ）</li>
+      <li>ソートを初期表示状態に戻す：以上全ての項目を初期表示時の状態に戻します。</li>
+    </ul>
+    <p>プレーデータの表示内容は<a href="#extend">【拡張機能使用時の追加項目】</a>と共通です。<br>
+      各項目ごとにソートが行えます。初期表示時はスコア順です。</p>
+
+    <div style="max-width: 600px;">
+        <img src="picture/ir_ranking.png" alt="DBR IR マイページ" style="max-width:100%; height: auto;">
+        <div style="text-align: center; font-size: 0.9em; margin-top: 0.25rem;">曲別ランキング画面</div>
+    </div>
+    <p>プレーデータの表示内容は<a href="#extend">【拡張機能使用時の追加項目】</a>と共通ですが、更新日が追加されます。<br>
+      各項目ごとにソートが行えます。初期表示時はスコア順です。</p>
+
+    <p>テスト公開中です。</p>
   </div>
 </body>
 </html>

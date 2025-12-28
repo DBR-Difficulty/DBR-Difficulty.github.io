@@ -205,7 +205,7 @@
 
     <!-- 追加: 自分のデータを全削除するボタンと処理 -->
     <div class="top-section-box">
-      <button id="deleteAllBtn" disabled>自分のスコアデータをすべて削除</button>
+      <button id="deleteAllBtn" disabled>自分のプレーデータをすべて削除</button>
       <p class="subtext" id="deleteStatus"></p>
     </div>
 
@@ -543,10 +543,10 @@
 
       deleteBtn.addEventListener("click", async () => {
         if (!currentUserUid) return alert("ログインしてください。");
-        if (!confirm("本当にすべてのスコアデータを削除しますか？\nこの操作は元に戻せません。")) return;
+        if (!confirm("本当にすべてのプレーデータを削除しますか？\nこの操作は元に戻せません。")) return;
         if (!confirm("後悔しませんね？")) return;
 
-        setLoading(true, "スコアデータを削除しています。<br>しばらくお待ちください……");
+        setLoading(true, "プレーデータを削除しています。<br>しばらくお待ちください……");
         deleteStatus.textContent = "削除中...";
 
         try {
@@ -585,7 +585,7 @@
             const deleteOps = snapshot.docs.map(docSnap => deleteDoc(docSnap.ref));
             await Promise.all(deleteOps);
           } catch (e) {
-            return alert("スコアデータ削除中にエラーが発生しました。再度ログインしてからお試しください。");
+            return alert("プレーデータ削除中にエラーが発生しました。再度ログインしてからお試しください。");
           }
           try {
             await deleteDoc(doc(db, "users", user.uid));

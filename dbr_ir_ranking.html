@@ -226,8 +226,8 @@
         return { ...data, displayName: userCache[uid], docId };
       }));
 
-      // ★ ソートして表示（renderTable は sortBy 内で呼ばれている）
-      sortBy("score");  // ← ここが重要
+      // ソートして表示（renderTable は sortBy 内で呼ばれている）
+      sortBy("score");
     } catch (e) {
       console.error(e);
       tbody.innerHTML = "<tr><td colspan='8'>取得に失敗しました</td></tr>";
@@ -365,6 +365,11 @@
     let currentSort = { key: null, asc: false };
 
     function sortBy(key) {
+      // データ無しの場合はソート処理を行わない
+      if (!rows || rows.length === 0) {
+        return;
+      }
+
       // 昇順・降順の状態を更新
       if (currentSort.key === key) {
         currentSort.asc = !currentSort.asc;
