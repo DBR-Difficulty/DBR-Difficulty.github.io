@@ -85,13 +85,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
 
                 // ----- 行セル数をヘッダーと一致させる -----
-                // 足りないぶんは空セルを補完
+                // 足りない分は空セルを補完
                 while (row.cells.length < headerColCount) {
                     const blank = row.insertCell(-1);   // 行末に追加
                     blank.textContent = "";
                     blank.classList.add("colspan-blank");
                 }
-                // 多すぎるぶんは右側から削除
+                // 多すぎる分は右側から削除
                 while (row.cells.length > headerColCount) {
                     row.deleteCell(row.cells.length - 1);
                 }
@@ -327,6 +327,29 @@ document.addEventListener("DOMContentLoaded", function () {
             const mm = String(now.getMonth() + 1).padStart(2, "0");
             const dd = String(now.getDate()).padStart(2, "0");
             const timestamp = `${yyyy}${mm}${dd}`;
+
+            // iOS用
+            const file = new File(
+                [blob],
+                `${fileTitle}_${timestamp}.xlsx`,
+                { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }
+            );
+
+            const ua = navigator.userAgent.toLowerCase();
+            const isiOS = /iphone|ipad|ipod/.test(ua);
+
+            if (isiOS && navigator.canShare && navigator.canShare({ files: [file] })) {
+                try {
+                    await navigator.share({
+                        files: [file],
+                        title: "DBR難易度表 Excel出力",
+                        text: "DBR難易度表 Excel出力"
+                    });
+                    return;
+                } catch (e) {
+                    return;
+                }
+            }
 
             link.href = URL.createObjectURL(blob);
             link.download = `${fileTitle}_${timestamp}.xlsx`;
