@@ -295,7 +295,7 @@
           <span style="cursor:pointer;">インポート</span>
           <input type="file" id="importFile" accept="application/json" onchange="importData(event)" style="display:none;">
         </label>
-        <button onclick="exportData()">エクスポート</button>
+        <button id="exportFile">エクスポート</button>
       </div>
     </center>
     <div id="tableContainer"></div>
@@ -726,7 +726,7 @@
       return textageID + suffix;
     }
 
-    function exportData() {
+    document.getElementById("exportFile").addEventListener("click", async () => {
       const data = {
         lamp: {},
         bp: {},
@@ -753,13 +753,33 @@
         }
       }
 
-      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+      const json = JSON.stringify(data, null, 2);
+      const blob = new Blob([json], { type: "application/json" });
+      const file = new File([blob], "dbr_data.json", { type: "application/json" });
+
+      const ua = navigator.userAgent.toLowerCase();
+      const isiOS = /iphone|ipad|ipod/.test(ua);
+
+      if (isiOS && navigator.canShare && navigator.canShare({ files: [file] })) {
+        try {
+          await navigator.share({
+            files: [file],
+            title: "DBRプレー記録 エクスポート",
+            text: "DBRプレー記録 エクスポート"
+          });
+          return;
+        } catch (e) {
+          return;
+        }
+      }
+
+      const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
+      a.href = url;
       a.download = "dbr_data.json";
       a.click();
       URL.revokeObjectURL(a.href);
-    }
+    });
 
     function importData(event) {
       const file = event.target.files[0];
