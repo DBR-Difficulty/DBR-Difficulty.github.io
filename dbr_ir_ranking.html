@@ -216,14 +216,20 @@
         if (!userCache[uid]) {
           try {
             const userSnap = await getDoc(doc(db, "users", uid));
-            userCache[uid] = userSnap.exists() ?
-              (userSnap.data().anonymous ? "匿名希望" : (userSnap.data().displayName || "未設定"))
-              : "不明ユーザー";
+            if (userSnap.exists()) {
+              const u = userSnap.data();
+              userCache[uid] = {
+                displayName: u.displayName || "未設定",
+                anonymous: !!u.anonymous
+              };
+            } else {
+              userCache[uid] = { displayName: "不明ユーザー", anonymous: false };
+            }
           } catch {
-            userCache[uid] = "取得失敗";
+            userCache[uid] = { displayName: "取得失敗", anonymous: false };
           }
         }
-        return { ...data, displayName: userCache[uid], docId };
+        return { ...data, ...userCache[uid], docId };
       }));
 
       // ソートして表示（renderTable は sortBy 内で呼ばれている）
@@ -324,7 +330,11 @@
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td>${index + 1}</td>
-          <td><a href="dbr_ir_playerdata.html?uid=${d.userUid}" target="_blank">${d.displayName}</a></td>
+          <td>${
+            d.anonymous
+              ? "匿名希望"
+              : `<a href="dbr_ir_playerdata.html?uid=${d.userUid}" target="_blank">${d.displayName}</a>`
+          }</td>
           <td class="lamp-cell">${lampCodeToText(d.lamp)}</td>
           <td>${d.bp === -1 ? "" : d.bp}</td>
           <td>${score !== null ? score : ""}</td>
