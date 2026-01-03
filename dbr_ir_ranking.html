@@ -35,12 +35,12 @@
     }
 
     .sortable::after {
-      content: "▲"; /* デフォルトの矢印。JSで切り替えるなら "▲▼" は不要 */
+      content: "▲";
       font-size: 0.7em;
       position: absolute;
       right: 0.2em;
       top: 0.5em;
-      color: transparent; /* 初期状態では透明 */
+      color: transparent;
       transition: color 0.2s ease;
     }
 
@@ -82,7 +82,6 @@
       cursor: pointer;
     }
 
-    /* テーブル全体を relative にする */
     #scoreTable {
       position: relative;
     }
@@ -139,7 +138,6 @@
       getDocs,
       getDoc,
       doc,
-      orderBy,
       deleteDoc
     } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
 
@@ -158,61 +156,151 @@
       measurementId: "G-THHFG18D5G"
     };
 
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-  const auth = getAuth();
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth();
 
-  let currentUserUid = null;
+    let currentUserUid = null;
 
-  onAuthStateChanged(auth, async (user) => {
-    currentUserUid = user?.uid || null;
-    await loadAndRender();
-  });
+    onAuthStateChanged(auth, async (user) => {
+      currentUserUid = user?.uid || null;
+      await loadAndRender();
+    });
 
-  const params = new URLSearchParams(location.search);
-  const title = params.get("title");
-  const notesValueParam = Number(params.get("notesValue") || 0);
-  const notesDisplayParamRaw = params.get("notesDisplay") || "";
-  const notesDisplayParam = Number(notesDisplayParamRaw.replace(/[^\d]/g, ""));
-  const displayLevelParam = params.get("displayLevel") || "";
+    const params = new URLSearchParams(location.search);
+    const title = params.get("title");
+    const notesValueParam = Number(params.get("notesValue") || 0);
+    const notesDisplayParamRaw = params.get("notesDisplay") || "";
+    const notesDisplayParam = Number(notesDisplayParamRaw.replace(/[^\d]/g, ""));
+    const displayLevelParam = params.get("displayLevel") || "";
 
-  let notesDisplay = "不明", scratchDisplay = "不明";
-  if (isNaN(notesDisplayParamRaw) && !notesDisplayParam <= 0) {
-    notesDisplay = notesValueParam;
-  } else if (!isNaN(notesDisplayParamRaw) && !notesDisplayParam <= 0) {
-    notesDisplay = notesDisplayParam;
-    scratchDisplay = notesValueParam - notesDisplayParam;
-  } else if (!notesDisplayParam <= 0) {
-    scratchDisplay = notesValueParam - notesDisplayParam;
-  }
+    let notesDisplay = "不明", scratchDisplay = "不明";
+    if (isNaN(notesDisplayParamRaw) && !notesDisplayParam <= 0) {
+      notesDisplay = notesValueParam;
+    } else if (!isNaN(notesDisplayParamRaw) && !notesDisplayParam <= 0) {
+      notesDisplay = notesDisplayParam;
+      scratchDisplay = notesValueParam - notesDisplayParam;
+    } else if (!notesDisplayParam <= 0) {
+      scratchDisplay = notesValueParam - notesDisplayParam;
+    }
 
-  document.title = `${title} - DBR IR`;
-  document.getElementById("page-title").textContent = `${displayLevelParam} ${title} `;
-  document.getElementById("notes-disp").textContent =
-    `Notes: ${notesDisplay} Scratch: ${scratchDisplay}`;
+    document.title = `${title} - DBR IR`;
+    document.getElementById("page-title").textContent = `${displayLevelParam} ${title} `;
+    document.getElementById("notes-disp").textContent =
+      `Notes: ${notesDisplay} Scratch: ${scratchDisplay}`;
 
-  const tbody = document.querySelector("#scoreTable tbody");
-  let rows = [];
+    const tbody = document.querySelector("#scoreTable tbody");
+    let rows = [];
 
-  async function loadAndRender() {
-    try {
-      const q = query(
-        collection(db, "scores"),
-        where("title", "==", title),
-        orderBy("timestamp", "desc")
-      );
-      const snapshot = await getDocs(q);
+    // キャッシュ設定
+    const FORCE_REFRESH_INTERVAL = 365 * 24 * 60 * 60 * 1000; // 365日
+    const DIFF_CHECK_INTERVAL = 10 * 1000; // 10秒
 
-      if (snapshot.empty) {
-        tbody.innerHTML = "<tr><td colspan='8'>データが見つかりません</td></tr>";
+    async function loadAndRender() {
+      if (!title) {
+        tbody.innerHTML = "<tr><td colspan='8'>曲名が指定されていません</td></tr>";
         return;
       }
 
+      // キャッシュキー（曲名を含める）
+      const cacheKey = `ranking_${title}`;
+      const cacheTimeKey = `ranking_time_${title}`;
+      const lastSyncKey = `ranking_lastsync_${title}`;
+
+      const cachedData = localStorage.getItem(cacheKey);
+      const cachedTime = localStorage.getItem(cacheTimeKey);
+      const lastSyncTime = localStorage.getItem(lastSyncKey);
+      const now = Date.now();
+
+      let scores = [];
+
+      if (cachedData && cachedTime && (now - parseInt(cachedTime)) > FORCE_REFRESH_INTERVAL) {
+        // キャッシュが存在する場合
+        const cache = JSON.parse(cachedData);
+        scores = cache.scores;
+
+        // 差分更新チェック（10秒以上経過している場合のみ）
+        if (!lastSyncTime || (now - parseInt(lastSyncTime)) > DIFF_CHECK_INTERVAL) {
+          try {
+            const lastSync = lastSyncTime ? new Date(parseInt(lastSyncTime)) : new Date(0);
+
+            // 差分取得クエリ
+            const diffQuery = query(
+              collection(db, "scores"),
+              where("title", "==", title),
+              where("timestamp", ">", lastSync)
+            );
+
+            const diffSnap = await getDocs(diffQuery);
+
+            if (diffSnap.size > 0) {
+              // 差分データをマージ（userUidをキーに）
+              const scoreMapTemp = new Map(scores.map(s => [s.userUid, s]));
+
+              diffSnap.forEach(docSnap => {
+                const data = docSnap.data();
+                scoreMapTemp.set(data.userUid, {
+                  ...data,
+                  docId: docSnap.id
+                });
+              });
+
+              scores = Array.from(scoreMapTemp.values());
+
+              // キャッシュを更新
+              localStorage.setItem(cacheKey, JSON.stringify({ scores }));
+            }
+
+            // 最終同期時刻を更新
+            localStorage.setItem(lastSyncKey, now.toString());
+
+          } catch (error) {
+            console.error('差分取得エラー:', error);
+          }
+        }
+
+      } else {
+        // キャッシュがない、または全件再取得が必要
+        try {
+          const q = query(
+            collection(db, "scores"),
+            where("title", "==", title)
+          );
+          const snapshot = await getDocs(q);
+
+          if (snapshot.empty) {
+            tbody.innerHTML = "<tr><td colspan='8'>データが見つかりません</td></tr>";
+            return;
+          }
+
+          snapshot.docs.forEach(docSnap => {
+            const data = docSnap.data();
+            scores.push({
+              ...data,
+              docId: docSnap.id
+            });
+          });
+
+          // キャッシュに保存
+          try {
+            localStorage.setItem(cacheKey, JSON.stringify({ scores }));
+            localStorage.setItem(cacheTimeKey, now.toString());
+            localStorage.setItem(lastSyncKey, now.toString());
+          } catch (e) {
+            console.warn('キャッシュ保存失敗:', e);
+          }
+
+        } catch (e) {
+          console.error(e);
+          tbody.innerHTML = "<tr><td colspan='8'>取得に失敗しました</td></tr>";
+          return;
+        }
+      }
+
+      // ユーザー情報を取得
       const userCache = {};
-      rows = await Promise.all(snapshot.docs.map(async docSnap => {
-        const data = docSnap.data();
+      rows = await Promise.all(scores.map(async data => {
         const uid = data.userUid;
-        const docId = docSnap.id;
         if (!userCache[uid]) {
           try {
             const userSnap = await getDoc(doc(db, "users", uid));
@@ -229,38 +317,34 @@
             userCache[uid] = { displayName: "取得失敗", anonymous: false };
           }
         }
-        return { ...data, ...userCache[uid], docId };
+        return { ...data, ...userCache[uid] };
       }));
 
-      // ソートして表示（renderTable は sortBy 内で呼ばれている）
+      // ソートして表示
       sortBy("score");
-    } catch (e) {
-      console.error(e);
-      tbody.innerHTML = "<tr><td colspan='8'>取得に失敗しました</td></tr>";
     }
-  }
 
-  const lampSortOrder = { F: 0, E: 1, AE: 2, C: 3, H: 4, EXH: 5, FC: 6 };
+    const lampSortOrder = { F: 0, E: 1, AE: 2, C: 3, H: 4, EXH: 5, FC: 6 };
 
-  const lampCodeToText = (code) => ({
-    FC: "FULL COMBO", EXH: "EX-HARD CLEAR", H: "HARD CLEAR", C: "CLEAR",
-    E: "EASY CLEAR", AE: "A-EASY CLEAR", F: "FAILED"
-  }[code] || code || "");
+    const lampCodeToText = (code) => ({
+      FC: "FULL COMBO", EXH: "EX-HARD CLEAR", H: "HARD CLEAR", C: "CLEAR",
+      E: "EASY CLEAR", AE: "A-EASY CLEAR", F: "FAILED"
+    }[code] || code || "");
 
-  const lampColorMap = {
-    "NO PLAY": "transparent", F: "#666666", AE: "#b366ff", E: "#33cc33", C: "#66ccff",
-    H: "#ffffff", EXH: "#ffff00", FC: "#ffa500"
-  };
+    const lampColorMap = {
+      "NO PLAY": "transparent", F: "#666666", AE: "#b366ff", E: "#33cc33", C: "#66ccff",
+      H: "#ffffff", EXH: "#ffff00", FC: "#ffa500"
+    };
 
-  const setLampCellStyle = (cell, value) => {
-    if (value === "NO PLAY") {
-      cell.style.background = "transparent";
-      cell.style.color = "transparent";
-    } else {
-      cell.style.background = lampColorMap[value] || "transparent";
-      cell.style.color = (["H", "EXH", "FC"].includes(value)) ? "black" : "white";
-    }
-  };
+    const setLampCellStyle = (cell, value) => {
+      if (value === "NO PLAY") {
+        cell.style.background = "transparent";
+        cell.style.color = "transparent";
+      } else {
+        cell.style.background = lampColorMap[value] || "transparent";
+        cell.style.color = (["H", "EXH", "FC"].includes(value)) ? "black" : "white";
+      }
+    };
 
     // スコアランク計算
     function getRankWithDiff(score, maxScore) {
@@ -312,7 +396,6 @@
       return `(${floored.toFixed(2)}%)`;
     }
 
-    // renderTable 修正部分
     function renderTable(data) {
       tbody.innerHTML = "";
       data.forEach((d, index) => {
@@ -362,8 +445,18 @@
             if (!confirm("後悔しませんね？")) return;
             try {
               await deleteDoc(doc(db, "scores", d.docId));
-              tr.remove();        // 対象行を削除
-              wrapper.remove();   // ボタンも削除
+
+              // キャッシュからも削除
+              const cacheKey = `ranking_${title}`;
+              const cachedData = localStorage.getItem(cacheKey);
+              if (cachedData) {
+                const cache = JSON.parse(cachedData);
+                cache.scores = cache.scores.filter(s => s.docId !== d.docId);
+                localStorage.setItem(cacheKey, JSON.stringify(cache));
+              }
+
+              tr.remove();
+              wrapper.remove();
             } catch (e) {
               alert("削除に失敗しました。: " + e.message);
             }
