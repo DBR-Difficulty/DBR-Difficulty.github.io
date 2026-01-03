@@ -81,6 +81,21 @@
       cursor: default;
     }
 
+    .clear-cache-button {
+      background-color: #f5f5f5;
+      color: #000;
+      border: 1px solid #888;
+      border-radius: 0.375rem;
+      padding: 0.5rem 1rem;
+      font-weight: bold;
+      text-decoration: none;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      display: inline-block;
+      margin: 0;
+    }
+
     button:disabled, .button.label-disabled {
       background-color: #dcdcdc;
       color: #888;
@@ -280,7 +295,7 @@
         from: v => parseFloat(v.replace("\u2606", ""))
       }
     });
-
+    const CACHE_DURATION = 60 * 60 * 1000 * 12; // キャッシュ保持12時間
     async function main() {
       if (!userUid) {
         playerNameEl.textContent = "ユーザーIDが指定されていません。";
@@ -294,32 +309,75 @@
 
       const twitterBtn = document.getElementById("twitter-share");
 
-      try {
-        const userSnap = await getDoc(doc(db, "users", userUid));
-        if (userSnap.exists()) {
-          const data = userSnap.data();
-          displayName = data.anonymous ? "匿名希望" : (data.displayName || "未設定");
-          twitterBtn.classList.remove("disabled"); // クリック可能になる
+      // キャッシュキー
+      const cacheKey = `playdata_${userUid}`;
+      const cacheTimeKey = `playdata_time_${userUid}`;
+
+      // キャッシュチェック
+      const cachedData = localStorage.getItem(cacheKey);
+      const cachedTime = localStorage.getItem(cacheTimeKey);
+      const now = Date.now();
+
+      if (cachedData && cachedTime && (now - parseInt(cachedTime)) < CACHE_DURATION) {
+        // キャッシュが有効な場合
+        const cache = JSON.parse(cachedData);
+
+        displayName = cache.displayName;
+        cache.scores.forEach(scoreData => {
+          scoreMap.set(scoreData.title, scoreData);
+          titleSet.add(scoreData.title);
+        });
+
+        // Twitter共有ボタン設定
+        if (displayName !== "ユーザー情報の取得に失敗") {
+          twitterBtn.classList.remove("disabled");
         }
-      } catch {
-        displayName = "ユーザー情報の取得に失敗";
-        twitterBtn.classList.add("disabled"); // クリック可能になる
+        const shareUrl = window.location.href;
+        const shareText = `${displayName} さんのプレーデータ - DBR IR`;
+        const hashtags = "DBR_IR";
+        twitterBtn.href = `https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}&hashtags=${encodeURIComponent(hashtags)}`;
+
+      } else {
+        // キャッシュがない、または期限切れの場合はFirestoreから取得        
+        try {
+          const userSnap = await getDoc(doc(db, "users", userUid));
+          if (userSnap.exists()) {
+            const data = userSnap.data();
+            displayName = data.anonymous ? "匿名希望" : (data.displayName || "未設定");
+            twitterBtn.classList.remove("disabled");
+          }
+        } catch {
+          displayName = "ユーザー情報の取得に失敗";
+          twitterBtn.classList.add("disabled");
+        }
+
+        const shareUrl = window.location.href;
+        const shareText = `${displayName} さんのプレーデータ - DBR IR`;
+        const hashtags = "DBR_IR";
+        twitterBtn.href = `https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}&hashtags=${encodeURIComponent(hashtags)}`;
+
+        const snap = await getDocs(query(collection(db, "scores"), where("userUid", "==", userUid)));
+        const scores = [];
+        snap.forEach(doc => {
+          const data = doc.data();
+          if (data.title) {
+            scoreMap.set(data.title, data);
+            titleSet.add(data.title);
+            scores.push(data);
+          }
+        });
+
+        // キャッシュに保存
+        try {
+          localStorage.setItem(cacheKey, JSON.stringify({
+            displayName: displayName,
+            scores: scores
+          }));
+          localStorage.setItem(cacheTimeKey, now.toString());
+        } catch (e) {
+          console.warn("キャッシュ保存失敗:", e);
+        }
       }
-
-      const shareUrl = window.location.href;
-      const shareText = `${displayName} さんのプレーデータ - DBR IR`;
-      const hashtags = "DBR_IR";
-
-      twitterBtn.href = `https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}&hashtags=${encodeURIComponent(hashtags)}`;
-
-      const snap = await getDocs(query(collection(db, "scores"), where("userUid", "==", userUid)));
-      snap.forEach(doc => {
-        const data = doc.data();
-        if (data.title) {
-          scoreMap.set(data.title, data);
-          titleSet.add(data.title);
-        }
-      });
 
       const header = await $.getJSON("dbralleheader.json");
       const songList = await $.getJSON(header.data_url);
@@ -617,6 +675,12 @@
       };
     }
 
+    document.getElementById("clear-cache")?.addEventListener("click", () => {
+      localStorage.removeItem(`playdata_${userUid}`);
+      localStorage.removeItem(`playdata_time_${userUid}`);
+      location.reload();
+    });
+
     main();
   </script>
 </head>
@@ -636,6 +700,7 @@
   >
     Twitterで共有
   </a>
+  <button id="clear-cache" class="clear-cache-button"">記録の最新化</button>
 </div>
   <div id="playdata-table"></div>
 </body>
