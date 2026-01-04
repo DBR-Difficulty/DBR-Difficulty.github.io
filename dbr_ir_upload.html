@@ -70,9 +70,9 @@
     }
 
     button {
-        background-color: #f5f5f5;  /* 淡い灰色背景 */
-        color: #000;  /* 黒文字 */
-        border: 1px solid #888;  /* 灰色の縁取り */
+        background-color: #f5f5f5;
+        color: #000;
+        border: 1px solid #888;
         border-radius: 0.375rem;
         padding: 0.5rem 1rem;
         margin-top: 1rem;
@@ -83,12 +83,11 @@
         transition: background-color 0.3s ease, transform 0.2s ease;
     }
 
-    /* ボタンが無効化された時のスタイル（その他のボタン） */
     button:disabled {
-        background-color: #dcdcdc; /* グレー背景 */
-        color: #888; /* グレー文字 */
-        cursor: not-allowed; /* カーソルを無効化表示 */
-        border: 1px solid #ccc; /* 境界線も薄いグレーに */
+        background-color: #dcdcdc;
+        color: #888;
+        cursor: not-allowed;
+        border: 1px solid #ccc;
     }
 
     .button {
@@ -107,31 +106,29 @@
     }
     
     .button-delete {
-      background-color: #ff4d4d;     /* 赤 */
-      color: #fff;                  /* 白文字 */
-      border: 1px solid #cc0000;    /* 濃い赤の枠 */
+      background-color: #ff4d4d;
+      color: #fff;
+      border: 1px solid #cc0000;
     }
 
-    /* チェックボックスを大きくする */
     input[type="checkbox"] {
-        transform: scale(1.5);  /* チェックボックスを1.5倍に拡大 */
+        transform: scale(1.5);
         margin-right: 0.5rem;
         margin-top: 0.75rem;
     }
 
-    /* チェックボックスのラベルも大きく */
     label {
-        font-size: 1.2rem;      /* ラベルの文字サイズを大きく */
-        line-height: 1.5rem;    /* 行間を広げて読みやすく */
-        cursor: pointer;       /* クリック可能にする */
+        font-size: 1.2rem;
+        line-height: 1.5rem;
+        cursor: pointer;
     }
 
     .label-disabled {
-      color: #888;          /* グレーっぽく */
-      border-color: #ccc;   /* 薄い境界線 */
+      color: #888;
+      border-color: #ccc;
       cursor: not-allowed;
       background-color: #dcdcdc;
-      pointer-events: none; /* クリック無効 */
+      pointer-events: none;
     }
 
     .subtext {
@@ -153,7 +150,6 @@
     <center>
         <strong><span style="font-size: 2rem;">DBR IR プレーデータアップロード</span></strong><br>
 
-        <!-- ここに注意書きの枠を追加 -->
         <div class="notice-box">
           <ul>
             <li>DBR IRにプレーデータを登録します</li>
@@ -168,7 +164,6 @@
         <div class="toplink-margin">
           <a href="index.html">TOPに戻る</a>
         </div>
-
 
         <div id="loading" style="display: none;">
           <div class="spinner"></div>
@@ -195,23 +190,18 @@
       <button id="saveProfileBtn" disabled>プロフィール保存</button>
       <a id="playerDataLink" class="button label-disabled" style="margin-left: 1.125rem;">自分のプレーデータを見る</a><br><br>
 
-      <!-- 隠し file input -->
       <input type="file" id="jsonFileInput" accept=".json" style="display: none;">
-      <!-- 擬似ボタン -->
       <label for="jsonFileInput" class="button label-disabled">JSONファイルを選択</label>
-      <!-- ファイル名表示（任意） -->
       <span id="fileName" class="subtext"></span>
 
       <button id="uploadBtn" disabled>送信</button>
     </div>
 
-    <!-- 追加: 自分のデータを全削除するボタンと処理 -->
     <div class="top-section-box">
       <button id="deleteAllBtn" disabled>自分のプレーデータをすべて削除</button>
       <p class="subtext" id="deleteStatus"></p>
     </div>
 
-    <!-- 追加: 自分のデータを全削除するボタンと処理 -->
     <div class="top-section-box">
       <button class="button-delete" id="deleteAccountBtn" disabled>アカウントを削除</button>
       <p class="subtext" id="deleteAccount"></p>
@@ -249,6 +239,10 @@
 
       let currentUserUid = null;
 
+      // キャッシュ定数
+      const FORCE_REFRESH_INTERVAL = 365 * 24 * 60 * 60 * 1000; // 365日
+      const DIFF_CHECK_INTERVAL = 10 * 1000; // 10秒
+
       loginBtn.onclick = async () => {
         const email = document.getElementById("email").value;
         const password = document.getElementById("password").value;
@@ -273,7 +267,7 @@
           });
       };
 
-      // ボタン要素を変数でまとめて取得（スクリプト上部あたりに追加推奨）
+      // ボタン要素を変数でまとめて取得
       const buttonsToDisableDuringProcess = [
         loginBtn,
         logoutBtn,
@@ -286,8 +280,6 @@
         fileInput
       ];
 
-      // ローディング表示を制御する関数を作成（既存の loadingDiv を活用）
-      // setLoadingをメッセージ指定可能に変更
       function setLoading(show, message = "処理中です。しばらくお待ちください……") {
         loadingDiv.style.display = show ? "block" : "none";
         // メッセージ表示部分（class="loading-text"のdiv）
@@ -307,6 +299,126 @@
         } else {
           fileLabel.classList.remove("label-disabled");
           playerDataLink.classList.remove("label-disabled");
+        }
+      }
+
+      // キャッシュから既存スコアを取得する関数
+      async function getExistingScores(userUid) {
+        const cacheKey = `playdata_${userUid}`;
+        const cacheTimeKey = `playdata_time_${userUid}`;
+        const lastSyncKey = `playdata_lastsync_${userUid}`;
+
+        const cachedData = localStorage.getItem(cacheKey);
+        const cachedTime = localStorage.getItem(cacheTimeKey);
+        const lastSyncTime = localStorage.getItem(lastSyncKey);
+        const now = Date.now();
+
+        let scores = [];
+
+        // キャッシュが有効な場合
+        if (cachedData && cachedTime && (now - parseInt(cachedTime)) < FORCE_REFRESH_INTERVAL) {
+          const cache = JSON.parse(cachedData);
+          scores = cache.scores || [];
+
+          // 差分更新チェック
+          if (!lastSyncTime || (now - parseInt(lastSyncTime)) > DIFF_CHECK_INTERVAL) {
+            try {
+              const lastSync = parseInt(lastSyncTime) || 0;
+              const diffQuery = query(
+                collection(db, "scores"),
+                where("userUid", "==", userUid),
+                where("timestamp", ">", lastSync)
+              );
+
+              const diffSnap = await getDocs(diffQuery);
+
+              if (diffSnap.size > 0) {
+                const scoreMap = new Map(scores.map(s => [`${s.textageKey}_${s.difficulty}`, s]));
+
+                diffSnap.forEach(doc => {
+                  const data = doc.data();
+                  if (data.textageKey && data.difficulty) {
+                    scoreMap.set(`${data.textageKey}_${data.difficulty}`, data);
+                  }
+                });
+
+                scores = Array.from(scoreMap.values());
+
+                // キャッシュを更新
+                localStorage.setItem(cacheKey, JSON.stringify({
+                  displayName: cache.displayName,
+                  scores: scores
+                }));
+                localStorage.setItem(lastSyncKey, now.toString());
+              } else {
+                localStorage.setItem(lastSyncKey, now.toString());
+              }
+            } catch (error) {
+              console.warn('差分取得エラー:', error);
+            }
+          }
+        } else {
+          // キャッシュがない、または期限切れ → 全件取得
+          const snap = await getDocs(query(collection(db, "scores"), where("userUid", "==", userUid)));
+          snap.forEach(doc => {
+            const data = doc.data();
+            if (data.textageKey && data.difficulty) {
+              scores.push(data);
+            }
+          });
+
+          // ユーザー情報取得
+          let displayName = "不明ユーザー";
+          try {
+            const userSnap = await getDoc(doc(db, "users", userUid));
+            if (userSnap.exists()) {
+              const data = userSnap.data();
+              displayName = data.anonymous ? "匿名希望" : (data.displayName || "未設定");
+            }
+          } catch {
+            displayName = "ユーザー情報の取得に失敗";
+          }
+
+          // キャッシュに保存
+          try {
+            localStorage.setItem(cacheKey, JSON.stringify({
+              displayName: displayName,
+              scores: scores
+            }));
+            localStorage.setItem(cacheTimeKey, now.toString());
+            localStorage.setItem(lastSyncKey, now.toString());
+          } catch (e) {
+            console.warn('キャッシュ保存失敗:', e);
+          }
+        }
+
+        return scores;
+      }
+
+      // キャッシュを更新する関数
+      function updateCache(userUid, newScores) {
+        const cacheKey = `playdata_${userUid}`;
+        const cacheTimeKey = `playdata_time_${userUid}`;
+        const lastSyncKey = `playdata_lastsync_${userUid}`;
+        const now = Date.now();
+
+        try {
+          const cachedData = localStorage.getItem(cacheKey);
+          let displayName = "不明ユーザー";
+
+          if (cachedData) {
+            const cache = JSON.parse(cachedData);
+            displayName = cache.displayName || displayName;
+          }
+
+          localStorage.setItem(cacheKey, JSON.stringify({
+            displayName: displayName,
+            scores: newScores
+          }));
+          localStorage.setItem(cacheTimeKey, now.toString());
+          localStorage.setItem(lastSyncKey, now.toString());
+        } catch (e) {
+          console.warn('キャッシュ更新失敗:', e);
         }
       }
 
@@ -457,20 +569,16 @@
             return;
           }
 
-          // 既存スコアを一括取得し、Mapに展開
-          const existingSnap = await getDocs(query(
-            collection(db, "scores"),
-            where("userUid", "==", currentUserUid)
-          ));
+          // キャッシュから既存スコアを取得
+          const existingScores = await getExistingScores(currentUserUid);
           const existingMap = {};
-          existingSnap.forEach(docSnap => {
-            const d = docSnap.data();
-            existingMap[`${d.textageKey}_${d.difficulty}`] = d;
+          existingScores.forEach(s => {
+            existingMap[`${s.textageKey}_${s.difficulty}`] = s;
           });
 
           const { lamp, bp, score, textageKey } = data;
           const now = Date.now();
-          const twelveHours = 12 * 60 * 60 * 1000; // 43,200,000 ms
+          const twelveHours = 12 * 60 * 60 * 1000;
           const allTitles = new Set([
             ...Object.keys(lamp || {}).map(k => k.replace(/^lamp_/, '')),
             ...Object.keys(bp || {}).map(k => k.replace(/^bp_/, '')),
@@ -479,6 +587,8 @@
 
           let count = 0;
           let skipped = 0;
+          const updatedScores = [...existingScores];
+          const updatedMap = new Map(existingScores.map(s => [`${s.textageKey}_${s.difficulty}`, s]));
 
           for (const title of allTitles) {
             const textage = textageKey?.[title];
@@ -508,7 +618,7 @@
               const lastUpdated = existing.timestamp || 0;
               if (now - lastUpdated < twelveHours) {
                 skipped++;
-                continue; // ← 12時間未満なのでスキップ
+                continue; // 12時間未満なのでスキップ
               }
             }
 
@@ -523,9 +633,14 @@
 
             if (shouldUpdate) {
               await setDoc(docRef, newData);
+              updatedMap.set(key, newData);
               count++;
             }
           }
+
+          // キャッシュを更新
+          const finalScores = Array.from(updatedMap.values());
+          updateCache(currentUserUid, finalScores);
 
           const summary = [
             `${count}件のプレーデータをアップロードしました。`,
@@ -560,6 +675,15 @@
           }
           const deleteOps = snapshot.docs.map(docSnap => deleteDoc(docSnap.ref));
           await Promise.all(deleteOps);
+
+          // キャッシュもクリア
+          const cacheKey = `playdata_${currentUserUid}`;
+          const cacheTimeKey = `playdata_time_${currentUserUid}`;
+          const lastSyncKey = `playdata_lastsync_${currentUserUid}`;
+          localStorage.removeItem(cacheKey);
+          localStorage.removeItem(cacheTimeKey);
+          localStorage.removeItem(lastSyncKey);
+
           deleteStatus.textContent = `${deleteOps.length}件のデータを削除しました。`;
         } catch (e) {
           console.error(e);
@@ -594,6 +718,15 @@
           } catch (e) {
             return alert("ユーザー情報削除中にエラーが発生しました。再度ログインしてからお試しください。");
           }
+
+          // キャッシュもクリア
+          const cacheKey = `playdata_${user.uid}`;
+          const cacheTimeKey = `playdata_time_${user.uid}`;
+          const lastSyncKey = `playdata_lastsync_${user.uid}`;
+          localStorage.removeItem(cacheKey);
+          localStorage.removeItem(cacheTimeKey);
+          localStorage.removeItem(lastSyncKey);
+
           await deleteUser(user);
           return alert("アカウントを削除しました。");
         } catch (e) {
