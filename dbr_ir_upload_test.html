@@ -391,6 +391,7 @@
             }));
             localStorage.setItem(cacheTimeKey, now.toString());
             localStorage.setItem(lastSyncKey, now.toString());
+            console.log('[全件取得] キャッシュに保存しました');
           } catch (e) {
             console.warn('[全件取得] キャッシュ保存失敗:', e);
           }
