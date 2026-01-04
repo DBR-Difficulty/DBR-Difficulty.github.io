@@ -214,6 +214,9 @@
 
       let scores = [];
 
+      // 現在のページ以外の期限切れデータを削除
+      cleanupOldCache(cacheKey);
+
       if (cachedData && cachedTime && (now - parseInt(cachedTime)) > FORCE_REFRESH_INTERVAL) {
         // キャッシュが存在する場合
         const cache = JSON.parse(cachedData);
@@ -531,6 +534,54 @@
     document.getElementById("sort-lamp").addEventListener("click", () => sortBy("lamp"));
     document.getElementById("sort-bp").addEventListener("click", () => sortBy("bp"));
     document.getElementById("sort-score").addEventListener("click", () => sortBy("score"));
+
+    // localStorageのクリーンアップ関数
+    function cleanupOldCache(currentKey) {
+      const now = Date.now();
+      const MAX_AGE = 365 * 24 * 60 * 60 * 1000; // 365日
+
+      const prefixes = ['playdata_', 'ranking_'];
+      const keysToDelete = [];
+      const processedBaseKeys = new Set();
+
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+
+        const isTarget = prefixes.some(prefix => key.startsWith(prefix));
+        if (!isTarget) continue;
+
+        if (key.includes('_time_')) {
+          const baseKey = key.replace('_time_', '_');
+
+          if (processedBaseKeys.has(baseKey)) continue;
+          processedBaseKeys.add(baseKey);
+
+          const prefix = baseKey.match(/^(playdata|ranking)_/)[0];
+          const suffix = baseKey.replace(prefix, '');
+
+          // 現在表示中のページはスキップ
+          if (baseKey === currentKey) continue;
+
+          const timestamp = parseInt(localStorage.getItem(key));
+
+          // 期限切れのみ削除対象に追加
+          if (isNaN(timestamp) || (now - timestamp) > MAX_AGE) {
+            keysToDelete.push(baseKey);
+            keysToDelete.push(prefix + 'time_' + suffix);
+            keysToDelete.push(prefix + 'lastsync_' + suffix);
+          }
+        }
+      }
+
+      // 削除実行
+      keysToDelete.forEach(key => {
+        try {
+          localStorage.removeItem(key);
+        } catch (e) {
+          console.warn(`キャッシュ削除失敗: ${key}`, e);
+        }
+      });
+    }
   </script>
 </body>
 </html>
