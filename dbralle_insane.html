@@ -270,7 +270,17 @@
                 let htmlContent = "";
 
                 Object.values(sections)
-                    .sort((a, b) => a.isDeleted - b.isDeleted || a.sortKey - b.sortKey)
+                    .sort((a, b) => {
+                        // まず sortKey（insaneLevel の数値部分）で比較
+                        const sortKeyCompare = a.sortKey - b.sortKey;
+
+                        if (sortKeyCompare !== 0) {
+                            return sortKeyCompare;
+                        }
+
+                        // 同じ insaneLevel の場合は削除フラグで比較（0=AC収録が先、1=削除が後）
+                        return a.isDeleted - b.isDeleted;
+                    })
                     .forEach(section => {
                         htmlContent += `<tr class='tr_separate'><td colspan='16' align='center'><b>${section.displayLevel} (${section.count}譜面)</b></td></tr>`;
                         htmlContent += section.rows.join("");

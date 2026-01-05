@@ -23,6 +23,9 @@
         <script src="style/jquery-2.0.2.min.js"></script>
         <script src="modal_template.js"></script>
         <script src="export_json.js"></script>
+
+        <link href="https://cdn.jsdelivr.net/npm/nouislider@15.7.0/dist/nouislider.min.css" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/nouislider@15.7.0/dist/nouislider.min.js"></script>
     </head>
 
     <body>
@@ -45,6 +48,38 @@
                         表のレベル～タイトルの範囲をクリックすると、譜面の詳細情報が表示されるモーダルが出現します。こちらからも新規・変更・おすすめ提案が可能です。</li>
                     <li>読み込みに時間がかかります。難易度表が表示されない場合、しばらくお待ちください。</li>
                 </ul>
+            </div>
+
+            <!-- フィルター機能 -->
+            <div class="filter-container">
+                <div class="filter-row">
+                    <div class="filter-label">表示レベル範囲:</div>
+                    <div class="slider-container">
+                        <div id="level-range"></div>
+                        <div class="input-group">
+                            <label>☆: </label>
+                            <input type="number" id="level-min" step="0.01" style="width:6ch;">
+                            〜
+                            <input type="number" id="level-max" step="0.01" style="width:6ch;">
+                        </div>
+                    </div>
+                </div>
+                <div class="filter-row">
+                    <div class="filter-label">表示SPレベル範囲:</div>
+                    <div class="slider-container">
+                        <div id="splv-range"></div>
+                        <div class="input-group">
+                            <label>☆: </label>
+                            <input type="number" id="splv-min" step="1" style="width:4ch;">
+                            〜
+                            <input type="number" id="splv-max" step="1" style="width:4ch;">
+                        </div>
+                    </div>
+                </div>
+                <div class="filter-row">
+                    <label><input type="checkbox" id="hide-acdeleted"> AC削除・未収録曲を除く</label>
+                    <button id="reset-filters" style="padding: 0.5em 1em;">フィルターをリセット</button>
+                </div>
             </div>
 
             <div class="toplink-margin">
@@ -70,6 +105,11 @@
         </div>
 
         <script>
+            let allSongData = [];
+            let currentMark = "";
+            let currentSongTimes = {};
+            let levelSlider;
+
             // ドキュメントが読み込まれたときに実行される関数
             $(document).ready(function() {
                 $("#loading").show(); // ローディング表示
@@ -77,6 +117,7 @@
                 $.getJSON($("meta[name=alldbrtable]").attr("content"), function(header) {
                     const dataUrl = header.data_url;
                     const timesUrl = header.song_times;  // 追加: 演奏時間JSONのURL
+                    currentMark = header.symbol;
 
                     // 見出しテキストを取得
                     const titleText = $("span[style*='font-size']").first().text().trim();  // DBR難易度表(イージー)(未査定有)
@@ -93,8 +134,15 @@
                         $.getJSON(dataUrl),
                         timesUrl ? $.getJSON(timesUrl) : $.Deferred().resolve({})
                     ).done(function(info, songTimesResult) {
-                        const songTimes = songTimesResult[0];  // $.getJSON の戻り値は配列で包まれる
-                        makeDBRTable(info[0], header.symbol, header.level_order || null, songTimes);
+                        allSongData = info[0];
+                        currentSongTimes = songTimesResult[0];
+
+                        // スライダー初期化
+                        initializeSlider();
+
+                        // 初回描画
+                        updateTable();
+
                         $("#loading").remove(); // ローディング終了
                         document.getElementById("export-excel-btn").disabled = false; // Excel出力可能
 
@@ -116,6 +164,118 @@
                     });
                 });
             });
+
+            function initializeSlider() {
+                levelSlider = document.getElementById("level-range");
+                const levelMinInput = document.getElementById("level-min");
+                const levelMaxInput = document.getElementById("level-max");
+
+                const splvSlider = document.getElementById("splv-range");
+                const splvMinInput = document.getElementById("splv-min");
+                const splvMaxInput = document.getElementById("splv-max");
+
+                noUiSlider.create(levelSlider, {
+                    start: [10.20, 13.01],
+                    connect: true,
+                    step: 0.01,
+                    range: { min: 10.20, max: 13.01 },
+                    tooltips: false,
+                    format: {
+                        to: v => `☆${v.toFixed(2)}`,
+                        from: v => parseFloat(v.replace("☆", ""))
+                    }
+                });
+
+                noUiSlider.create(splvSlider, {
+                    start: [1, 12],
+                    connect: true,
+                    step: 1,
+                    range: { min: 1, max: 12 },
+                    tooltips: false,
+                    format: {
+                        to: v => `${v.toFixed(0)}`,
+                        from: v => parseFloat(v)
+                    }
+                });
+
+                // スライダー → input
+                levelSlider.noUiSlider.on("update", (values) => {
+                    levelMinInput.value = parseFloat(values[0].replace("☆", "")).toFixed(2);
+                    levelMaxInput.value = parseFloat(values[1].replace("☆", "")).toFixed(2);
+                });
+
+                splvSlider.noUiSlider.on("update", (values) => {
+                    splvMinInput.value = parseInt(values[0]);
+                    splvMaxInput.value = parseInt(values[1]);
+                });
+
+                // input → スライダー
+                [levelMinInput, levelMaxInput].forEach(input => {
+                    input.addEventListener("change", () => {
+                        const min = parseFloat(levelMinInput.value);
+                        const max = parseFloat(levelMaxInput.value);
+                        if (!isNaN(min) && !isNaN(max)) {
+                            levelSlider.noUiSlider.set([min, max]);
+                            updateTable();
+                        }
+                    });
+                });
+
+                [splvMinInput, splvMaxInput].forEach(input => {
+                    input.addEventListener("change", () => {
+                        const min = parseInt(splvMinInput.value);
+                        const max = parseInt(splvMaxInput.value);
+                        if (!isNaN(min) && !isNaN(max)) {
+                            splvSlider.noUiSlider.set([min, max]);
+                            updateTable();
+                        }
+                    });
+                });
+
+                // スライダー変更時に再描画
+                levelSlider.noUiSlider.on("change", updateTable);
+                splvSlider.noUiSlider.on("change", updateTable);
+
+                // チェックボックス変更時に再描画
+                document.getElementById("hide-acdeleted").addEventListener("change", updateTable);
+
+                // リセットボタン
+                document.getElementById("reset-filters").onclick = () => {
+                    levelSlider.noUiSlider.set([10.20, 13.01]);
+                    splvSlider.noUiSlider.set([1, 12]);
+                    levelMinInput.value = "10.20";
+                    levelMaxInput.value = "13.01";
+                    splvMinInput.value = "1";
+                    splvMaxInput.value = "12";
+                    document.getElementById("hide-acdeleted").checked = false;
+                    updateTable();
+                };
+            }
+
+            function applyFilters(songList) {
+                const [lvMin, lvMax] = levelSlider.noUiSlider.get().map(v => parseFloat(v.replace("☆", "")));
+                const hideAcDeleted = document.getElementById("hide-acdeleted").checked;
+
+                const splvSlider = document.getElementById("splv-range");
+                const [splvMin, splvMax] = splvSlider.noUiSlider.get().map(v => parseInt(v));
+
+                return songList.filter(song => {
+                    const acdeleted = !!song.acdelete;
+                    if (hideAcDeleted && acdeleted) return false;
+
+                    const level = parseFloat(song.level);
+                    const levelOk = isNaN(level) ? true : (level >= lvMin && level <= lvMax);
+                    const splv = parseInt(song.splv);
+                    const splvOk = isNaN(splv) ? true : (splv >= splvMin && splv <= splvMax);
+
+                    return levelOk && splvOk;
+                });
+            }
+
+            function updateTable() {
+                const filteredData = applyFilters(allSongData);
+                makeDBRTable(filteredData, currentMark, null, currentSongTimes);
+            }
 
             function calculateGaugeIncrease(x) {
                 let gaugeIncrease;
@@ -255,13 +415,28 @@
                 let htmlContent = "";
 
                 Object.values(sections)
-                    .sort((a, b) => a.isDeleted - b.isDeleted || a.displayLevel.localeCompare(b.displayLevel))
+                    .sort((a, b) => {
+                        // まず基準レベル（†を除いた部分）で比較
+                        const levelA = a.displayLevel.replace(/^†/, '').replace(mark, '');
+                        const levelB = b.displayLevel.replace(/^†/, '').replace(mark, '');
+
+                        const levelCompare = levelA.localeCompare(levelB, undefined, { numeric: true });
+
+                        if (levelCompare !== 0) {
+                            return levelCompare;
+                        }
+
+                        // 同レベルの場合は削除フラグで比較（0=AC収録が先、1=削除が後）
+                        return a.isDeleted - b.isDeleted;
+                    })
                     .forEach(section => {
                         htmlContent += `<tr class='tr_separate'><td colspan='16' align='center'><b>${section.displayLevel} (${section.count}譜面)</b></td></tr>`;
                         htmlContent += section.rows.join("");
                     });
 
                 obj.append(htmlContent);
+
+                window.dispatchEvent(new CustomEvent('dbrTableRedrawn'));
             }
 
             // 解禁方法をフォーマットする関数
