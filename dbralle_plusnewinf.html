@@ -277,39 +277,110 @@
 
             function makeDBRTable(info, mark, order, songTimes = {}) {
                 const obj = $("#table_int");
-                obj.empty(); // 一応中身クリア
+                obj.empty();
 
-                // ヘッダー行はjQueryで追加（列幅を自動計算しやすく）
+                // ヘッダー行
                 obj.append(
                     $("<tr height='20' style='color:white;background-color:#666666'></tr>").append(
                     "<td>レベル</td><td>薦</td><td>ver</td><td>タイトル</td><td>BPM</td>" +
                     "<td>ノーツ数</td><td>SPLv</td><td>動画</td><td>TexTage</td>" +
                     "<td>ゲージ増加量</td><td>平均密度</td><td>コメント</td><td>解禁方法</td>"
                     )
-                ); // 解禁方法の列を追加
+                );
 
-                let sections = {};
+                // 重複排除処理: title + textageid で譜面を一意化
+                const chartMap = new Map();
 
                 info.forEach(data => {
-                    if (!data.level || data.level === "未査定") return; // 未査定のデータをスキップ
-                    if (!data.inf) return;
+                    const chartKey = `${data.title}|${data.textageid || ''}`;
 
-                    let baseLevel = data.level || "未査定";
-                    let displayLevel = `${mark}${baseLevel}`;
+                    if (!chartMap.has(chartKey)) {
+                        // 初出の譜面
+                        const isProposed = data.splv === "新規提案";
+                        chartMap.set(chartKey, { 
+                            ...data, 
+                            isProposed: isProposed,
+                            actualSplv: data.splv
+                        });
+                    } else {
+                        // 既に存在する譜面
+                        const existing = chartMap.get(chartKey);
+
+                        // 両方のデータを確認して、どちらが新規提案版かを判定
+                        const dataIsProposal = data.level && data.level !== "未査定";
+                        const existingIsProposal = existing.level && existing.level !== "未査定";
+
+                        if (dataIsProposal && !existingIsProposal) {
+                            // 新しく来たデータが新規提案版 → これを採用
+                            const mergedData = { ...data };
+
+                            // 既存版（未査定版）にSPLvがあれば、それを表示用として保持
+                            if (existing.splv && existing.splv !== "新規提案") {
+                                mergedData.actualSplv = existing.splv;
+                            } else {
+                                mergedData.actualSplv = data.splv;
+                            }
+
+                            mergedData.isProposed = (data.splv === "新規提案");
+                            chartMap.set(chartKey, mergedData);
+
+                        } else if (!dataIsProposal && existingIsProposal) {
+                            // 既存が新規提案版で、新しく来たのが未査定版 → 既存を保持しつつSPLvを更新
+                            if (data.splv && data.splv !== "新規提案") {
+                                existing.actualSplv = data.splv;
+                            }
+                            // isProposedは既存のまま維持
+
+                        } else if (!dataIsProposal && !existingIsProposal) {
+                            // 両方未査定の場合、SPLvがある方を優先
+                            if (data.splv && data.splv !== "新規提案" && 
+                                (!existing.splv || existing.splv === "新規提案")) {
+                                chartMap.set(chartKey, { 
+                                    ...data, 
+                                    isProposed: false,
+                                    actualSplv: data.splv
+                                });
+                            }
+                        }
+                        // 両方が新規提案版の場合は何もしない（先勝ち）
+                    }
+                });
+
+                // 重複排除後のデータで表を構築
+                let sections = {};
+
+                chartMap.forEach(data => {
+                    // INF収録譜面のみ、かつ未査定を除外
+                    if (!data.inf) return;
+                    if (!data.level || data.level === "未査定") return;
+
+                    const baseLevel = data.level;
+                    const displayLevel = `${mark}${baseLevel}`;
 
                     if (!sections[displayLevel]) {
                         sections[displayLevel] = { count: 0, rows: [], displayLevel };
                     }
 
-                    let notesValue = data.notes * 2;
-                    let notesDisplay = data.scratch ? (notesValue - (data.scratch * 2)) : `(${notesValue})`;
-                    let gaugeIncrease = calculateGaugeIncrease(notesValue);
-                    let isProposed = data.splv == "新規提案";
-                    let rowClass = isProposed ? 'tr_proposed' : 'tr_normal';
-                    let splvDisplay = isProposed ? "新規" : `☆${data.splv}`;
-                    let unlockMethod = formatUnlockMethod(data.infpack); // 解禁方法をフォーマット
+                    const notesValue = data.notes * 2;
+                    const notesDisplay = data.scratch ? (notesValue - (data.scratch * 2)) : `(${notesValue})`;
+                    const gaugeIncrease = calculateGaugeIncrease(notesValue);
+                    const unlockMethod = formatUnlockMethod(data.infpack); // 解禁方法をフォーマット
 
-                    // 譜面キーを作る（例: "VANESSA(H)"）
+                    // 新規提案フラグを使用
+                    const isProposed = data.isProposed;
+                    const rowClass = isProposed ? 'tr_proposed' : 'tr_normal';
+
+                    // SPLv表示 - actualSplvを使用
+                    let splvDisplay;
+                    if (data.actualSplv === "新規提案") {
+                        splvDisplay = "新規";
+                    } else if (data.actualSplv) {
+                        splvDisplay = `☆${data.actualSplv}`;
+                    } else {
+                        splvDisplay = "新規";
+                    }
+
+                    // 譜面キーを作る
                     const chartKey = `${data.title}`;
                     let pureNotes = 0;
 
@@ -330,7 +401,7 @@
                         density = (pureNotes / seconds).toFixed(2) + "notes/s";
                     }
 
-                    let row = `<tr class='${rowClass}'${seconds ? ` data-playtime="${seconds}"` : ''}>
+                    let row = `<tr class='${rowClass}'${seconds ? ` data-playtime="${seconds}"` : ''}${isProposed ? ` data-proposed="true"` : ''}>
                     <td class='col-level'>${displayLevel}</td>
                     <td class='col-recommend'>${data.recommend}</td>
                     <td class='col-ver'>${data.ver}</td>
@@ -379,7 +450,7 @@
 
                     // TexTage列
                     if (data.textageid) {
-                        let suffix = generateTextageSuffix(data.title, data.splv);
+                        let suffix = generateTextageSuffix(data.title, data.actualSplv);
                         let url = `https://textage.cc/score/${data.ver}/${data.textageid}.html?${suffix}`;
                         row += `<td class='col-textage'><a href='${url}' target='_blank'>TexTage</a></td>`;
                     } else {
@@ -393,18 +464,30 @@
                     <td class='col-unlock'>${unlockMethod}</td>
                     </tr>`; // 解禁方法の列を追加
 
-                    sections[displayLevel].rows.push(row);
+                    sections[displayLevel].rows.push({ html: row, isProposed: isProposed });
                     sections[displayLevel].count++;
                 });
 
-                // 表本体構築（innerHTML一括）
+                // 各レベル内で通常譜面→新規提案譜面の順にソート
+                Object.values(sections).forEach(section => {
+                    section.rows.sort((a, b) => {
+                        if (a.isProposed === b.isProposed) return 0;
+                        return a.isProposed ? 1 : -1;
+                    });
+                });
+
+                // 表本体構築
                 let htmlContent = "";
 
                 Object.values(sections)
-                    .sort((a, b) => a.displayLevel.localeCompare(b.displayLevel))
+                    .sort((a, b) => {
+                        const levelA = a.displayLevel.replace(mark, '');
+                        const levelB = b.displayLevel.replace(mark, '');
+                        return levelA.localeCompare(levelB, undefined, { numeric: true });
+                    })
                     .forEach(section => {
                         htmlContent += `<tr class='tr_separate'><td colspan='13' align='center'><b>${section.displayLevel} (${section.count}譜面)</b></td></tr>`;
-                        htmlContent += section.rows.join("");
+                        htmlContent += section.rows.map(r => r.html).join("");
                     });
 
                 obj.append(htmlContent);
