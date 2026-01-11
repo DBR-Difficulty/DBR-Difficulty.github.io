@@ -103,6 +103,8 @@ function setupModal(columnsToShow) {
         const modalData = {};
         const $row = $(this).closest("tr");
         const playtime = $row.data("playtime");
+        const isProposedRow = $row.data("proposed") === true; // 新規提案フラグを取得
+
         modalData.playtime = playtime;
 
         columnsToShow.forEach(key => {
@@ -404,10 +406,9 @@ function setupModal(columnsToShow) {
 
         // 提案ボタン生成
         const isUnrated = modalData.level === "☆未査定" || modalData.level === "†☆未査定";
-        const isUnderReview = modalData.splv === "新規";
         const actions = [];
 
-        if (isUnderReview) {
+        if (isProposedRow) {
             actions.push(`
                 <hr><div style="margin-top: 1rem; line-height: 1.6;">
                     <b>現在新規提案中の譜面です。<br>

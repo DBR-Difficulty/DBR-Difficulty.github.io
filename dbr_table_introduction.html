@@ -327,9 +327,9 @@
     <h2 id="arcade">【アーケード作品用の表】</h2>
     <p><a href="#premise">【前提】</a>にある「おすすめ度」によって表示を分けた3種類が存在します。</p>
     <ul>
-      <li><b><a href="dbralle_normal.html">DBR難易度表(イージー)</a></b>：メインの難易度表です。☆、◎、○の譜面が表示されます。</li>
-      <li><b><a href="dbralle_recommended.html">DBR難易度表(イージー)(おすすめ)</a></b>：☆の譜面が表示されます。</li>
-      <li><b><a href="dbralle.html">DBR難易度表(イージー)(全譜面)</a></b>：全ての譜面が表示されます。</li>
+      <li><b><a href="dbralle_normal.html" style="font-size: 1.2rem;">DBR難易度表(イージー)</a></b>：メインの難易度表です。☆、◎、○の譜面が表示されます。</li>
+      <li><b><a href="dbralle_recommended.html" style="font-size: 1.2rem;">DBR難易度表(イージー)(おすすめ)</a></b>：☆の譜面が表示されます。</li>
+      <li><b><a href="dbralle.html" style="font-size: 1.2rem;">DBR難易度表(イージー)(全譜面)</a></b>：全ての譜面が表示されます。</li>
     </ul>
 
     <div style="max-width: 600px;">
@@ -392,7 +392,7 @@
     <p>ACに比べてリトライが容易であり、選曲時間の制限もないため「おすすめ度」による表示分けは行っていません。（希望があれば作成します）<br>
     INFINITASでプレーできる譜面のみ表示します。そのため「†☆」の区分けもありません。</p>
     <ul>
-      <li><b><a href="dbralle_inf.html">DBR難易度表(イージー)(INFINITAS)</a></b></li>
+      <li><b><a href="dbralle_inf.html" style="font-size: 1.2rem;">DBR難易度表(イージー)(INFINITAS)</a></b></li>
     </ul>
 
     <div style="max-width: 600px;">
@@ -423,8 +423,8 @@
     難易度査定に協力していただける方、とにかく譜面数が欲しい方におすすめです。<br>
     アーケード用、INFINITAS用の両方が存在します。</p>
     <ul>
-      <b><li><a href="dbralle_plusnew.html">DBR難易度表(イージー)(新規提案有)</a></li>
-      <li><a href="dbralle_plusnewinf.html">DBR難易度表(イージー)(INFINITAS)(新規提案有)</a></li></b>
+      <b><li><a href="dbralle_plusnew.html" style="font-size: 1.2rem;">DBR難易度表(イージー)(新規提案有)</a></li>
+      <li><a href="dbralle_plusnewinf.html" style="font-size: 1.2rem;">DBR難易度表(イージー)(INFINITAS)(新規提案有)</a></li></b>
     </ul>
 
     <div style="max-width: 600px;">
@@ -433,13 +433,23 @@
 
     <p>新規提案されている譜面は黄背景で表示されます。レベルの相対比較にお使いください。<br>
     難易度やおすすめ度に違和感がある場合、<a href="https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?gid=1709558806#gid=1709558806" target="_blank">「新規提案」シート</a>の「異議申し立て」列に記載してください。<br>
-    SPLvが「新規」となり、TexTageのリンク先でレベルがうまく表示されませんが、仕様です。（技術的限界）</p>
+    <s>SPLvが「新規」となり、TexTageのリンク先でレベルがうまく表示されませんが、仕様です。（技術的限界）</s></p>
+    <p><b><a href="https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?gid=1709558806#gid=1709558806" target="_blank">「新規提案」シート</a></b>の「曲名(難易度)」列と「textageid」列が未査定譜面の内容と一致する場合に限り、SPLvを取得するようになりました。<br>
+    もちろん今後もtextageid列は任意項目ですので、記載なしでの提案も歓迎ですし、該当の譜面が一意に定まれば曲名の省略も可能です。<br>
+    （これらが一致しない場合引き続きSPLvが「新規」となりますが、提案内容は確認次第管理者側で追加、修正いたします。お気軽にご提案ください。）</p>
 
     <div style="max-width: 600px;">
-        <img src="picture/dbrtable_new_modal.png" alt="AC版難易度表モーダル" style="max-width:100%; height: auto;">
+        <img src="picture/dbrtable_new_only.png" alt="表示SPレベル範囲変更後の新規提案有難易度表" style="max-width:100%; height: auto;">
+        <div style="text-align: center; font-size: 0.9em; margin-top: 0.25rem;">☆1～4に何か表入りするまで</div>
+    </div>
+    <p>新規提案譜面が絞り込んだSPレベル範囲外になった場合にもSPLv「新規」として出現しますが、ご了承ください。<br>
+    難易度表にまだ存在しないSPレベル範囲を指定した場合、新規提案譜面のみ表示できます。</p>
+
+    <div style="max-width: 600px;">
+        <img src="picture/dbrtable_new_modal.png" alt="新規提案中譜面のモーダル" style="max-width:100%; height: auto;">
     </div>
 
-    <p>新規提案譜面を選択した場合、提案のボタンは表示されません。<br>
+    <p>新規提案譜面を選択した場合、モーダルに提案のボタンは表示されません。<br>
     代わりに<a href="https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?gid=1709558806#gid=1709558806" target="_blank">新規提案シート</a>へのリンクが表示されますので、レベル、おすすめ度に違和感がある方はそちらから異議申し立てをお願いします。</p>
   </div>
 
@@ -449,8 +459,12 @@
     ☆6以下の一部譜面も表示されますが、データ量の関係で全譜面を網羅できていないため、<br>
     表示されていない譜面の登録を希望する方は<a href="https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?usp=sharing" target="_blank">管理用スプレッドシート</a>の<a href="https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?gid=1133259776#gid=1133259776" target="_blank">「修正依頼」シート</a>に記載いただくか、<br>
     直接<a href="https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?gid=1709558806#gid=1709558806" target="_blank">「新規提案」シート</a>に必要事項を記載して提案してください。</p>
+    <p>また、<a href="#suggest">新規提案有の表</a>と同じく、新規提案されている譜面を黄背景で表示するようになりました。<br>
+    <a href="https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?gid=1709558806#gid=1709558806" target="_blank">「新規提案」シート</a>の「曲名(難易度)」列と「textageid」列が未査定譜面の内容と一致する場合、重複が排除され、☆未査定としては表示されません。<br>
+    <a href="#modal-new">モーダルからの新規提案</a>の場合、この二項目は最初から記入された状態となり、重複排除が確実に行えるのでおすすめです。
+    </p>
     <ul>
-      <b><li><a href="dbralle_misatei.html">DBR難易度表(イージー)(未査定有)</a></li></b>
+      <b><li><a href="dbralle_misatei.html" style="font-size: 1.2rem;">DBR難易度表(イージー)(未査定有)</a></li></b>
     </ul>
 
     <div style="max-width: 600px;">
@@ -473,7 +487,7 @@
 
     <ul>
       <li>おすすめ度：未査定譜面にはほぼ入力されていない項目のため、良い譜面だと思ったら新規提案時におすすめ度をつけてください。</li>
-      <li>INFINITAS収録有無：INFINITASに収録済みの場合、「○」で表示されます。現在未査定譜面の多くはINFINITAS向け情報が入力されていない為、非表示でも収録済みの場合があります。</li>
+      <li>INFINITAS収録有無：INFINITASに収録済みの場合、「○」で表示されます。現在未査定譜面の多くはINFINITAS向け情報が入力されていないため、非表示でも収録済みの場合があります。</li>
       <li>INFINITAS解禁方法：「INFINITAS収録有無」が「○」の場合のみ表示されます。表で表示されているものと同一ですが、デフォルト解禁の場合「デフォルト解禁」と表示されます。</li>
       <li>新規提案：譜面の新規提案を行えます。詳しくはこちら→<a href="#modal-new">モーダル：新規提案</a></li>
     </ul>
@@ -584,7 +598,7 @@
         <div style="text-align: center; font-size: 0.9em; margin-top: 0.25rem;"><a href="dbr_table_extend.html">拡張機能</a>使用時の追加列にも対応</div>
     </div>
 
-    <p>拡張機能と併用する場合は、表更新時の最新化が二度手間になってしまうため、プレー履歴の管理は拡張機能側で行うことを強く推奨します。<br></p>
+    <p><a href="dbr_table_extend.html">拡張機能</a>と併用する場合、表更新時の最新化が二度手間になってしまうため、プレー履歴の管理は拡張機能側で行うことを強く推奨します。<br></p>
   </div>  
   <strong><span style="font-size: 2.33rem;">プレイヤー補助ツール</span></strong><br>
   <div class="section-box">
