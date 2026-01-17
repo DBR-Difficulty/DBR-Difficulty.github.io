@@ -150,7 +150,7 @@ body.diff {
 .col-level {
   min-width: 7ch;
   max-width: 7ch;
-  width: 1%;
+  width: 0.1%;
   text-align: left;
 }
 
@@ -158,7 +158,7 @@ body.diff {
 .col-pending {
   min-width: 6ch;
   max-width: 6ch;
-  width: 1%;
+  width: 0.1%;
   text-align: left;
 }
 
@@ -166,7 +166,7 @@ body.diff {
 .col-recommend {
   min-width: 1ch;
   max-width: 1ch;
-  width: 1%;
+  width: 0.1%;
   text-align: center;
 }
 
@@ -174,7 +174,7 @@ body.diff {
 .col-ver {
   min-width: 3ch;
   max-width: 3ch;
-  width: 1%;
+  width: 0.1%;
   text-align: left;
   white-space: nowrap;
 }
@@ -191,7 +191,7 @@ body.diff {
 .col-bpm {
   min-width: 4ch;
   max-width: 4ch;
-  width: 1%;
+  width: 0.1%;
   text-align: left;
 }
 
@@ -199,7 +199,7 @@ body.diff {
 .col-notes {
   min-width: 4ch;
   max-width: 4ch;
-  width: 1%;
+  width: 0.1%;
   text-align: left;
   word-break: break-all;
 }
@@ -208,16 +208,24 @@ body.diff {
 .col-notesfull {
   min-width: 4ch;
   max-width: 4ch;
-  width: 1%;
+  width: 0.1%;
   text-align: left;
 }
 
+/* IR */
+.col-ir {
+  min-width: 1.7ch;
+  max-width: 1.7ch;
+  width: 0.1%;
+  text-align: center;
+  white-space: nowrap;
+}
 
 /* SPLv */
 .col-splv {
   min-width: 4ch;
   max-width: 6ch;
-  width: 1%;
+  width: 0.1%;
   text-align: left;
 }
 
@@ -225,7 +233,7 @@ body.diff {
 .col-video {
   min-width: 2ch;
   max-width: 3ch;
-  width: 1%;
+  width: 0.1%;
   text-align: center;
   white-space: nowrap;
 }
@@ -234,7 +242,7 @@ body.diff {
 .col-textage {
   min-width: 7ch;
   max-width: 7ch;
-  width: 1%;
+  width: 0.1%;
   text-align: center;
   white-space: nowrap;
 }
@@ -243,7 +251,7 @@ body.diff {
 .col-gauge {
   min-width: 10ch;
   max-width: 10ch;
-  width: 1%;
+  width: 0.1%;
   text-align: center;
   white-space: nowrap;
 }
@@ -252,7 +260,7 @@ body.diff {
 .col-density {
   min-width: 11ch;
   max-width: 11ch;
-  width: 1%;
+  width: 0.1%;
   text-align: center;
   white-space: nowrap;
 }
@@ -291,7 +299,7 @@ body.diff {
 .col-insane {
   min-width: 6ch;
   max-width: 6ch;
-  width: 1%;
+  width: 0.1%;
   text-align: left;
 }
 

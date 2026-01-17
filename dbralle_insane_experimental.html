@@ -37,7 +37,7 @@
             <!-- ここに注意書きの枠を追加 -->
             <div class="notice-box">
                 <ul>
-                    <li>☆12.92を☆☆1とした難易度表です</li>
+                    <li>☆12.93を☆☆1とした難易度表です</li>
                     <li>管理側約一名が適正外まで作成したので、妥当性はないものとお考えください</li>
                     <li>GASでスプレッドシートから自動生成せずサイトに生成後のJSONを置いて読み込んでいます</li>
                     <li id="lastUpdated">難易度表データの最終生成日は です</li>
@@ -158,7 +158,7 @@
                 obj.append(
                     $("<tr height='20' style='color:white;background-color:#666666'></tr>").append(
                     "<td>レベル</td><td>狂</td><td>薦</td><td>ver</td><td>タイトル</td><td>BPM</td>" +
-                    "<td>ノーツ数</td><td>皿含</td><td>SPLv</td><td>動画</td><td>TexTage</td>" +
+                    "<td>ノーツ数</td><td>皿含</td><td>IR</td><td>SPLv</td><td>動画</td><td>TexTage</td>" +
                     "<td>ゲージ増加量</td><td>平均密度</td><td>コメント</td><td>INF有</td><td>解禁方法</td>"
                     )
                 );
@@ -228,6 +228,9 @@
                     <td class='col-bpm'><a>${data.bpm}</a></td>
                     <td class='col-notes'><a data-notes-full='${notesValue}'>${notesDisplay}</a></td>
                     <td class='col-notesfull'><a>${notesValue}</a></td>
+                    <td class='col-ir'>
+                        <a href="dbr_ir_ranking.html?title=${encodeURIComponent(data.title)}&notesValue=${notesValue}&notesDisplay=${encodeURIComponent(notesDisplay)}&displayLevel=${encodeURIComponent(displayLevel)}" target="_blank">■</a>
+                    </td>
                     <td class='col-splv'><a>☆${data.splv}</a></td>`;
 
                     // 動画列
@@ -305,7 +308,7 @@
                         return a.isDeleted - b.isDeleted;
                     })
                     .forEach(section => {
-                        htmlContent += `<tr class='tr_separate'><td colspan='16' align='center'><b>${section.displayLevel} (${section.count}譜面)</b></td></tr>`;
+                        htmlContent += `<tr class='tr_separate'><td colspan='17' align='center'><b>${section.displayLevel} (${section.count}譜面)</b></td></tr>`;
                         htmlContent += section.rows.join("");
                     });
 
@@ -319,8 +322,8 @@
                 return infpack.replace(/BIT/g, 'BIT解禁')
                     .replace(/PK(\d+)/g, 'INFINITAS 楽曲パック vol.$1')
                     .replace(/ST(\d+)/g, 'スタートアップセレクション 楽曲パック vol.$1')
-                    .replace(/PM(\d+)/g, "pop'n music セレクション 楽曲パック vol.$1")
-                    .replace(/ju(\d+)/g, 'jubeat セレクション 楽曲パック vol.$1')
+                    .replace(/pm(\d+)/g, "pop'n music セレクション 楽曲パック vol.$1")
+                    .replace(/jb(\d+)/g, 'jubeat セレクション 楽曲パック vol.$1')
                     .replace(/SV(\d+)/g, 'SOUND VOLTEX セレクション 楽曲パック vol.$1')
                     .replace(/GD(\d+)/g, 'GITADORA セレクション 楽曲パック vol.$1')
                     .replace(/BPL(\d+)/g, 'BPL セレクション 楽曲パック vol.$1')
