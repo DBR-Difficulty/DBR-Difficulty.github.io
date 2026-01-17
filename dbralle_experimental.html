@@ -170,7 +170,7 @@
                         setupModal([
                             "level", "recommend", "ver", "title", "bpm",
                             "lamp", "bp", "score", "score-rank", "real-rank",  // 拡張機能用
-                            "notes", "splv", "video", "textage",
+                            "notes", "ir", "splv", "video", "textage",
                             "gauge", "density", "comment"
                             ]); // 表描画後にモーダルを設定
                     }).fail(function() {
@@ -318,7 +318,7 @@
                 obj.append(
                     $("<tr height='20' style='color:white;background-color:#666666'></tr>").append(
                     "<td>レベル</td><td>薦</td><td>ver</td><td>タイトル</td><td>BPM</td>" +
-                    "<td>ノーツ数</td><td>SPLv</td><td>動画</td><td>TexTage</td><td>ゲージ増加量</td><td>平均密度</td><td>コメント</td>"
+                    "<td>ノーツ数</td><td>IR</td><td>SPLv</td><td>動画</td><td>TexTage</td><td>ゲージ増加量</td><td>平均密度</td><td>コメント</td>"
                     )
                 );
 
@@ -367,6 +367,9 @@
                     <td class='col-title'><a>${data.title}</a></td>
                     <td class='col-bpm'><a>${data.bpm}</a></td>
                     <td class='col-notes'><a data-notes-full='${notesValue}'>${notesDisplay}</a></td>
+                    <td class='col-ir'>
+                        <a href="dbr_ir_ranking.html?title=${encodeURIComponent(data.title)}&notesValue=${notesValue}&notesDisplay=${encodeURIComponent(notesDisplay)}&displayLevel=${encodeURIComponent(displayLevel)}" target="_blank">■</a>
+                    </td>
                     <td class='col-splv'><a>☆${data.splv}</a></td>`;
 
                     // 動画列
@@ -445,7 +448,7 @@
                         return a.isDeleted - b.isDeleted;
                     })
                     .forEach(section => {
-                        htmlContent += `<tr class='tr_separate'><td colspan='12' align='center'><b>${section.displayLevel} (${section.count}譜面)</b></td></tr>`;
+                        htmlContent += `<tr class='tr_separate'><td colspan='13' align='center'><b>${section.displayLevel} (${section.count}譜面)</b></td></tr>`;
                         htmlContent += section.rows.join("");
                     });
 
