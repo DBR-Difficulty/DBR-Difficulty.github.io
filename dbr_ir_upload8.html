@@ -370,8 +370,8 @@
               <tr>
                 <th>譜面</th>
                 <th>ランプ</th>
-                <th>スコア</th>
                 <th>BP</th>
+                <th>スコア</th>
                 <th>状態</th>
               </tr>
             </thead>
@@ -898,8 +898,8 @@
             <td style="max-width:220px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${fullTitle}">${cleanTitle}<span style="font-size:0.9em;">(${item.difficulty})</span></td>
           `;
           tr.appendChild(lampTd);
-          tr.appendChild(scoreTd);
           tr.appendChild(bpTd);
+          tr.appendChild(scoreTd);
           tr.appendChild(statusTd);
 
           previewTableBody.appendChild(tr);
