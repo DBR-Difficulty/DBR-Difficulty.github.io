@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-M5CPZDQB');</script>
+    <!-- End Google Tag Manager -->
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png" />
+    <meta name="msapplication-TileImage" content="/mstile-150x150.png" />
+    <link rel="manifest" href="/manifest.json" />
+
+    <meta charset="UTF-8" />
+    <title>DBR IR プレーデータアップロード</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="style/style.css" rel="stylesheet">
+    <script src="style/jquery-2.0.2.min.js"></script>
+  </head>
+  <style>
+    body {
+      font-family: "Noto Sans JP", sans-serif;
+      font-size: 1rem;
+      line-height: 1.6;
+      color: #333;
+      background-color: #fff;
+      padding: 1.25rem;
+      max-width: 100%;
+    }
+
+    .top-section-box {
+      background: #fafafa;
+      border: 1px solid #ddd;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin: 0.625rem 0 1.5rem 0;
+    }
+
+    .notice-box {
+      border: 0.125rem solid #666;
+      background-color: #353535;
+      color: white;
+      padding: 0.625rem;
+      margin: 0.625rem auto;
+      width: 80%;
+      text-align: left;
+      border-radius: 0.3125rem;
+    }
+
+    .notice-box ul {
+      list-style-type: square;
+      padding-left: 1.25rem;
+    }
+
+    .notice-box li {
+      margin-bottom: 0.3125rem;
+    }
+
+    .notice-box a:visited {
+      color: #cc00cc;
+    }
+
+    .notice-box a {
+      color: #bce2e8;
+    }
+
+    button {
+        background-color: #f5f5f5;
+        color: #000;
+        border: 1px solid #888;
+        border-radius: 0.375rem;
+        padding: 0.5rem 1rem;
+        margin-top: 1rem;
+        font-weight: bold;
+        text-decoration: none;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    button:disabled {
+        background-color: #dcdcdc;
+        color: #888;
+        cursor: not-allowed;
+        border: 1px solid #ccc;
+    }
+
+    .button {
+        background-color: #f5f5f5;
+        color: #000;
+        border: 1px solid #888;
+        border-radius: 0.375rem;
+        padding: 0.5rem 1rem;
+        margin-bottom: 1rem;
+        font-weight: bold;
+        text-decoration: none;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        display: inline-block;
+    }
+    
+    .button-delete {
+      background-color: #ff4d4d;
+      color: #fff;
+      border: 1px solid #cc0000;
+    }
+
+    input[type="checkbox"] {
+        transform: scale(1.5);
+        margin-right: 0.5rem;
+        margin-top: 0.75rem;
+    }
+
+    label {
+        font-size: 1.2rem;
+        line-height: 1.5rem;
+        cursor: pointer;
+    }
+
+    .label-disabled {
+      color: #888;
+      border-color: #ccc;
+      cursor: not-allowed;
+      background-color: #dcdcdc;
+      pointer-events: none;
+    }
+
+    .subtext {
+      font-size: 0.9rem;
+      color: #555;
+      margin: 0.5rem;
+    }
+
+    #authInput #email {
+      margin-bottom: 0.5rem;
+    }
+
+    /* ===== 変更プレビューモーダル ===== */
+    #previewModal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.55);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+    }
+    #previewModal.active {
+      display: flex;
+    }
+    #previewModalInner {
+      background: #fff;
+      border-radius: 0.6rem;
+      padding: 1.5rem;
+      max-width: 720px;
+      width: 95%;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.25);
+    }
+    #previewModalInner h2 {
+      margin: 0 0 0.6rem 0;
+      font-size: 1.2rem;
+    }
+    #previewSummary {
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+      color: #444;
+    }
+    /* 警告バナー */
+    #warningBanner {
+      display: none;
+      background: #fff3cd;
+      border: 1.5px solid #e6a817;
+      border-radius: 0.375rem;
+      padding: 0.5rem 0.75rem;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+      color: #7a4f00;
+    }
+    #warningBanner b { color: #c0392b; }
+    #previewList {
+      overflow-y: auto;
+      flex: 1;
+      border: 1px solid #ddd;
+      border-radius: 0.375rem;
+      font-size: 0.88rem;
+    }
+    #previewList table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    #previewList th {
+      background: #353535;
+      color: #fff;
+      padding: 0.4rem 0.6rem;
+      text-align: left;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      font-size: 0.85rem;
+    }
+    #previewList tr:nth-child(even) {
+      background: #f9f9f9;
+    }
+    #previewList td {
+      padding: 0.35rem 0.6rem;
+      border-bottom: 1px solid #eee;
+      vertical-align: middle;
+    }
+    /* 悪化行 */
+    tr.row-worsened {
+      background: #fff0f0 !important;
+    }
+    tr.row-worsened td {
+      color: #333;
+    }
+    .change-arrow {
+      color: #aaa;
+      margin: 0 0.2rem;
+      font-size: 0.8rem;
+    }
+    /* 改善値（青） */
+    .val-improved {
+      font-weight: bold;
+      color: #1a6fc4;
+    }
+    /* 悪化値（赤） */
+    .val-worsened {
+      font-weight: bold;
+      color: #c0392b;
+    }
+    /* 変化なし値 */
+    .val-unchanged {
+      color: #aaa;
+    }
+    /* 新規値（緑） */
+    .val-new {
+      font-weight: bold;
+      color: #228822;
+    }
+    /* 旧値 */
+    .val-old {
+      color: #888;
+    }
+    .tag-new {
+      display: inline-block;
+      background: #228822;
+      color: #fff;
+      border-radius: 0.25rem;
+      padding: 0 0.35rem;
+      font-size: 0.75rem;
+    }
+    .tag-skip {
+      display: inline-block;
+      background: #888;
+      color: #fff;
+      border-radius: 0.25rem;
+      padding: 0 0.35rem;
+      font-size: 0.75rem;
+    }
+    .tag-warn {
+      display: inline-block;
+      background: #e6a817;
+      color: #fff;
+      border-radius: 0.25rem;
+      padding: 0 0.35rem;
+      font-size: 0.75rem;
+    }
+    #previewModalBtns {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 0.75rem;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+    #previewConfirmBtn {
+      background: #1a6fc4;
+      color: #fff;
+      border: none;
+    }
+    #previewConfirmBtn:hover {
+      background: #155a9e;
+    }
+    #previewCancelBtn {
+      background: #f5f5f5;
+      color: #333;
+    }
+    .preview-filter-bar {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .preview-filter-bar label {
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    .preview-filter-bar input[type="checkbox"] {
+      transform: scale(1.2);
+      margin: 0;
+    }
+  </style>
+  <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M5CPZDQB"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <center>
+        <strong><span style="font-size: 2rem;">DBR IR プレーデータアップロード</span></strong><br>
+
+        <div class="notice-box">
+          <ul>
+            <li>DBR IRにプレーデータを登録します</li>
+            <li>ログイン後、<b><a href="dbr_table_extend.html">拡張機能</a>でエクスポートしたJSONファイル</b>をアップロードしてください<br>
+            （<a href="dbr_record.html">DBRプレー記録管理</a>でエクスポートしたJSONファイルには対応していません）</li>
+            <li>プレーデータ送信後、12時間が経過するまでは再送信できません（12時間以内に更新があった譜面はスキップされます） ご注意ください</li>
+            <li>IRに表示するユーザー名を変更したい場合、変更後に（匿名希望の場合、チェックも入れてから）[プロフィール保存]をクリックしてください</li>
+            <li>各難易度表のIR列から譜面別ランキングが参照できます</li>
+          </ul>
+        </div>
+
+        <div class="toplink-margin">
+          <a href="index.html">TOPに戻る</a>
+        </div>
+
+        <div id="loading" style="display: none;">
+          <div class="spinner"></div>
+          <div class="loading-text">プレーデータをアップロードしています。<br>しばらくお待ちください……</div>
+        </div>
+
+        <div class="top-section-box">
+          <form id="loginForm" onsubmit="return false;">
+            <div id="authInput">
+              <input type="email" id="email" placeholder="メールアドレス" autocomplete="username"><br>
+              <input type="password" id="password" placeholder="パスワード" autocomplete="current-password"><br>
+            </div>
+            <button id="loginBtn">ログイン</button>
+          </form>
+          <button id="logoutBtn" style="display:none;">ログアウト</button>
+          <p id="userInfo">ログアウト中</p>
+          <p><a href="dbr_ir_register.html" id="registerLink">新規登録はこちら</a></p>
+        </div>
+
+    </center>
+    <div class="top-section-box">
+      <label id="displayNameLabel">表示するユーザー名: <input type="text" id="displayName" maxlength="30" /></label><br>
+      <label id="anonymousLabel"><input type="checkbox" id="anonymousCheck" /> 匿名希望</label><br>
+      <button id="saveProfileBtn" disabled>プロフィール保存</button>
+      <a id="playerDataLink" class="button label-disabled" style="margin-left: 1.125rem;">自分のプレーデータを見る</a><br><br>
+
+      <input type="file" id="jsonFileInput" accept=".json" style="display: none;">
+      <label for="jsonFileInput" class="button label-disabled">JSONファイルを選択</label>
+      <span id="fileName" class="subtext"></span>
+
+      <button id="uploadBtn" disabled>送信</button>
+    </div>
+
+    <div class="top-section-box">
+      <button id="deleteAllBtn" disabled>自分のプレーデータをすべて削除</button>
+      <p class="subtext" id="deleteStatus"></p>
+    </div>
+
+    <div class="top-section-box">
+      <button class="button-delete" id="deleteAccountBtn" disabled>アカウントを削除</button>
+      <p class="subtext" id="deleteAccount"></p>
+    </div>
+
+    <!-- ===== 変更プレビューモーダル ===== -->
+    <div id="previewModal">
+      <div id="previewModalInner">
+        <h2>📋 アップロード内容の確認</h2>
+        <div id="previewSummary"></div>
+        <div id="warningBanner"></div>
+        <div class="preview-filter-bar">
+          <strong style="font-size:0.9rem;">表示:</strong>
+          <label><input type="checkbox" id="filterImproved" checked> ✅ 改善</label>
+          <label><input type="checkbox" id="filterWorsened" checked> ⚠️ 悪化あり</label>
+          <label><input type="checkbox" id="filterNew" checked> 🆕 新規</label>
+          <label><input type="checkbox" id="filterSkip" checked> ⏭️ スキップ</label>
+        </div>
+        <div id="previewList">
+          <table>
+            <thead>
+              <tr>
+                <th>譜面名</th>
+                <th>難</th>
+                <th>ランプ</th>
+                <th>スコア</th>
+                <th>BP</th>
+                <th>状態</th>
+              </tr>
+            </thead>
+            <tbody id="previewTableBody"></tbody>
+          </table>
+        </div>
+        <div id="previewModalBtns">
+          <button id="previewCancelBtn">キャンセル</button>
+          <button id="previewConfirmBtn">このまま送信する</button>
+        </div>
+      </div>
+    </div>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+
+      import {
+        auth, db,
+        signInWithEmailAndPassword, signOut, deleteUser, onAuthStateChanged,
+        doc, getDoc, setDoc, collection, query, where, getDocs, deleteDoc,
+        translateAuthError
+      } from "./main.js";
+
+      const loginBtn = document.getElementById("loginBtn");
+      const logoutBtn = document.getElementById("logoutBtn");
+      const userInfo = document.getElementById("userInfo");
+
+      const displayNameInput = document.getElementById("displayName");
+      const anonymousCheck = document.getElementById("anonymousCheck");
+      const displayNameLabel = document.getElementById("displayNameLabel");
+      const anonymousLabel = document.getElementById("anonymousLabel");
+      const saveProfileBtn = document.getElementById("saveProfileBtn");
+
+      const fileInput = document.getElementById("jsonFileInput");
+      const uploadBtn = document.getElementById("uploadBtn");
+      
+      const deleteBtn = document.getElementById("deleteAllBtn");
+      const deleteAccountBtn = document.getElementById("deleteAccountBtn");
+      const deleteStatus = document.getElementById("deleteStatus");
+      const playerDataLink = document.getElementById("playerDataLink");
+
+      const loadingDiv = document.getElementById("loading");
+
+      // プレビューモーダル関連
+      const previewModal = document.getElementById("previewModal");
+      const previewConfirmBtn = document.getElementById("previewConfirmBtn");
+      const previewCancelBtn = document.getElementById("previewCancelBtn");
+      const previewTableBody = document.getElementById("previewTableBody");
+      const previewSummary = document.getElementById("previewSummary");
+
+      let currentUserUid = null;
+      // プレビュー時に計算したデータを保持してから実際のアップロードに使う
+      let pendingUploadData = null;
+
+      // キャッシュ定数
+      const FORCE_REFRESH_INTERVAL = 365 * 24 * 60 * 60 * 1000;
+      const DIFF_CHECK_INTERVAL = 10 * 1000;
+
+      // ランプの表示名マッピング
+      const LAMP_LABEL = {
+        "NO PLAY": "NO PLAY",
+        "FAILED": "FAILED",
+        "ASSIST CLEAR": "ASSIST",
+        "EASY CLEAR": "EASY",
+        "CLEAR": "CLEAR",
+        "HARD CLEAR": "HARD",
+        "EX HARD CLEAR": "EX HARD",
+        "FULL COMBO": "FC",
+      };
+      function lampLabel(v) {
+        if (v === null || v === undefined || v === "") return "-";
+        return LAMP_LABEL[v] ?? v;
+      }
+
+      loginBtn.onclick = async () => {
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        if (!email || !password) return alert("メールアドレスとパスワードを入力してください。");
+        try {
+          const userCred = await signInWithEmailAndPassword(auth, email, password);
+          if (!userCred.user.emailVerified) {
+            await signOut(auth);
+            alert("メールアドレスが確認されていません。メール内のリンクをクリックしてください。");
+            return;
+          }
+        } catch (e) {
+          alert("ログインに失敗しました。: " + translateAuthError(e));
+        }
+      };
+
+      logoutBtn.onclick = () => {
+        signOut(auth).catch((e) => { alert("ログアウトに失敗しました。: " + e.message); });
+      };
+
+      const buttonsToDisableDuringProcess = [
+        loginBtn, logoutBtn, saveProfileBtn, uploadBtn,
+        deleteBtn, deleteAccountBtn, displayNameInput, anonymousCheck, fileInput
+      ];
+
+      function setLoading(show, message = "処理中です。しばらくお待ちください……") {
+        loadingDiv.style.display = show ? "block" : "none";
+        const loadingTextDiv = loadingDiv.querySelector(".loading-text");
+        if (show) loadingTextDiv.innerHTML = message;
+        buttonsToDisableDuringProcess.forEach(btn => { btn.disabled = show; });
+        const fileLabel = document.querySelector('label[for="jsonFileInput"]');
+        if (show) {
+          fileLabel.classList.add("label-disabled");
+          playerDataLink.classList.add("label-disabled");
+        } else {
+          fileLabel.classList.remove("label-disabled");
+          playerDataLink.classList.remove("label-disabled");
+        }
+      }
+
+      async function getExistingScores(userUid) {
+        const cacheKey = `playdata_${userUid}`;
+        const cacheTimeKey = `playdata_time_${userUid}`;
+        const lastSyncKey = `playdata_lastsync_${userUid}`;
+        const cachedData = localStorage.getItem(cacheKey);
+        const cachedTime = localStorage.getItem(cacheTimeKey);
+        const lastSyncTime = localStorage.getItem(lastSyncKey);
+        const now = Date.now();
+        let scores = [];
+
+        if (cachedData && cachedTime && (now - parseInt(cachedTime)) < FORCE_REFRESH_INTERVAL) {
+          const cache = JSON.parse(cachedData);
+          scores = cache.scores || [];
+
+          if (!lastSyncTime || (now - parseInt(lastSyncTime)) > DIFF_CHECK_INTERVAL) {
+            try {
+              const lastSync = parseInt(lastSyncTime) || 0;
+              const diffQuery = query(
+                collection(db, "scores"),
+                where("userUid", "==", userUid),
+                where("timestamp", ">", lastSync)
+              );
+              const diffSnap = await getDocs(diffQuery);
+              if (diffSnap.size > 0) {
+                const scoreMap = new Map(scores.map(s => [`${s.textageKey}_${s.difficulty}`, s]));
+                diffSnap.forEach(doc => {
+                  const data = doc.data();
+                  if (data.textageKey && data.difficulty) {
+                    scoreMap.set(`${data.textageKey}_${data.difficulty}`, data);
+                  }
+                });
+                scores = Array.from(scoreMap.values());
+                localStorage.setItem(cacheKey, JSON.stringify({ displayName: cache.displayName, scores }));
+                localStorage.setItem(lastSyncKey, now.toString());
+              } else {
+                localStorage.setItem(lastSyncKey, now.toString());
+              }
+            } catch (error) {
+              console.warn('差分取得エラー:', error);
+            }
+          }
+        } else {
+          const snap = await getDocs(query(collection(db, "scores"), where("userUid", "==", userUid)));
+          snap.forEach(doc => {
+            const data = doc.data();
+            if (data.textageKey && data.difficulty) scores.push(data);
+          });
+          let displayName = "不明ユーザー";
+          try {
+            const userSnap = await getDoc(doc(db, "users", userUid));
+            if (userSnap.exists()) {
+              const data = userSnap.data();
+              displayName = data.anonymous ? "匿名希望" : (data.displayName || "未設定");
+            }
+          } catch { displayName = "ユーザー情報の取得に失敗"; }
+          try {
+            localStorage.setItem(cacheKey, JSON.stringify({ displayName, scores }));
+            localStorage.setItem(cacheTimeKey, now.toString());
+            localStorage.setItem(lastSyncKey, now.toString());
+          } catch (e) { console.warn('キャッシュ保存失敗:', e); }
+        }
+        return scores;
+      }
+
+      function updateCache(userUid, newScores) {
+        const cacheKey = `playdata_${userUid}`;
+        const cacheTimeKey = `playdata_time_${userUid}`;
+        const lastSyncKey = `playdata_lastsync_${userUid}`;
+        const now = Date.now();
+        try {
+          const cachedData = localStorage.getItem(cacheKey);
+          let displayName = "不明ユーザー";
+          if (cachedData) {
+            const cache = JSON.parse(cachedData);
+            displayName = cache.displayName || displayName;
+          }
+          localStorage.setItem(cacheKey, JSON.stringify({ displayName, scores: newScores }));
+          localStorage.setItem(cacheTimeKey, now.toString());
+          localStorage.setItem(lastSyncKey, now.toString());
+        } catch (e) { console.warn('キャッシュ更新失敗:', e); }
+      }
+
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          document.getElementById("loginForm").style.display = "none";
+          document.getElementById("registerLink").style.display = "none";
+          currentUserUid = user.uid;
+          loginBtn.style.display = "none";
+          logoutBtn.style.display = "inline";
+          userInfo.textContent = `ログイン中: ${user.email}`;
+          saveProfileBtn.disabled = false;
+          uploadBtn.disabled = false;
+          deleteBtn.disabled = false;
+          deleteAccountBtn.disabled = false;
+          displayNameInput.disabled = false;
+          anonymousCheck.disabled = false;
+          displayNameLabel.style.pointerEvents = "auto";
+          anonymousLabel.style.pointerEvents = "auto";
+
+          const userDocRef = doc(db, "users", currentUserUid);
+          const userDocSnap = await getDoc(userDocRef);
+          if (userDocSnap.exists()) {
+            const profileData = userDocSnap.data();
+            displayNameInput.value = profileData.displayName || user.displayName || "player";
+            anonymousCheck.checked = profileData.anonymous || false;
+          } else {
+            displayNameInput.value = user.displayName || "player";
+            anonymousCheck.checked = false;
+            document.getElementById("loginForm").style.display = "block";
+            document.getElementById("registerLink").style.display = "block";
+            await setDoc(userDocRef, { displayName: "player", anonymous: false });
+          }
+
+          const fileLabel = document.querySelector('label[for="jsonFileInput"]');
+          fileLabel.classList.remove("label-disabled");
+          playerDataLink.href = `dbr_ir_playerdata.html?uid=${currentUserUid}`;
+          playerDataLink.classList.remove("label-disabled");
+          displayNameLabel.classList.remove("label-disabled");
+          anonymousLabel.classList.remove("label-disabled");
+        } else {
+          currentUserUid = null;
+          document.getElementById("loginForm").style.display = "block";
+          document.getElementById("registerLink").style.display = "block";
+          loginBtn.style.display = "inline";
+          logoutBtn.style.display = "none";
+          userInfo.textContent = "ログアウト中";
+          displayNameInput.value = "";
+          anonymousCheck.checked = false;
+          saveProfileBtn.disabled = true;
+          uploadBtn.disabled = true;
+          deleteBtn.disabled = true;
+          deleteAccountBtn.disabled = true;
+          displayNameInput.disabled = true;
+          anonymousCheck.disabled = true;
+          displayNameLabel.style.pointerEvents = "none";
+          anonymousLabel.style.pointerEvents = "none";
+          const fileLabel = document.querySelector('label[for="jsonFileInput"]');
+          fileLabel.classList.add("label-disabled");
+          playerDataLink.removeAttribute("href");
+          playerDataLink.classList.add("label-disabled");
+        }
+      });
+
+      saveProfileBtn.onclick = async () => {
+        if (!currentUserUid) { alert("ログインしてください。"); return; }
+        const displayName = displayNameInput.value.trim();
+        const anonymous = anonymousCheck.checked;
+        if (displayName.length === 0 && !anonymous) { alert("匿名希望か、表示名を入力してください。"); return; }
+        if (displayName.length > 30) { alert("表示名は30文字以内で入力してください。"); return; }
+        try {
+          await setDoc(doc(db, "users", currentUserUid), { displayName, anonymous }, { merge: true });
+          alert("プロフィールを保存しました。");
+        } catch (e) { alert("保存に失敗しました。: " + e.message); }
+      };
+
+      function generateDocId(userUid, textageKey, difficulty) {
+        return `${userUid}_${textageKey}_${difficulty}`.replace(/[.#$[\]/]/g, "_");
+      }
+
+      document.getElementById("jsonFileInput").addEventListener("change", function() {
+        const fileName = this.files[0]?.name || "ファイルが選択されていません。";
+        document.getElementById("fileName").textContent = fileName;
+      });
+
+      // ===== ランプ順序定義（低→高） =====
+      // null / undefined / "" / "NO PLAY" が最低、FULL COMBO が最高
+      const LAMP_ORDER = [
+        null, undefined, "", "NO PLAY",
+        "FAILED",
+        "ASSIST CLEAR",
+        "EASY CLEAR",
+        "CLEAR",
+        "HARD CLEAR",
+        "EX HARD CLEAR",
+        "FULL COMBO"
+      ];
+      function lampRank(v) {
+        const idx = LAMP_ORDER.indexOf(v);
+        return idx === -1 ? 0 : idx; // 未知は最低扱い
+      }
+
+      // ===== フィルタチェックボックスの制御 =====
+      ["filterImproved", "filterWorsened", "filterNew", "filterSkip"].forEach(id => {
+        document.getElementById(id).addEventListener("change", applyPreviewFilter);
+      });
+
+      function applyPreviewFilter() {
+        const showImproved = document.getElementById("filterImproved").checked;
+        const showWorsened = document.getElementById("filterWorsened").checked;
+        const showNew = document.getElementById("filterNew").checked;
+        const showSkip = document.getElementById("filterSkip").checked;
+
+        const rows = previewTableBody.querySelectorAll("tr[data-status]");
+        rows.forEach(row => {
+          const st = row.dataset.status;
+          let visible = false;
+          if (st === "improved" && showImproved) visible = true;
+          if (st === "worsened" && showWorsened) visible = true;
+          if (st === "new" && showNew) visible = true;
+          if (st === "skip" && showSkip) visible = true;
+          row.style.display = visible ? "" : "none";
+        });
+      }
+
+      // ===== アップロードボタン：まずプレビューを表示 =====
+      uploadBtn.addEventListener("click", async () => {
+        if (!currentUserUid) { alert("ログインしてください。"); return; }
+        const file = fileInput.files[0];
+        if (!file) { alert("JSONファイルを選択してください。"); return; }
+
+        setLoading(true, "変更内容を確認しています。<br>しばらくお待ちください……");
+
+        try {
+          const text = await file.text();
+          const data = JSON.parse(text);
+
+          const userDocSnap = await getDoc(doc(db, "users", currentUserUid));
+          if (!userDocSnap.exists()) {
+            alert("ユーザープロファイルが見つかりません。プロフィールを保存してください。");
+            setLoading(false);
+            return;
+          }
+          const profile = userDocSnap.data();
+          const usernameToUse = profile.anonymous ? "匿名" : (profile.displayName || "");
+          if (!usernameToUse) {
+            alert("ユーザー名が設定されていません。プロフィールを保存してください。");
+            setLoading(false);
+            return;
+          }
+
+          const existingScores = await getExistingScores(currentUserUid);
+          const existingMap = {};
+          existingScores.forEach(s => { existingMap[`${s.textageKey}_${s.difficulty}`] = s; });
+
+          const { lamp, bp, score, textageKey } = data;
+          const now = Date.now();
+          const twelveHours = 12 * 60 * 60 * 1000;
+          const allTitles = new Set([
+            ...Object.keys(lamp || {}).map(k => k.replace(/^lamp_/, '')),
+            ...Object.keys(bp || {}).map(k => k.replace(/^bp_/, '')),
+            ...Object.keys(score || {}).map(k => k.replace(/^score_/, ''))
+          ]);
+
+          // 各譜面の変更内容を計算
+          const previewItems = [];
+
+          for (const title of allTitles) {
+            const textage = textageKey?.[title];
+            const diffMatch = title.match(/\((.)\)$/);
+            if (!textage || !diffMatch) continue;
+
+            const difficulty = diffMatch[1];
+            const key = `${textage}_${difficulty}`;
+            const rawBp = bp?.[`bp_${title}`];
+            const rawScore = score?.[`score_${title}`];
+
+            const newLamp = lamp?.[`lamp_${title}`] ?? null;
+            const newBp = rawBp === "" || rawBp == null ? -1 : parseInt(rawBp);
+            const newScore = rawScore === "" || rawScore == null ? -1 : parseInt(rawScore);
+
+            const existing = existingMap[key];
+
+            // スキップ判定
+            if (existing) {
+              const lastUpdated = existing.timestamp || 0;
+              if (now - lastUpdated < twelveHours) {
+                previewItems.push({ title, difficulty, textage, status: "skip", existing, newLamp, newBp, newScore });
+                continue;
+              }
+            }
+
+            if (!existing) {
+              previewItems.push({ title, difficulty, textage, status: "new", existing: null, newLamp, newBp, newScore });
+            } else {
+              // 改善・悪化の判定
+              const lampImproved = lampRank(newLamp) > lampRank(existing.lamp);
+              const lampWorsened = lampRank(newLamp) < lampRank(existing.lamp);
+              // スコア: 高い方が良い（-1は未プレー扱い、比較対象外）
+              const scoreImproved = newScore !== -1 && existing.score !== -1 && newScore > existing.score;
+              const scoreWorsened = newScore !== -1 && existing.score !== -1 && newScore < existing.score;
+              // BP: 低い方が良い（-1は未プレー扱い）
+              const bpImproved = newBp !== -1 && existing.bp !== -1 && newBp < existing.bp;
+              const bpWorsened = newBp !== -1 && existing.bp !== -1 && newBp > existing.bp;
+
+              const hasImprovement = lampImproved || scoreImproved || bpImproved;
+              const hasWorsening = lampWorsened || scoreWorsened || bpWorsened;
+              const hasChange =
+                existing.lamp !== newLamp ||
+                existing.bp !== newBp ||
+                existing.score !== newScore;
+
+              if (!hasChange) continue; // 変更なしは完全スキップ
+
+              // statusはworsenedが優先（改善もあり悪化もある場合はworsenedとして警告）
+              const status = hasWorsening ? "worsened" : "improved";
+
+              previewItems.push({
+                title, difficulty, textage, status, existing, newLamp, newBp, newScore,
+                lampImproved, lampWorsened,
+                scoreImproved, scoreWorsened,
+                bpImproved, bpWorsened
+              });
+            }
+          }
+
+          // pendingUploadData に保存
+          pendingUploadData = { data, existingScores, existingMap, usernameToUse, previewItems, now };
+
+          // モーダルに表示
+          showPreviewModal(previewItems);
+        } catch (e) {
+          alert("ファイルの読み込みに失敗しました。: " + e.message);
+          console.error(e);
+        } finally {
+          setLoading(false);
+        }
+      });
+
+      function showPreviewModal(items) {
+        const cntImproved = items.filter(i => i.status === "improved").length;
+        const cntWorsened = items.filter(i => i.status === "worsened").length;
+        const cntNew = items.filter(i => i.status === "new").length;
+        const cntSkip = items.filter(i => i.status === "skip").length;
+        const cntUpload = cntImproved + cntWorsened + cntNew;
+
+        previewSummary.innerHTML =
+          `<b>${cntUpload}件</b>がアップロードされます。` +
+          (cntImproved ? ` <span style="color:#1a6fc4">✅ 改善: ${cntImproved}件</span>` : "") +
+          (cntNew ? ` <span style="color:#228822">🆕 新規: ${cntNew}件</span>` : "") +
+          (cntWorsened ? ` <span style="color:#c0392b">⚠️ 悪化あり: ${cntWorsened}件</span>` : "") +
+          (cntSkip ? ` <span style="color:#888">　⏭️ スキップ: ${cntSkip}件（12時間以内）</span>` : "");
+
+        // 警告バナー
+        const warningBanner = document.getElementById("warningBanner");
+        if (cntWorsened > 0) {
+          warningBanner.style.display = "block";
+          warningBanner.innerHTML =
+            `⚠️ <b>${cntWorsened}件</b>の譜面で、現在のデータより<b style="color:#c0392b">評価が下がる</b>データが含まれています。<br>` +
+            `スコアの低下・BPの増加・ランプの低下が検出されました。内容を確認してから送信してください。`;
+        } else {
+          warningBanner.style.display = "none";
+        }
+
+        // テーブル行生成
+        previewTableBody.innerHTML = "";
+
+        // 並び順: worsened → improved → new → skip
+        const order = { worsened: 0, improved: 1, new: 2, skip: 3 };
+        const sorted = [...items].sort((a, b) => order[a.status] - order[b.status]);
+
+        for (const item of sorted) {
+          const tr = document.createElement("tr");
+          tr.dataset.status = item.status;
+          if (item.status === "worsened") tr.classList.add("row-worsened");
+
+          const cleanTitle = item.title.replace(/\s*\(.\)$/, "");
+
+          // --- ランプセル ---
+          const lampTd = document.createElement("td");
+          if (item.status === "new") {
+            lampTd.innerHTML = `<span class="val-new">${lampLabel(item.newLamp)}</span>`;
+          } else if (item.status === "skip") {
+            lampTd.innerHTML = `<span class="val-unchanged">${lampLabel(item.newLamp)}</span>`;
+          } else if (item.existing && item.existing.lamp !== item.newLamp) {
+            const cls = item.lampImproved ? "val-improved" : item.lampWorsened ? "val-worsened" : "val-unchanged";
+            lampTd.innerHTML = `<span class="val-old">${lampLabel(item.existing.lamp)}</span><span class="change-arrow">→</span><span class="${cls}">${lampLabel(item.newLamp)}</span>`;
+          } else {
+            lampTd.innerHTML = `<span class="val-unchanged">${lampLabel(item.newLamp)}</span>`;
+          }
+
+          // --- スコアセル ---
+          const scoreTd = document.createElement("td");
+          const fmtScore = v => (v === -1 || v === null || v === undefined) ? "-" : String(v);
+          if (item.status === "new") {
+            scoreTd.innerHTML = `<span class="val-new">${fmtScore(item.newScore)}</span>`;
+          } else if (item.status === "skip") {
+            scoreTd.innerHTML = `<span class="val-unchanged">${fmtScore(item.newScore)}</span>`;
+          } else if (item.existing && item.existing.score !== item.newScore) {
+            const cls = item.scoreImproved ? "val-improved" : item.scoreWorsened ? "val-worsened" : "val-unchanged";
+            scoreTd.innerHTML = `<span class="val-old">${fmtScore(item.existing.score)}</span><span class="change-arrow">→</span><span class="${cls}">${fmtScore(item.newScore)}</span>`;
+          } else {
+            scoreTd.innerHTML = `<span class="val-unchanged">${fmtScore(item.newScore)}</span>`;
+          }
+
+          // --- BPセル ---
+          const bpTd = document.createElement("td");
+          const fmtBp = v => (v === -1 || v === null || v === undefined) ? "-" : String(v);
+          if (item.status === "new") {
+            bpTd.innerHTML = `<span class="val-new">${fmtBp(item.newBp)}</span>`;
+          } else if (item.status === "skip") {
+            bpTd.innerHTML = `<span class="val-unchanged">${fmtBp(item.newBp)}</span>`;
+          } else if (item.existing && item.existing.bp !== item.newBp) {
+            const cls = item.bpImproved ? "val-improved" : item.bpWorsened ? "val-worsened" : "val-unchanged";
+            bpTd.innerHTML = `<span class="val-old">${fmtBp(item.existing.bp)}</span><span class="change-arrow">→</span><span class="${cls}">${fmtBp(item.newBp)}</span>`;
+          } else {
+            bpTd.innerHTML = `<span class="val-unchanged">${fmtBp(item.newBp)}</span>`;
+          }
+
+          // --- 状態バッジ ---
+          const statusTd = document.createElement("td");
+          if (item.status === "new") statusTd.innerHTML = `<span class="tag-new">NEW</span>`;
+          else if (item.status === "skip") statusTd.innerHTML = `<span class="tag-skip">SKIP</span>`;
+          else if (item.status === "worsened") statusTd.innerHTML = `<span class="tag-warn">⚠️ 悪化</span>`;
+          else statusTd.innerHTML = `<span style="color:#1a6fc4; font-size:0.8rem;">更新</span>`;
+
+          tr.innerHTML = `
+            <td style="max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${cleanTitle}">${cleanTitle}</td>
+            <td style="text-align:center;">${item.difficulty}</td>
+          `;
+          tr.appendChild(lampTd);
+          tr.appendChild(scoreTd);
+          tr.appendChild(bpTd);
+          tr.appendChild(statusTd);
+
+          previewTableBody.appendChild(tr);
+        }
+
+        applyPreviewFilter();
+        previewModal.classList.add("active");
+      }
+
+      // キャンセル
+      previewCancelBtn.addEventListener("click", () => {
+        previewModal.classList.remove("active");
+        pendingUploadData = null;
+      });
+
+      // 確認→実際のアップロード
+      previewConfirmBtn.addEventListener("click", async () => {
+        previewModal.classList.remove("active");
+        if (!pendingUploadData) return;
+
+        const { data, existingScores, existingMap, previewItems, now } = pendingUploadData;
+        pendingUploadData = null;
+
+        setLoading(true, "プレーデータをアップロードしています。<br>しばらくお待ちください……");
+
+        try {
+          const { lamp, bp, score, textageKey } = data;
+          const twelveHours = 12 * 60 * 60 * 1000;
+
+          let count = 0;
+          let skipped = 0;
+          const updatedMap = new Map(existingScores.map(s => [`${s.textageKey}_${s.difficulty}`, s]));
+
+          for (const item of previewItems) {
+            if (item.status === "skip") { skipped++; continue; }
+            // improved / worsened / new のみアップロード対象
+
+            const docRef = doc(db, "scores", generateDocId(currentUserUid, item.textage, item.difficulty));
+            const newData = {
+              userUid: currentUserUid,
+              textageKey: item.textage,
+              title: item.title,
+              difficulty: item.difficulty,
+              lamp: item.newLamp,
+              bp: item.newBp,
+              score: item.newScore,
+              timestamp: now
+            };
+
+            await setDoc(docRef, newData);
+            updatedMap.set(`${item.textage}_${item.difficulty}`, newData);
+            count++;
+          }
+
+          const finalScores = Array.from(updatedMap.values());
+          updateCache(currentUserUid, finalScores);
+
+          const summary = [
+            `${count}件のプレーデータをアップロードしました。`,
+            skipped > 0 ? `（${skipped}件は12時間以内の再登録のため、スキップされました）` : ""
+          ].join(" ");
+
+          alert(summary);
+          fileInput.value = "";
+          document.getElementById("fileName").textContent = "";
+        } catch (e) {
+          alert("アップロード中にエラーが発生しました。: " + e.message);
+          console.error(e);
+        } finally {
+          setLoading(false);
+        }
+      });
+
+      deleteBtn.addEventListener("click", async () => {
+        if (!currentUserUid) return alert("ログインしてください。");
+        if (!confirm("本当にすべてのプレーデータを削除しますか？\nこの操作は元に戻せません。")) return;
+        if (!confirm("後悔しませんね？")) return;
+
+        setLoading(true, "プレーデータを削除しています。<br>しばらくお待ちください……");
+        deleteStatus.textContent = "削除中...";
+
+        try {
+          const q = query(collection(db, "scores"), where("userUid", "==", currentUserUid));
+          const snapshot = await getDocs(q);
+          if (snapshot.empty) { deleteStatus.textContent = "削除対象のデータはありません。"; return; }
+          const deleteOps = snapshot.docs.map(docSnap => deleteDoc(docSnap.ref));
+          await Promise.all(deleteOps);
+
+          const cacheKey = `playdata_${currentUserUid}`;
+          const cacheTimeKey = `playdata_time_${currentUserUid}`;
+          const lastSyncKey = `playdata_lastsync_${currentUserUid}`;
+          localStorage.removeItem(cacheKey);
+          localStorage.removeItem(cacheTimeKey);
+          localStorage.removeItem(lastSyncKey);
+
+          deleteStatus.textContent = `${deleteOps.length}件のデータを削除しました。`;
+        } catch (e) {
+          console.error(e);
+          deleteStatus.textContent = "削除中にエラーが発生しました。";
+        } finally {
+          setLoading(false);
+        }
+      });
+
+      deleteAccountBtn.addEventListener("click", async () => {
+        if (!currentUserUid) return alert("ログインしてください。");
+        if (!confirm("アカウントを削除しますか？\nこの操作は元に戻せません。")) return;
+        if (!confirm("後悔しませんね？")) return;
+
+        setLoading(true, "アカウントを削除しています。<br>しばらくお待ちください……");
+
+        try {
+          const user = auth.currentUser;
+          if (!user) { return alert("ユーザー情報の取得に失敗しました。"); }
+          try {
+            const q = query(collection(db, "scores"), where("userUid", "==", user.uid));
+            const snapshot = await getDocs(q);
+            const deleteOps = snapshot.docs.map(docSnap => deleteDoc(docSnap.ref));
+            await Promise.all(deleteOps);
+          } catch (e) {
+            return alert("プレーデータ削除中にエラーが発生しました。再度ログインしてからお試しください。");
+          }
+          try {
+            await deleteDoc(doc(db, "users", user.uid));
+          } catch (e) {
+            return alert("ユーザー情報削除中にエラーが発生しました。再度ログインしてからお試しください。");
+          }
+
+          const cacheKey = `playdata_${user.uid}`;
+          const cacheTimeKey = `playdata_time_${user.uid}`;
+          const lastSyncKey = `playdata_lastsync_${user.uid}`;
+          localStorage.removeItem(cacheKey);
+          localStorage.removeItem(cacheTimeKey);
+          localStorage.removeItem(lastSyncKey);
+
+          await deleteUser(user);
+          return alert("アカウントを削除しました。");
+        } catch (e) {
+          console.error(e);
+          alert("アカウント削除中にエラーが発生しました。再度ログインしてからお試しください。");
+        } finally {
+          setLoading(false);
+        }
+      });
+    </script>
+  </body>
+</html>
