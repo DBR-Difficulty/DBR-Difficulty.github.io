@@ -228,7 +228,7 @@
       margin: 0 0.2rem;
       font-size: 0.8rem;
     }
-    /* 改善値（青） */
+    /* 更新値（青） */
     .val-improved {
       font-weight: bold;
       color: #1a6fc4;
@@ -285,24 +285,6 @@
     #previewCancelBtn {
       background: #f5f5f5;
       color: #333;
-    }
-    .preview-filter-bar {
-      display: flex;
-      gap: 0.5rem;
-      margin-bottom: 0.5rem;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-    .preview-filter-bar label {
-      font-size: 0.9rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 0.25rem;
-    }
-    .preview-filter-bar input[type="checkbox"] {
-      transform: scale(1.2);
-      margin: 0;
     }
   </style>
   <body>
@@ -377,13 +359,6 @@
         <h2>アップロード内容</h2>
         <div id="previewSummary"></div>
         <div id="warningBanner"></div>
-        <div class="preview-filter-bar">
-          <strong style="font-size:0.9rem;">表示:</strong>
-          <label><input type="checkbox" id="filterImproved" checked>更新 </label>
-          <label><input type="checkbox" id="filterWorsened" checked>悪化 </label>
-          <label><input type="checkbox" id="filterNew" checked>新規 </label>
-
-        </div>
         <div id="previewList">
           <table>
             <thead>
@@ -676,27 +651,6 @@
         return idx === -1 ? 0 : idx; // 未知は最低扱い
       }
 
-      // ===== フィルタチェックボックスの制御 =====
-      ["filterImproved", "filterWorsened", "filterNew"].forEach(id => {
-        document.getElementById(id).addEventListener("change", applyPreviewFilter);
-      });
-
-      function applyPreviewFilter() {
-        const showImproved = document.getElementById("filterImproved").checked;
-        const showWorsened = document.getElementById("filterWorsened").checked;
-        const showNew = document.getElementById("filterNew").checked;
-
-        const rows = previewTableBody.querySelectorAll("tr[data-status]");
-        rows.forEach(row => {
-          const st = row.dataset.status;
-          let visible = false;
-          if (st === "improved" && showImproved) visible = true;
-          if (st === "worsened" && showWorsened) visible = true;
-          if (st === "new" && showNew) visible = true;
-          row.style.display = visible ? "" : "none";
-        });
-      }
-
       // ===== アップロードボタン：まずプレビューを表示 =====
       uploadBtn.addEventListener("click", async () => {
         if (!currentUserUid) { alert("ログインしてください。"); return; }
@@ -767,7 +721,7 @@
             if (!existing) {
               previewItems.push({ title, difficulty, textage, status: "new", existing: null, newLamp, newBp, newScore });
             } else {
-              // 改善・悪化の判定
+              // 更新・悪化の判定
               const lampImproved = lampRank(newLamp) > lampRank(existing.lamp);
               const lampWorsened = lampRank(newLamp) < lampRank(existing.lamp);
               // スコア: 高い方が良い（-1は未プレー扱い、比較対象外）
@@ -786,7 +740,7 @@
 
               if (!hasChange) continue; // 変更なしは完全スキップ
 
-              // statusはworsenedが優先（改善もあり悪化もある場合はworsenedとして警告）
+              // statusはworsenedが優先（更新もあり悪化もある場合はworsenedとして警告）
               const status = hasWorsening ? "worsened" : "improved";
 
               previewItems.push({
@@ -820,7 +774,7 @@
 
         previewSummary.innerHTML =
           `<b>${cntUpload}件</b>がアップロードされます。` +
-          (cntImproved ? ` <span style="color:#1a6fc4">改善: ${cntImproved}件</span>` : "") +
+          (cntImproved ? ` <span style="color:#1a6fc4">更新: ${cntImproved}件</span>` : "") +
           (cntNew ? ` <span style="color:#228822">新規: ${cntNew}件</span>` : "") +
           (cntWorsened ? ` <span style="color:#c0392b">悪化: ${cntWorsened}件</span>` : "");
 
@@ -902,7 +856,6 @@
           previewTableBody.appendChild(tr);
         }
 
-        applyPreviewFilter();
         previewModal.classList.add("active");
       }
 
