@@ -152,7 +152,7 @@
     import { getFirestore, collection, query, where, getDocs, getDoc, doc } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
 
     const firebaseConfig = {
-      apiKey: "AIzaSyDb8r_zN89WKh69HPWstxGKLR-E-spQl8U",
+      apiKey: "AIzaSyDgU5OwLsDBoTeq_jXS-frSAf9kDDwl6L0",
       authDomain: "dbr-ir.firebaseapp.com",
       projectId: "dbr-ir",
       storageBucket: "dbr-ir.appspot.com",
@@ -448,6 +448,7 @@
         for (const song of filteredSongs) {
           const scoreData = scoreMap.get(song.title);
           if (!scoreData) continue;
+          if (scoreData.lamp === "NO PLAY" && (scoreData.score === -1 || scoreData.score == null) && (scoreData.bp === -1 || scoreData.bp == null)) continue;
 
           const lamp = scoreData.lamp || "NO DATA";
           const score = scoreData.score;
@@ -536,7 +537,10 @@
       }
 
       function renderTable(filtered) {
-        const count = filtered.length;
+        const count = filtered.filter(song => {
+          const scoreData = scoreMap.get(song.title);
+          return !(scoreData && scoreData.lamp === "NO PLAY" && (scoreData.score === -1 || scoreData.score == null) && (scoreData.bp === -1 || scoreData.bp == null));
+        }).length;
         const statsEl = document.getElementById("stats");
         const katateCpChecked = document.getElementById("katate-cp").checked;
 
@@ -589,6 +593,8 @@
 
         for (const song of filtered) {
           const scoreData = scoreMap.get(song.title);
+          if (scoreData && scoreData.lamp === "NO PLAY" && (scoreData.score === -1 || scoreData.score == null) && (scoreData.bp === -1 || scoreData.bp == null)) continue;
+
           const level = song.level || "未査定";
           const title = song.title;
           const notesValue = song.notes * 2;

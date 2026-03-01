@@ -147,7 +147,7 @@
     } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
 
     const firebaseConfig = {
-      apiKey: "AIzaSyDb8r_zN89WKh69HPWstxGKLR-E-spQl8U",
+      apiKey: "AIzaSyDgU5OwLsDBoTeq_jXS-frSAf9kDDwl6L0",
       authDomain: "dbr-ir.firebaseapp.com",
       projectId: "dbr-ir",
       storageBucket: "dbr-ir.firebasestorage.app",
@@ -496,7 +496,9 @@
         sortTh.classList.add(currentSort.asc ? "asc" : "desc");
       }
 
-      const sorted = [...rows].sort((a, b) => {
+      const sorted = [...rows].filter(d =>
+        !(d.lamp === "NO PLAY" && (d.score === -1 || d.score == null) && (d.bp === -1 || d.bp == null))
+      ).sort((a, b) => {
         let va = a[key];
         let vb = b[key];
         const getVal = v => (v === null || v === -1 || v === undefined || v === "") ? null : v;
