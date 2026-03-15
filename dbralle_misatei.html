@@ -40,10 +40,19 @@
             <!-- ここに注意書きの枠を追加 -->
             <div class="notice-box">
                 <ul>
+                    <li><div style="font-size: 1.3rem;">DBR難易度表(イージー)の内容に加え、新規提案中、未査定の譜面を追加で表示します。<br>
+                        現在収録されている未査定の譜面は、<b>☆7以上</b>（+一部☆6以下）<b>のDBRでプレー可能な全譜面</b>です。</div>
+                    <li><div style="font-size: 1.3rem;">INFINITASでプレーする場合、「INF収録フラグ有のみ表示」で譜面を絞り込めます。</div></li><br>
+
+                    <li>レベル、おすすめ度の基準については、<a href="./dbr_table_introduction.html#premise" target="_self">【DBR難易度表について】-【前提】</a>項をお読みください。</li>
+                    <li>拡張機能を使用すると、難易度表に直接クリアランプ、BP、スコアを保存できます。（<a href="./dbr_table_extend.html" target="_self">詳しくはこちら</a>）</li>
+                    <li>初期表示時は全ての譜面を表示しています。フィルターで譜面の表示範囲を変更できます。</li><br>
+
                     <li>ゲージ増加量: NORMAL以下のゲージでGREAT以上を出した際の、1ノーツあたりのゲージ増加量です。（<a href="https://zenn.dev/waisky/articles/b97a35fe042b51" target="_blank">参考</a>）
                     </li>
                     <li>ノーツ数: 全ノーツ数からスクラッチの数を引いた値です。スクラッチの数が設定されていない場合、全ノーツ数を括弧付きで表示しています。</li>
-                    <li>レベル未査定の譜面、隠し項目も合わせて表示しています。新規提案の検討や、拡張機能使用時にご活用ください。（<a href="./dbralle.html" target="_self">通常の表</a>はこちら）</li>
+                    <li>現行AC作品で遊べない曲のレベルは「†☆」で表示されます。</li>
+                    <li>レベル未査定の譜面、隠し項目も合わせて表示しています。新規提案の検討や、拡張機能使用時にご活用ください。</li>
                     <li>難易度表への新規提案、レベルの変更提案等は<a href="https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?usp=sharing" target="_blank">管理用スプレッドシート</a>で行っています。プレーした譜面を記録する程度の感覚で構いませんので、ぜひご協力をお願いします。<br>
                         表のレベル～タイトルの範囲をクリックすると、譜面の詳細情報が表示されるモーダルが出現します。こちらからも新規・変更・おすすめ提案が可能です。</li>
                     <li>読み込みに時間がかかります。難易度表が表示されない場合、しばらくお待ちください。</li>
@@ -77,8 +86,29 @@
                     </div>
                 </div>
                 <div class="filter-row">
-                    <label><input type="checkbox" id="hide-acdeleted"> AC削除・未収録曲を除く</label>
+                    <div class="filter-label">おすすめ度:</div>
+                    <div class="slider-container">
+                        <div class="recommend-filter-group">
+                            <label><input type="checkbox" class="recommend-filter" value="☆" checked>☆</label>
+                            <label><input type="checkbox" class="recommend-filter" value="◎" checked>◎</label>
+                            <label><input type="checkbox" class="recommend-filter" value="○" checked>○</label>
+                            <label><input type="checkbox" class="recommend-filter" value="△" checked>△</label>
+                            <label><input type="checkbox" class="recommend-filter" value="" checked>空</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="filter-row" style="align-items: flex-end; margin-bottom: 0;">
+                    <div style="display: flex; flex-direction: column; gap: 0.75em; margin-top: 0.35em;">
+                        <label><input type="checkbox" id="hide-acdeleted"> AC削除・未収録曲を除く</label>
+                        <label><input type="checkbox" id="filter-inf-only"> INF収録フラグ有のみ表示</label>
+                    </div>
                     <button id="reset-filters" style="padding: 0.5em 1em;">フィルターをリセット</button>
+                </div>
+                <div class="pack-filter-row" id="pack-filter-row" style="display: none; padding: 0; margin: 0;">
+                    <div class="filter-label">解禁条件:</div>
+                    <div class="slider-container" style="margin-top: 1em;">
+                        <div id="pack-filter-container"></div>
+                    </div>
                 </div>
             </div>
 
@@ -114,6 +144,9 @@
                 levelMin: 10.20, levelMax: 13.01,
                 splvMin: 1, splvMax: 12
             };
+
+            // おすすめ度フィルターのデフォルト値（全表示）
+            const RECOMMEND_DEFAULTS = ["☆", "◎", "○", "△", ""];
 
             // ドキュメントが読み込まれたときに実行される関数
             $(document).ready(function() {
@@ -180,16 +213,35 @@
                 splvMin === SLIDER_DEFAULTS.splvMin ? localStorage.removeItem("dbr_filter_splvMin") : localStorage.setItem("dbr_filter_splvMin", splvMin);
                 splvMax === SLIDER_DEFAULTS.splvMax ? localStorage.removeItem("dbr_filter_splvMax") : localStorage.setItem("dbr_filter_splvMax", splvMax);
                 localStorage.setItem("dbr_filter_hideAcDeleted", document.getElementById("hide-acdeleted").checked);
+
+                // おすすめ度フィルターの保存（デフォルトと異なる場合のみ保存、ページごとに独立したキー）
+                const pageKey = location.pathname.split("/").pop().replace(".html", "");
+                const checkedValues = Array.from(document.querySelectorAll(".recommend-filter:checked")).map(el => el.value);
+                const isDefault = RECOMMEND_DEFAULTS.length === checkedValues.length &&
+                    RECOMMEND_DEFAULTS.every(v => checkedValues.includes(v));
+                isDefault ? localStorage.removeItem(`dbr_filter_recommend_${pageKey}`) : localStorage.setItem(`dbr_filter_recommend_${pageKey}`, JSON.stringify(checkedValues));
+
+                // INF収録フィルターの保存（デフォルト=falseと異なる場合のみ保存）
+                const infOnly = document.getElementById("filter-inf-only").checked;
+                infOnly ? localStorage.setItem("dbr_filter_infOnly", true) : localStorage.removeItem("dbr_filter_infOnly");
+
+                // パックフィルターの保存（全ページ共有キー）
+                savePackFilterSettings();
             }
 
             // フィルター設定をlocalStorageから読み込む関数（値が存在しない場合はデフォルト値を返す）
             function loadFilterSettings() {
+                // おすすめ度はページごとに独立したキーで読み込む
+                const pageKey = location.pathname.split("/").pop().replace(".html", "");
+                const savedRecommend = localStorage.getItem(`dbr_filter_recommend_${pageKey}`);
                 return {
                     levelMin: parseFloat(localStorage.getItem("dbr_filter_levelMin") ?? SLIDER_DEFAULTS.levelMin),
                     levelMax: parseFloat(localStorage.getItem("dbr_filter_levelMax") ?? SLIDER_DEFAULTS.levelMax),
                     splvMin: parseInt(localStorage.getItem("dbr_filter_splvMin") ?? SLIDER_DEFAULTS.splvMin),
                     splvMax: parseInt(localStorage.getItem("dbr_filter_splvMax") ?? SLIDER_DEFAULTS.splvMax),
-                    hideAcDeleted: localStorage.getItem("dbr_filter_hideAcDeleted") === "true"
+                    hideAcDeleted: localStorage.getItem("dbr_filter_hideAcDeleted") === "true",
+                    recommend: savedRecommend ? JSON.parse(savedRecommend) : RECOMMEND_DEFAULTS,
+                    infOnly: localStorage.getItem("dbr_filter_infOnly") === "true"
                 };
             }
 
@@ -232,6 +284,14 @@
                 // 保存済みのチェックボックス状態を復元する
                 document.getElementById("hide-acdeleted").checked = saved.hideAcDeleted;
 
+                // おすすめ度チェックボックスの状態を復元する
+                document.querySelectorAll(".recommend-filter").forEach(el => {
+                    el.checked = saved.recommend.includes(el.value);
+                });
+
+                // INF収録フィルターの状態を復元する
+                document.getElementById("filter-inf-only").checked = saved.infOnly;
+
                 // スライダー → input
                 levelSlider.noUiSlider.on("update", (values) => {
                     levelMinInput.value = parseFloat(values[0].replace("☆", "")).toFixed(2);
@@ -273,6 +333,26 @@
                 // チェックボックス変更時に再描画・保存
                 document.getElementById("hide-acdeleted").addEventListener("change", () => { saveFilterSettings(); updateTable(); });
 
+                // おすすめ度チェックボックス変更時に再描画・保存
+                document.querySelectorAll(".recommend-filter").forEach(el => {
+                    el.addEventListener("change", () => { saveFilterSettings(); updateTable(); });
+                });
+
+                // INF収録フィルター変更時に再描画・保存
+                document.getElementById("filter-inf-only").addEventListener("change", () => {
+                    const infOnly = document.getElementById("filter-inf-only").checked;
+                    document.getElementById("pack-filter-row").style.display = infOnly ? "" : "none";
+                    saveFilterSettings();
+                    updateTable();
+                });
+
+                // パックフィルターを初期化
+                initPackFilter();
+
+                // INF収録フラグ有のみ表示の状態に合わせてパックフィルター行の表示を初期化
+                document.getElementById("pack-filter-row").style.display =
+                    document.getElementById("filter-inf-only").checked ? "" : "none";
+
                 // リセットボタン
                 document.getElementById("reset-filters").onclick = () => {
                     levelSlider.noUiSlider.set([SLIDER_DEFAULTS.levelMin, SLIDER_DEFAULTS.levelMax]);
@@ -282,34 +362,77 @@
                     splvMinInput.value = SLIDER_DEFAULTS.splvMin;
                     splvMaxInput.value = SLIDER_DEFAULTS.splvMax;
                     document.getElementById("hide-acdeleted").checked = false;
+                    document.querySelectorAll(".recommend-filter").forEach(el => {
+                        el.checked = RECOMMEND_DEFAULTS.includes(el.value);
+                    });
+                    document.getElementById("filter-inf-only").checked = false;
+                    document.getElementById("pack-filter-row").style.display = "none";
+                    resetPackFilter();
                     saveFilterSettings();
                     updateTable();
                 };
             }
 
-            function applyFilters(songList) {
-                const [lvMin, lvMax] = levelSlider.noUiSlider.get().map(v => parseFloat(v.replace("☆", "")));
-                const hideAcDeleted = document.getElementById("hide-acdeleted").checked;
 
-                const splvSlider = document.getElementById("splv-range");
-                const [splvMin, splvMax] = splvSlider.noUiSlider.get().map(v => parseInt(v));
 
-                return songList.filter(song => {
-                    const acdeleted = !!song.acdelete;
-                    if (hideAcDeleted && acdeleted) return false;
-
-                    const level = parseFloat(song.level);
-                    const levelOk = isNaN(level) ? true : (level >= lvMin && level <= lvMax);
-                    const splv = parseInt(song.splv);
-                    const splvOk = isNaN(splv) ? true : (splv >= splvMin && splv <= splvMax);
-
-                    return levelOk && splvOk;
-                });
-            }
+            let tableBuilt = false;
 
             function updateTable() {
-                const filteredData = applyFilters(allSongData);
-                makeDBRTable(filteredData, currentMark, null, currentSongTimes);
+                if (!tableBuilt) {
+                    makeDBRTable(allSongData, currentMark, null, currentSongTimes);
+                    tableBuilt = true;
+                }
+                // 初回描画後も含め、常にDOM絞り込みを適用
+                applyFiltersByDOM();
+            }
+
+            function applyFiltersByDOM() {
+                const [lvMin, lvMax] = levelSlider.noUiSlider.get().map(v => parseFloat(v.replace("☆", "")));
+                const splvSlider = document.getElementById("splv-range");
+                const [splvMin, splvMax] = splvSlider.noUiSlider.get().map(v => parseInt(v));
+                const checkedRecommend = new Set(
+                    Array.from(document.querySelectorAll(".recommend-filter:checked")).map(el => el.value)
+                );
+                const hideAcDeleted = document.getElementById("hide-acdeleted").checked;
+                const infOnly = document.getElementById("filter-inf-only").checked;
+                const uncheckedPacks = new Set(getUncheckedPacks());
+
+                const sectionCounts = {};
+                const rows = document.querySelectorAll("#table_int tr.tr_normal, #table_int tr.tr_proposed");
+
+                rows.forEach(tr => {
+                    const level    = parseFloat(tr.dataset.level);
+                    const splv     = parseInt(tr.dataset.splv);
+                    const recommend = tr.dataset.recommend ?? "";
+                    const inf      = tr.dataset.inf === "1";
+                    const infpack  = tr.dataset.infpack || "";
+                    const acdelete = tr.dataset.acdelete === "1";
+                    const sectionKey = tr.dataset.sectionKey;
+
+                    if (hideAcDeleted && acdelete) { tr.style.display = "none"; return; }
+                    if (infOnly && !inf) { tr.style.display = "none"; return; }
+                    if (infOnly && !packFilterAllowsFast(infpack, uncheckedPacks)) { tr.style.display = "none"; return; }
+
+                    const levelOk     = isNaN(level) || (level >= lvMin && level <= lvMax);
+                    const splvOk      = isNaN(splv)  || (splv  >= splvMin && splv  <= splvMax);
+                    const recommendOk = checkedRecommend.has(recommend);
+
+                    const visible = levelOk && splvOk && recommendOk;
+                    tr.style.display = visible ? "" : "none";
+
+                    if (!sectionCounts[sectionKey]) sectionCounts[sectionKey] = 0;
+                    if (visible) sectionCounts[sectionKey]++;
+                });
+
+                // セクション行の表示更新
+                document.querySelectorAll("#table_int tr.tr_separate").forEach(tr => {
+                    const key = tr.dataset.sectionKey;
+                    const count = sectionCounts[key] || 0;
+                    tr.style.display = count > 0 ? "" : "none";
+                    // (N譜面) カウント更新
+                    const b = tr.querySelector("b");
+                    if (b) b.textContent = b.textContent.replace(/\(\d+譜面\)/, `(${count}譜面)`);
+                });
             }
 
             function calculateGaugeIncrease(x) {
@@ -450,7 +573,7 @@
                         density = (pureNotes / seconds).toFixed(2) + "notes/s";
                     }
 
-                    let row = `<tr class='${rowClass}'${seconds ? ` data-playtime="${seconds}"` : ''}${isProposed ? ` data-proposed="true"` : ''}>
+                    let row = `<tr class='${rowClass}'${seconds ? ` data-playtime="${seconds}"` : ''}${isProposed ? ` data-proposed="true"` : ''} data-level='${data.level || ""}' data-splv='${data.actualSplv === "新規提案" ? "" : (data.actualSplv || "")}' data-recommend='${data.recommend ?? ""}' data-inf='${data.inf ? "1" : "0"}' data-infpack='${data.infpack || ""}' data-acdelete='${data.acdelete ? "1" : "0"}' data-section-key='${displayLevel}'>
                     <td class='col-level'>${displayLevel}</td>
                     <td class='col-recommend'>${data.recommend}</td>
                     <td class='col-ver'>${data.ver}</td>
@@ -549,7 +672,7 @@
                         return a.isDeleted - b.isDeleted;
                     })
                     .forEach(section => {
-                        htmlContent += `<tr class='tr_separate'><td colspan='16' align='center'><b>${section.displayLevel} (${section.count}譜面)</b></td></tr>`;
+                        htmlContent += `<tr class='tr_separate' data-section-key='${section.displayLevel}'><td colspan='16' align='center'><b>${section.displayLevel} (${section.count}譜面)</b></td></tr>`;
                         htmlContent += section.rows.map(r => r.html).join("");
                     });
 
@@ -557,6 +680,279 @@
 
                 window.dispatchEvent(new CustomEvent('dbrTableRedrawn'));
             }
+
+            // ===== パックフィルター共通処理 =====
+
+            // パック定義（プレフィックス → 表示名）
+            const PACK_GROUPS = [
+                { prefix: "BIT",  label: "BIT解禁",         hasVol: false },
+                { prefix: "DJP",  label: "DJPOINT解禁",     hasVol: false },
+                { prefix: "PK",   label: "INFINITAS",       hasVol: true  },
+                { prefix: "ST",   label: "スタートアップ",   hasVol: true  },
+                { prefix: "pm",   label: "pop'n",           hasVol: true  },
+                { prefix: "jb",   label: "jubeat",          hasVol: true  },
+                { prefix: "SV",   label: "SDVX",            hasVol: true  },
+                { prefix: "GD",   label: "GITADORA",        hasVol: true  },
+                { prefix: "BPL",  label: "BPL",             hasVol: true  },
+                { prefix: "TH",   label: "東方",            hasVol: true  },
+                { prefix: "UM",   label: "ULTIMATE MOBILE", hasVol: true  }
+            ];
+
+            // 全曲データからパックプレフィックスごとのvol番号セットを収集する
+            function collectPackVols() {
+                const volMap = {};
+                PACK_GROUPS.forEach(g => { volMap[g.prefix] = new Set(); });
+                allSongData.forEach(song => {
+                    if (!song.infpack) return;
+                    PACK_GROUPS.forEach(g => {
+                        if (!g.hasVol) return;
+                        const re = new RegExp(g.prefix + "(\\d+)", "g");
+                        let m;
+                        while ((m = re.exec(song.infpack)) !== null) {
+                            volMap[g.prefix].add(parseInt(m[1]));
+                        }
+                    });
+                });
+                return volMap;
+            }
+
+            // パックフィルターのlocalStorage保存（全ページ共有）
+            function savePackFilterSettings() {
+                const unchecked = getUncheckedPacks();
+                if (unchecked.length === 0) {
+                    localStorage.removeItem("dbr_filter_packs_unchecked");
+                } else {
+                    localStorage.setItem("dbr_filter_packs_unchecked", JSON.stringify(unchecked));
+                }
+            }
+
+            // チェックが外れているパック識別子の配列を返す
+            function getUncheckedPacks() {
+                return Array.from(document.querySelectorAll(".pack-vol-cb:not(:checked), .pack-noVol-cb:not(:checked)"))
+                    .map(el => el.dataset.pack);
+            }
+
+            // パックフィルターUI初期化
+            function initPackFilter() {
+                const volMap = collectPackVols();
+                const savedUnchecked = JSON.parse(localStorage.getItem("dbr_filter_packs_unchecked") || "[]");
+                const container = document.getElementById("pack-filter-container");
+                container.innerHTML = "";
+
+                // スタイル（初回のみ）
+                if (!document.getElementById("pack-filter-style")) {
+                    const style = document.createElement("style");
+                    style.id = "pack-filter-style";
+                    style.textContent = `
+                        .pack-filter-wrap { display: flex; flex-wrap: wrap; gap: 0.3em 0.5em; align-items: flex-start; }
+                        .pack-group { display: inline-block; vertical-align: top; position: relative; }
+                        .pack-group-toggle { cursor: pointer; user-select: none; background: none; border: none; padding: 0; font-size: 1em; display: inline-flex; align-items: center; gap: 0.2em; white-space: nowrap; }
+                        .pack-toggle-arrow { vertical-align: middle; line-height: 1; font-size: 0.75em; }
+                        .pack-vol-list { display: none; position: absolute; top: 100%; left: 0; z-index: 999; margin-top: 0.2em; padding: 0.3em 0.5em; background: #fff; border: 1px solid #bbb; border-radius: 3px; box-shadow: 1px 2px 6px rgba(0,0,0,0.12); display: none; grid-template-columns: repeat(3, auto); gap: 0.05em 0.6em; }
+                        .pack-vol-list.open { display: grid; }
+                        .pack-vol-list label { display: flex; align-items: center; gap: 0.3em; cursor: pointer; padding: 0.1em 0.2em; white-space: nowrap; }
+                        .pack-vol-list label:hover { background: #f0f0f0; }
+                    `;
+                    document.head.appendChild(style);
+                }
+
+                const wrap = document.createElement("div");
+                wrap.className = "pack-filter-wrap";
+
+                PACK_GROUPS.forEach(g => {
+                    const groupDiv = document.createElement("div");
+                    groupDiv.className = "pack-group";
+
+                    if (!g.hasVol) {
+                        // vol無し（BIT, DJP）: チェックボックス1つだけ
+                        const packId = g.prefix;
+                        const cb = document.createElement("input");
+                        cb.type = "checkbox";
+                        cb.className = "pack-noVol-cb";
+                        cb.dataset.pack = packId;
+                        cb.checked = !savedUnchecked.includes(packId);
+                        cb.addEventListener("change", () => { savePackFilterSettings(); updateTable(); });
+
+                        const lbl = document.createElement("label");
+                        lbl.style.cssText = "cursor:pointer; display:inline-flex; align-items:center; gap:0.2em;";
+                        lbl.appendChild(cb);
+                        lbl.appendChild(document.createTextNode(" " + g.label));
+                        groupDiv.appendChild(lbl);
+                    } else {
+                        const vols = Array.from(volMap[g.prefix]).sort((a, b) => a - b);
+                        if (vols.length === 0) return; // 該当曲なし → 表示しない
+
+                        // 親チェックボックス（グループ全体の一括チェック用）
+                        const parentCb = document.createElement("input");
+                        parentCb.type = "checkbox";
+                        parentCb.className = "pack-group-cb";
+                        const allChecked = vols.every(v => !savedUnchecked.includes(`${g.prefix}${v}`));
+                        parentCb.checked = allChecked;
+                        parentCb.indeterminate = !allChecked && vols.some(v => !savedUnchecked.includes(`${g.prefix}${v}`));
+
+                        // 矢印テキスト
+                        const arrowSpan = document.createElement("span");
+                        arrowSpan.className = "pack-toggle-arrow";
+                        arrowSpan.textContent = "▶";
+
+                        // トグルボタン
+                        const toggleBtn = document.createElement("button");
+                        toggleBtn.type = "button";
+                        toggleBtn.className = "pack-group-toggle";
+                        toggleBtn.appendChild(parentCb);
+                        toggleBtn.appendChild(document.createTextNode(" " + g.label + " "));
+                        toggleBtn.appendChild(arrowSpan);
+
+                        // vol一覧（インライン展開）
+                        const volList = document.createElement("div");
+                        volList.className = "pack-vol-list";
+
+                        vols.forEach(v => {
+                            const packId = `${g.prefix}${v}`;
+                            const volCb = document.createElement("input");
+                            volCb.type = "checkbox";
+                            volCb.className = "pack-vol-cb";
+                            volCb.dataset.pack = packId;
+                            volCb.checked = !savedUnchecked.includes(packId);
+                            volCb.addEventListener("change", () => {
+                                // 親の状態を更新
+                                const siblings = volList.querySelectorAll(".pack-vol-cb");
+                                const checkedCount = Array.from(siblings).filter(c => c.checked).length;
+                                parentCb.checked = checkedCount === siblings.length;
+                                parentCb.indeterminate = checkedCount > 0 && checkedCount < siblings.length;
+                                savePackFilterSettings();
+                                updateTable();
+                            });
+
+                            const volLbl = document.createElement("label");
+                            volLbl.appendChild(volCb);
+                            volLbl.appendChild(document.createTextNode(` vol.${v}`));
+                            volList.appendChild(volLbl);
+                        });
+
+                        // 親チェックボックスのclick（一括チェック/解除）
+                        parentCb.addEventListener("click", (e) => {
+                            e.stopPropagation();
+                            const checked = parentCb.checked;
+                            volList.querySelectorAll(".pack-vol-cb").forEach(c => { c.checked = checked; });
+                            parentCb.indeterminate = false;
+                            savePackFilterSettings();
+                            updateTable();
+                        });
+
+                        // トグルボタンのclick（他を閉じてから自分を開閉）
+                        toggleBtn.addEventListener("click", (e) => {
+                            if (e.target === parentCb) return;
+                            const isOpen = volList.classList.contains("open");
+                            // 他の全ドロップダウンを閉じる
+                            document.querySelectorAll(".pack-vol-list.open").forEach(d => {
+                                if (d !== volList) {
+                                    d.classList.remove("open");
+                                    const arr = d.closest(".pack-group").querySelector(".pack-toggle-arrow");
+                                    if (arr) arr.textContent = "▶";
+                                }
+                            });
+                            if (!isOpen) {
+                                volList.classList.add("open");
+                                arrowSpan.textContent = "▼";
+                            } else {
+                                volList.classList.remove("open");
+                                arrowSpan.textContent = "▶";
+                            }
+                        });
+
+                        groupDiv.appendChild(toggleBtn);
+                        groupDiv.appendChild(volList);
+                    }
+
+                    wrap.appendChild(groupDiv);
+                });
+
+                container.appendChild(wrap);
+
+                // ページ外クリックで全ドロップダウンを閉じる（1回だけ登録）
+                if (!document.getElementById("pack-outside-click-handler")) {
+                    const marker = document.createElement("span");
+                    marker.id = "pack-outside-click-handler";
+                    document.head.appendChild(marker);
+                    document.addEventListener("click", (e) => {
+                        if (!e.target.closest(".pack-group")) {
+                            document.querySelectorAll(".pack-vol-list.open").forEach(d => {
+                                d.classList.remove("open");
+                                const arr = d.closest(".pack-group").querySelector(".pack-toggle-arrow");
+                                if (arr) arr.textContent = "▶";
+                            });
+                        }
+                    });
+                }
+            }
+
+            // パックフィルターをリセット（全チェック）
+            function resetPackFilter() {
+                document.querySelectorAll(".pack-vol-cb, .pack-noVol-cb").forEach(cb => { cb.checked = true; });
+                document.querySelectorAll(".pack-group-cb").forEach(cb => { cb.checked = true; cb.indeterminate = false; });
+                document.querySelectorAll(".pack-vol-list.open").forEach(d => {
+                    d.classList.remove("open");
+                    const arrow = d.closest(".pack-group").querySelector(".pack-toggle-arrow");
+                    if (arrow) arrow.textContent = "▶";
+                });
+                localStorage.removeItem("dbr_filter_packs_unchecked");
+            }
+
+            // applyFiltersByDOM用の高速版（Setを受け取る）
+            function packFilterAllowsFast(infpack, uncheckedSet) {
+                if (uncheckedSet.size === 0) return true;
+                if (!infpack) return true;
+
+                const contained = [];
+                PACK_GROUPS.forEach(g => {
+                    if (!g.hasVol) {
+                        if (infpack.includes(g.prefix)) contained.push(g.prefix);
+                    } else {
+                        const re = new RegExp(g.prefix + "(\\d+)", "g");
+                        let m;
+                        while ((m = re.exec(infpack)) !== null) {
+                            contained.push(`${g.prefix}${m[1]}`);
+                        }
+                    }
+                });
+
+                if (contained.length === 0) return true;
+                return contained.some(p => !uncheckedSet.has(p));
+            }
+
+            // 指定infpackがパックフィルターを通過するか判定
+            function packFilterAllows(infpack) {
+                const unchecked = getUncheckedPacks();
+                if (unchecked.length === 0) return true; // 全チェック → フィルターなし
+
+                if (!infpack) {
+                    // infpackなし（BIT/DJP以外の無料曲扱い）→ 通過
+                    return true;
+                }
+
+                // infpackに含まれるパック識別子を全て列挙
+                const contained = [];
+
+                PACK_GROUPS.forEach(g => {
+                    if (!g.hasVol) {
+                        if (infpack.includes(g.prefix)) contained.push(g.prefix);
+                    } else {
+                        const re = new RegExp(g.prefix + "(\\d+)", "g");
+                        let m;
+                        while ((m = re.exec(infpack)) !== null) {
+                            contained.push(`${g.prefix}${m[1]}`);
+                        }
+                    }
+                });
+
+                if (contained.length === 0) return true; // 判定不能 → 通過
+
+                // 含まれるパックのうち、少なくとも1つがチェックされていれば表示
+                return contained.some(p => !unchecked.includes(p));
+            }
+
+            // ===== パックフィルター共通処理ここまで =====
 
             // 解禁方法をフォーマットする関数
             function formatUnlockMethod(infpack) {

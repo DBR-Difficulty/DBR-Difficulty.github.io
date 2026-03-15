@@ -61,6 +61,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const clonedTable = table.cloneNode(true);
 
+            // 元テーブルで非表示の行をクローンから除去（後ろから削除してインデックスずれを防止）
+            for (let i = table.rows.length - 1; i >= 0; i--) {
+                if (table.rows[i].style.display === "none") {
+                    clonedTable.rows[i].remove();
+                }
+            }
+
             // --- header行取得 & 列数記録（これを基準に揃える） ---
             const headerRow = clonedTable.querySelector("tr");
             const headerColCount = headerRow.cells.length;
