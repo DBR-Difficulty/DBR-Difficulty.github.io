@@ -74,6 +74,18 @@
                     </div>
                 </div>
                 <div class="filter-row">
+                    <div class="filter-label">おすすめ度:</div>
+                    <div class="slider-container">
+                        <div class="recommend-filter-group">
+                            <label><input type="checkbox" class="recommend-filter" value="☆" checked>☆</label>
+                            <label><input type="checkbox" class="recommend-filter" value="◎" checked>◎</label>
+                            <label><input type="checkbox" class="recommend-filter" value="○" checked>○</label>
+                            <label><input type="checkbox" class="recommend-filter" value="△">△</label>
+                            <label><input type="checkbox" class="recommend-filter" value="">空</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="filter-row">
                     <label><input type="checkbox" id="hide-acdeleted"> AC削除・未収録曲を除く</label>
                     <button id="reset-filters" style="padding: 0.5em 1em;">フィルターをリセット</button>
                 </div>
@@ -111,6 +123,9 @@
                 levelMin: 10.20, levelMax: 13.01,
                 splvMin: 1, splvMax: 12
             };
+
+            // おすすめ度フィルターのデフォルト値（○以上）
+            const RECOMMEND_DEFAULTS = ["☆", "◎", "○"];
 
             // ドキュメントが読み込まれたときに実行される関数
             $(document).ready(function() {
@@ -198,16 +213,29 @@
                 splvMin === SLIDER_DEFAULTS.splvMin ? localStorage.removeItem("dbr_filter_splvMin") : localStorage.setItem("dbr_filter_splvMin", splvMin);
                 splvMax === SLIDER_DEFAULTS.splvMax ? localStorage.removeItem("dbr_filter_splvMax") : localStorage.setItem("dbr_filter_splvMax", splvMax);
                 localStorage.setItem("dbr_filter_hideAcDeleted", document.getElementById("hide-acdeleted").checked);
+
+                // おすすめ度フィルターの保存（デフォルトと異なる場合のみ保存、対応する通常ページと共有するキーを使用）
+                // _experimental を除いたページ名をキーとし、通常ページ（○○.html）と設定を共有する
+                const pageKey = location.pathname.split("/").pop().replace("_experimental.html", "").replace(".html", "");
+                const checkedValues = Array.from(document.querySelectorAll(".recommend-filter:checked")).map(el => el.value);
+                const isDefault = RECOMMEND_DEFAULTS.length === checkedValues.length &&
+                    RECOMMEND_DEFAULTS.every(v => checkedValues.includes(v));
+                isDefault ? localStorage.removeItem(`dbr_filter_recommend_${pageKey}`) : localStorage.setItem(`dbr_filter_recommend_${pageKey}`, JSON.stringify(checkedValues));
             }
 
             // フィルター設定をlocalStorageから読み込む関数（値が存在しない場合はデフォルト値を返す）
             function loadFilterSettings() {
+                // おすすめ度は対応する通常ページと共有するキーで読み込む
+                // _experimental を除いたページ名をキーとし、通常ページ（○○.html）と設定を共有する
+                const pageKey = location.pathname.split("/").pop().replace("_experimental.html", "").replace(".html", "");
+                const savedRecommend = localStorage.getItem(`dbr_filter_recommend_${pageKey}`);
                 return {
                     levelMin: parseFloat(localStorage.getItem("dbr_filter_levelMin") ?? SLIDER_DEFAULTS.levelMin),
                     levelMax: parseFloat(localStorage.getItem("dbr_filter_levelMax") ?? SLIDER_DEFAULTS.levelMax),
                     splvMin: parseInt(localStorage.getItem("dbr_filter_splvMin") ?? SLIDER_DEFAULTS.splvMin),
                     splvMax: parseInt(localStorage.getItem("dbr_filter_splvMax") ?? SLIDER_DEFAULTS.splvMax),
-                    hideAcDeleted: localStorage.getItem("dbr_filter_hideAcDeleted") === "true"
+                    hideAcDeleted: localStorage.getItem("dbr_filter_hideAcDeleted") === "true",
+                    recommend: savedRecommend ? JSON.parse(savedRecommend) : RECOMMEND_DEFAULTS
                 };
             }
 
@@ -250,6 +278,11 @@
                 // 保存済みのチェックボックス状態を復元する
                 document.getElementById("hide-acdeleted").checked = saved.hideAcDeleted;
 
+                // おすすめ度チェックボックスの状態を復元する
+                document.querySelectorAll(".recommend-filter").forEach(el => {
+                    el.checked = saved.recommend.includes(el.value);
+                });
+
                 // スライダー → input
                 levelSlider.noUiSlider.on("update", (values) => {
                     levelMinInput.value = parseFloat(values[0].replace("☆", "")).toFixed(2);
@@ -291,6 +324,11 @@
                 // チェックボックス変更時に再描画・保存
                 document.getElementById("hide-acdeleted").addEventListener("change", () => { saveFilterSettings(); updateTable(); });
 
+                // おすすめ度チェックボックス変更時に再描画・保存
+                document.querySelectorAll(".recommend-filter").forEach(el => {
+                    el.addEventListener("change", () => { saveFilterSettings(); updateTable(); });
+                });
+
                 // リセットボタン
                 document.getElementById("reset-filters").onclick = () => {
                     levelSlider.noUiSlider.set([SLIDER_DEFAULTS.levelMin, SLIDER_DEFAULTS.levelMax]);
@@ -300,34 +338,66 @@
                     splvMinInput.value = SLIDER_DEFAULTS.splvMin;
                     splvMaxInput.value = SLIDER_DEFAULTS.splvMax;
                     document.getElementById("hide-acdeleted").checked = false;
+                    document.querySelectorAll(".recommend-filter").forEach(el => {
+                        el.checked = RECOMMEND_DEFAULTS.includes(el.value);
+                    });
                     saveFilterSettings();
                     updateTable();
                 };
             }
 
-            function applyFilters(songList) {
-                const [lvMin, lvMax] = levelSlider.noUiSlider.get().map(v => parseFloat(v.replace("☆", "")));
-                const hideAcDeleted = document.getElementById("hide-acdeleted").checked;
-
-                const splvSlider = document.getElementById("splv-range");
-                const [splvMin, splvMax] = splvSlider.noUiSlider.get().map(v => parseInt(v));
-
-                return songList.filter(song => {
-                    const acdeleted = !!song.acdelete;
-                    if (hideAcDeleted && acdeleted) return false;
-
-                    const level = parseFloat(song.level);
-                    const levelOk = isNaN(level) ? true : (level >= lvMin && level <= lvMax);
-                    const splv = parseInt(song.splv);
-                    const splvOk = isNaN(splv) ? true : (splv >= splvMin && splv <= splvMax);
-
-                    return levelOk && splvOk;
-                });
-            }
+            let tableBuilt = false;
 
             function updateTable() {
-                const filteredData = applyFilters(allSongData);
-                makeDBRTable(filteredData, currentMark, null, currentSongTimes);
+                if (!tableBuilt) {
+                    makeDBRTable(allSongData, currentMark, null, currentSongTimes);
+                    tableBuilt = true;
+                }
+                // 初回描画後も含め、常にDOM絞り込みを適用
+                applyFiltersByDOM();
+            }
+
+            function applyFiltersByDOM() {
+                const [lvMin, lvMax] = levelSlider.noUiSlider.get().map(v => parseFloat(v.replace("☆", "")));
+                const splvSlider = document.getElementById("splv-range");
+                const [splvMin, splvMax] = splvSlider.noUiSlider.get().map(v => parseInt(v));
+                const checkedRecommend = new Set(
+                    Array.from(document.querySelectorAll(".recommend-filter:checked")).map(el => el.value)
+                );
+                const hideAcDeleted = document.getElementById("hide-acdeleted").checked;
+
+                const sectionCounts = {};
+                const rows = document.querySelectorAll("#table_int tr.tr_normal");
+
+                rows.forEach(tr => {
+                    const level    = parseFloat(tr.dataset.level);
+                    const splv     = parseInt(tr.dataset.splv);
+                    const recommend = tr.dataset.recommend ?? "";
+                    const acdelete = tr.dataset.acdelete === "1";
+                    const sectionKey = tr.dataset.sectionKey;
+
+                    if (hideAcDeleted && acdelete) { tr.style.display = "none"; return; }
+
+                    const levelOk     = isNaN(level) || (level >= lvMin && level <= lvMax);
+                    const splvOk      = isNaN(splv)  || (splv  >= splvMin && splv  <= splvMax);
+                    const recommendOk = checkedRecommend.has(recommend);
+
+                    const visible = levelOk && splvOk && recommendOk;
+                    tr.style.display = visible ? "" : "none";
+
+                    if (!sectionCounts[sectionKey]) sectionCounts[sectionKey] = 0;
+                    if (visible) sectionCounts[sectionKey]++;
+                });
+
+                // セクション行の表示更新
+                document.querySelectorAll("#table_int tr.tr_separate").forEach(tr => {
+                    const key = tr.dataset.sectionKey;
+                    const count = sectionCounts[key] || 0;
+                    tr.style.display = count > 0 ? "" : "none";
+                    // (N譜面) カウント更新
+                    const b = tr.querySelector("b");
+                    if (b) b.textContent = b.textContent.replace(/\(\d+譜面\)/, `(${count}譜面)`);
+                });
             }
 
             function calculateGaugeIncrease(x) {
@@ -395,7 +465,7 @@
                         density = (pureNotes / seconds).toFixed(2) + "notes/s";
                     }
 
-                    let row = `<tr class='tr_normal'${seconds ? ` data-playtime="${seconds}"` : ''}>
+                    let row = `<tr class='tr_normal'${seconds ? ` data-playtime="${seconds}"` : ''} data-level='${data.level || ""}' data-splv='${data.splv || ""}' data-recommend='${data.recommend ?? ""}' data-acdelete='${data.acdelete ? "1" : "0"}' data-section-key='${displayLevel}'>
                     <td class='col-level'>${displayLevel}</td>
                     <td class='col-recommend'>${data.recommend}</td>
                     <td class='col-ver'>${data.ver}</td>
@@ -483,7 +553,7 @@
                         return a.isDeleted - b.isDeleted;
                     })
                     .forEach(section => {
-                        htmlContent += `<tr class='tr_separate'><td colspan='13' align='center'><b>${section.displayLevel} (${section.count}譜面)</b></td></tr>`;
+                        htmlContent += `<tr class='tr_separate' data-section-key='${section.displayLevel}'><td colspan='13' align='center'><b>${section.displayLevel} (${section.count}譜面)</b></td></tr>`;
                         htmlContent += section.rows.join("");
                     });
 

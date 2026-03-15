@@ -297,8 +297,8 @@ body.diff {
 
 /* 発狂 */
 .col-insane {
-  min-width: 7ch;
-  max-width: 7ch;
+  min-width: 6ch;
+  max-width: 6ch;
   width: 0.1%;
   text-align: left;
 }
@@ -483,6 +483,13 @@ button:disabled {
     margin-bottom: 0;
 }
 
+.pack-filter-row {
+    display: flex;
+    gap: 1.5em;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
 .filter-label {
     min-width: 9.375rem;
     font-weight: bold;
@@ -521,6 +528,21 @@ button:disabled {
 
 .raw-reset-row {
     text-align: center;
+}
+
+.recommend-filter-group label {
+    font-size: 1.2rem;
+}
+.filter-row label {
+    gap: 0.15em;
+}
+
+/* おすすめ度チェックボックス行の均等配置 */
+.filter-row .recommend-filter-group {
+    display: flex;
+    justify-content: space-between;
+    width: calc(100% + 34px);
+    margin-left: -17px;
 }
 
 @media (max-width: 480px) {
