@@ -378,7 +378,7 @@
                 rows.forEach(tr => {
                     const level = parseFloat(tr.dataset.level);
                     const splv  = parseInt(tr.dataset.splv);
-                    const recommend = tr.dataset.recommend ?? "";
+                    const recommend = (tr.dataset.recommend ?? "").replace(/[\u0000-\u001F\u007F-\u009F\u200B-\u200F\u202A-\u202E\uFEFF]/g, "");
                     const infpack   = tr.dataset.infpack || "";
                     const sectionKey = tr.dataset.sectionKey;
 
@@ -472,7 +472,7 @@
                         density = (pureNotes / seconds).toFixed(2) + "notes/s";
                     }
 
-                    let row = `<tr class='tr_normal'${seconds ? ` data-playtime="${seconds}"` : ''} data-level='${data.level}' data-splv='${data.splv}' data-recommend='${data.recommend ?? ""}' data-infpack='${data.infpack || ""}' data-section-key='${displayLevel}'>
+                    let row = `<tr class='tr_normal'${seconds ? ` data-playtime="${seconds}"` : ''} data-level='${data.level}' data-splv='${data.splv}' data-recommend='${(data.recommend ?? "").replace(/[\u0000-\u001F\u007F-\u009F\u200B-\u200F\u202A-\u202E\uFEFF]/g, "")}' data-infpack='${data.infpack || ""}' data-section-key='${displayLevel}'>
                     <td class='col-level'>${displayLevel}</td>
                     <td class='col-recommend'>${data.recommend}</td>
                     <td class='col-ver'>${data.ver}</td>
