@@ -364,7 +364,7 @@
                 rows.forEach(tr => {
                     const level = parseFloat(tr.dataset.level);
                     const splv  = parseInt(tr.dataset.splv);
-                    const recommend = tr.dataset.recommend ?? "";
+                    const recommend = (tr.dataset.recommend ?? "").replace(/[\u0000-\u001F\u007F-\u009F\u200B-\u200F\u202A-\u202E\uFEFF]/g, "");
                     const infpack   = tr.dataset.infpack || "";
                     const sectionKey = tr.dataset.sectionKey;
 
@@ -458,7 +458,7 @@
                         density = (pureNotes / seconds).toFixed(2) + "notes/s";
                     }
 
-                    let row = `<tr class='tr_normal'${seconds ? ` data-playtime="${seconds}"` : ''} data-level='${data.level}' data-splv='${data.splv}' data-recommend='${data.recommend ?? ""}' data-infpack='${data.infpack || ""}' data-section-key='${displayLevel}'>
+                    let row = `<tr class='tr_normal'${seconds ? ` data-playtime="${seconds}"` : ''} data-level='${data.level}' data-splv='${data.splv}' data-recommend='${(data.recommend ?? "").replace(/[\u0000-\u001F\u007F-\u009F\u200B-\u200F\u202A-\u202E\uFEFF]/g, "")}' data-infpack='${data.infpack || ""}' data-section-key='${displayLevel}'>
                     <td class='col-level'>${displayLevel}</td>
                     <td class='col-recommend'>${data.recommend}</td>
                     <td class='col-ver'>${data.ver}</td>
@@ -609,6 +609,7 @@
                         .pack-filter-wrap { display: flex; flex-wrap: wrap; gap: 0.3em 0.5em; align-items: flex-start; }
                         .pack-group { display: inline-block; vertical-align: top; position: relative; }
                         .pack-group-toggle { cursor: pointer; user-select: none; background: none; border: none; padding: 0; font-size: 1em; display: inline-flex; align-items: center; gap: 0.2em; white-space: nowrap; }
+                        .pack-toggle-arrow { vertical-align: middle; line-height: 1; font-size: 0.75em; }
                         .pack-vol-list { display: none; position: absolute; top: 100%; left: 0; z-index: 999; margin-top: 0.2em; padding: 0.3em 0.5em; background: #fff; border: 1px solid #bbb; border-radius: 3px; box-shadow: 1px 2px 6px rgba(0,0,0,0.12); display: none; grid-template-columns: repeat(3, auto); gap: 0.05em 0.6em; }
                         .pack-vol-list.open { display: grid; }
                         .pack-vol-list label { display: flex; align-items: center; gap: 0.3em; cursor: pointer; padding: 0.1em 0.2em; white-space: nowrap; }

@@ -414,7 +414,7 @@
                 rows.forEach(tr => {
                     const level    = parseFloat(tr.dataset.level);
                     const splv     = parseInt(tr.dataset.splv);
-                    const recommend = tr.dataset.recommend ?? "";
+                    const recommend = (tr.dataset.recommend ?? "").replace(/[\u0000-\u001F\u007F-\u009F\u200B-\u200F\u202A-\u202E\uFEFF]/g, "");
                     const inf      = tr.dataset.inf === "1";
                     const infpack  = tr.dataset.infpack || "";
                     const acdelete = tr.dataset.acdelete === "1";
@@ -511,7 +511,7 @@
                         density = (pureNotes / seconds).toFixed(2) + "notes/s";
                     }
 
-                    let row = `<tr class='tr_normal'${seconds ? ` data-playtime="${seconds}"` : ''} data-level='${data.level || ""}' data-splv='${data.splv || ""}' data-recommend='${data.recommend ?? ""}' data-inf='${data.inf ? "1" : "0"}' data-infpack='${data.infpack || ""}' data-acdelete='${data.acdelete ? "1" : "0"}' data-section-key='${displayLevel}'>
+                    let row = `<tr class='tr_normal'${seconds ? ` data-playtime="${seconds}"` : ''} data-level='${data.level || ""}' data-splv='${data.splv || ""}' data-recommend='${(data.recommend ?? "").replace(/[\u0000-\u001F\u007F-\u009F\u200B-\u200F\u202A-\u202E\uFEFF]/g, "")}' data-inf='${data.inf ? "1" : "0"}' data-infpack='${data.infpack || ""}' data-acdelete='${data.acdelete ? "1" : "0"}' data-section-key='${displayLevel}'>
                     <td class='col-level'>${displayLevel}</td>
                     <td class='col-recommend'>${data.recommend}</td>
                     <td class='col-ver'>${data.ver}</td>
