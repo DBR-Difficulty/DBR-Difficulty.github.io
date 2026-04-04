@@ -65,7 +65,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M5CPZDQB"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
-
 <center>
   <span style="font-size: 3rem;"><strong>DBR</span></strong><br>
 </center>
@@ -106,10 +105,27 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 心より感謝申し上げます。</a><br><br>
 
 連絡用<br>
-Twitter: <a href="https://twitter.com/DBR_Difficulty" target="_blank">＠DBR_Difficulty</a><br><br>
+Twitter: <b><a href="https://twitter.com/DBR_Difficulty" target="_blank">＠DBR_Difficulty</a></b><br>
+Mail: <b><span id="mail-link"></span></b> ※<a href="donate.html">ご支援</a>はこちらへ<br><br>
 
 <div style="color: #ffffff; text-decoration: none;"><a href="dbralle_insane.html" style="color: #ffffff; text-decoration: none;">？</a> … ？<br>
-</body>
+<script>
+  function rot13(str) {
+    return str.replace(/[a-zA-Z]/g, c =>
+      String.fromCharCode(
+        c.charCodeAt(0) + (c.toLowerCase() < 'n' ? 13 : -13)
+      )
+    );
+  }
 
+  const parts = ["qoeq", "vssv", "phygl@", "tznv", "y.pbz"];
+  const email = rot13(parts.join(""));
+
+  const link = document.createElement("a");
+  link.href = "mailto:" + email;
+  link.textContent = email;
+  document.getElementById("mail-link").appendChild(link);
+</script>
+</body>
 </html>
 

@@ -1,0 +1,93 @@
+<!DOCTYPE HTML>
+<html lang="ja">
+<head>
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-M5CPZDQB');</script>
+  <!-- End Google Tag Manager -->
+
+  <meta charset="UTF-8">
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png" />
+  <meta name="msapplication-TileImage" content="/mstile-150x150.png" />
+  <link rel="manifest" href="/manifest.json" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>支援について</title>
+  <style>
+    body {
+      font-family: "Noto Sans JP", sans-serif;
+      font-size: 1rem;
+      line-height: 1.6;
+      color: #333;
+      background-color: #fff;
+      padding: 1.25rem;
+      max-width: 100%;
+    }
+
+    .section-box {
+      background: #fafafa;
+      border: 1px solid #ddd;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin: 1.5rem 0;
+    }
+  </style>
+</head>
+<body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M5CPZDQB"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <center>
+    <strong><span style="font-size: 3rem;">支援について</span></strong><br>
+    <a href="index.html">TOPに戻る</a>
+  </center>
+
+  <div class="section-box">
+    <p style="font-size: 2.4rem; text-align: center;"><b><a style="text-decoration:none;" href="dbralle_misatei.html">そのお金でDBRをやってください</a></b></p>
+  </div>
+
+  <div class="section-box">
+    <p>DBRをやりまくっても生活に余裕があり、かつご支援いただける方は <span id="mail-link"></span> 宛に以下いずれかのコードをお送りください（その他は受け取れない可能性があります）</p>
+    <ul>
+      <li>Amazonギフトカード（生活に使います）</li>
+      <li>BitCash（PASELIにします）</li>
+      <li>PASELIカード（見つかるなら）</li>
+    </ul>
+    </div>
+
+  <div class="section-box">
+    <p><b>大変申し訳ありませんが、サイト上での名前の掲載や、支援者向けの機能追加等のリターンは一切行いません<br>
+    予めご了承ください</b><br>
+    ※機能追加に関しては支援等関係なく<a href="https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?gid=1133259776#gid=1133259776" target="_blank">修正依頼シート</a>や<a href="https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?gid=421687336#gid=421687336" target="_blank">その他シート</a>に書いてもらえれば検討します</p>    
+    <p>現状は管理者側の持ち出しが無いようにサイト（IR含）を作成しています<br>
+      カンパによる支払いの補填を目的としたものではなく、<b>支援の有無が直接サイトの存続に影響することは一切ありません</b><br>
+      （例外的にChrome Web Storeへのデベロッパー登録のみ支払いが発生し、<a href="dbr_table_extend.html">拡張機能のページ</a>に支援いただいた方の名前を掲載しています）</p>
+  </div>
+<script>
+  function rot13(str) {
+    return str.replace(/[a-zA-Z]/g, c =>
+      String.fromCharCode(
+        c.charCodeAt(0) + (c.toLowerCase() < 'n' ? 13 : -13)
+      )
+    );
+  }
+
+  const parts = ["qoeq", "vssv", "phygl@", "tznv", "y.pbz"];
+  const email = rot13(parts.join(""));
+
+  const link = document.createElement("a");
+  link.href = "mailto:" + email;
+  link.textContent = email;
+  document.getElementById("mail-link").appendChild(link);
+</script>
+</body>
+</html>
