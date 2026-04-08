@@ -1034,11 +1034,8 @@
             if (s.bp != null && s.bp !== -1) bp[`bp_${s.title}`] = String(s.bp);
             if (s.score != null && s.score !== -1) score[`score_${s.title}`] = String(s.score);
             if (s.textageKey) {
-              const cleanTitle = s.title.replace(/\s*\(.\)$/, "");
               const diffChar = s.difficulty || "";
-              const keyName = diffChar ? `${cleanTitle}(${diffChar})` : cleanTitle;
-              const keyVal = diffChar ? `${s.textageKey}(${diffChar})` : s.textageKey;
-              textageKeyObj[keyName] = keyVal;
+              textageKeyObj[s.title] = diffChar ? `${s.textageKey}(${diffChar})` : s.textageKey;
             }
           }
           const json = JSON.stringify({ lamp, bp, score, textageKey: textageKeyObj }, null, 2);
