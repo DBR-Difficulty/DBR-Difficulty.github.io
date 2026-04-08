@@ -1034,8 +1034,7 @@
             if (s.bp != null && s.bp !== -1) bp[`bp_${s.title}`] = String(s.bp);
             if (s.score != null && s.score !== -1) score[`score_${s.title}`] = String(s.score);
             if (s.textageKey) {
-              const diffChar = s.difficulty || "";
-              textageKeyObj[s.title] = diffChar ? `${s.textageKey}(${diffChar})` : s.textageKey;
+              textageKeyObj[s.title] = s.textageKey;
             }
           }
           const json = JSON.stringify({ lamp, bp, score, textageKey: textageKeyObj }, null, 2);
