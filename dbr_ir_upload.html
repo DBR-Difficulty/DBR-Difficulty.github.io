@@ -376,6 +376,11 @@
     </div>
 
     <div class="top-section-box">
+      <button id="downloadBtn" disabled>アップロード済みデータをJSONでダウンロード</button>
+      <p class="subtext" id="downloadStatus"></p>
+    </div>
+
+    <div class="top-section-box">
       <button id="deleteAllBtn" disabled>自分のプレーデータをすべて削除</button>
       <p class="subtext" id="deleteStatus"></p>
     </div>
@@ -485,6 +490,7 @@
 
       const buttonsToDisableDuringProcess = [
         loginBtn, logoutBtn, saveProfileBtn, uploadBtn,
+        document.getElementById("downloadBtn"),
         deleteBtn, deleteAccountBtn, displayNameInput, anonymousCheck, fileInput
       ];
 
@@ -597,6 +603,7 @@
           uploadBtn.disabled = false;
           deleteBtn.disabled = false;
           deleteAccountBtn.disabled = false;
+          document.getElementById("downloadBtn").disabled = false;
           displayNameInput.disabled = false;
           anonymousCheck.disabled = false;
           displayNameLabel.style.pointerEvents = "auto";
@@ -635,6 +642,7 @@
           uploadBtn.disabled = true;
           deleteBtn.disabled = true;
           deleteAccountBtn.disabled = true;
+          document.getElementById("downloadBtn").disabled = true;
           displayNameInput.disabled = true;
           anonymousCheck.disabled = true;
           displayNameLabel.style.pointerEvents = "none";
@@ -1009,6 +1017,42 @@
         } catch (e) {
           alert("アップロード中にエラーが発生しました。: " + e.message);
           console.error(e);
+        } finally {
+          setLoading(false);
+        }
+      });
+
+      document.getElementById("downloadBtn").addEventListener("click", async () => {
+        if (!currentUserUid) return alert("ログインしてください。");
+        setLoading(true, "データを取得しています。<br>しばらくお待ちください……");
+        try {
+          const existingScores = await getExistingScores(currentUserUid);
+          const lamp = {}, bp = {}, score = {}, textageKeyObj = {};
+          for (const s of existingScores) {
+            if (!s.title) continue;
+            if (s.lamp && s.lamp !== "NO PLAY") lamp[`lamp_${s.title}`] = s.lamp;
+            if (s.bp != null && s.bp !== -1) bp[`bp_${s.title}`] = String(s.bp);
+            if (s.score != null && s.score !== -1) score[`score_${s.title}`] = String(s.score);
+            if (s.textageKey) {
+              const cleanTitle = s.title.replace(/\s*\(.\)$/, "");
+              textageKeyObj[cleanTitle] = s.textageKey;
+            }
+          }
+          const json = JSON.stringify({ lamp, bp, score, textageKey: textageKeyObj }, null, 2);
+          const blob = new Blob([json], { type: "application/json" });
+          const file = new File([blob], "dbr_ir_backup.json", { type: "application/json" });
+          const ua = navigator.userAgent.toLowerCase();
+          const isiOS = /iphone|ipad|ipod/.test(ua);
+          if (isiOS && navigator.canShare && navigator.canShare({ files: [file] })) {
+            try { await navigator.share({ files: [file], title: "DBR IR バックアップ" }); return; } catch { return; }
+          }
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url; a.download = "dbr_ir_backup.json"; a.click();
+          URL.revokeObjectURL(url);
+          document.getElementById("downloadStatus").textContent = `${existingScores.length}件のデータをダウンロードしました。`;
+        } catch (e) {
+          alert("ダウンロード中にエラーが発生しました。: " + e.message);
         } finally {
           setLoading(false);
         }
