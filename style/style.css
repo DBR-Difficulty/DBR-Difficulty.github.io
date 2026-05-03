@@ -502,6 +502,12 @@ button:disabled {
     min-width: 15.25rem;
 }
 
+.search-container {
+    flex: 1;
+    max-width: 16.25rem;
+    min-width: 16.25rem;
+}
+
 .input-group {
     display: flex;
     align-items: center;
