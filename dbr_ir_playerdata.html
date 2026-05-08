@@ -148,6 +148,7 @@
     </div>
   </div>
   <script type="module">
+    import { escapeHtml } from "./html.js";
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
     import { getFirestore, collection, query, where, getDocs, getDoc, doc } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
@@ -327,37 +328,38 @@
         if (!lastSyncTime || (now - parseInt(lastSyncTime)) > DIFF_CHECK_INTERVAL) {
           try {
             // 最後に同期した時刻以降のデータのみ取得
+            const userSnap = await getDoc(doc(db, "users", userUid));
+            if (userSnap.exists()) {
+              const userData = userSnap.data();
+              displayName = userData.anonymous ? "匿名希望" : (userData.displayName || "未設定");
+            }
+
             const lastSync = parseInt(lastSyncTime) || 0;
             const diffQuery = query(
               collection(db, "scores"),
               where("userUid", "==", userUid),
               where("timestamp", ">", lastSync)
             );
-
             const diffSnap = await getDocs(diffQuery);
 
             if (diffSnap.size > 0) {
-              // 差分データをマージ
               const scoreMap = new Map(scores.map(s => [s.title, s]));
-
               diffSnap.forEach(doc => {
                 const data = doc.data();
                 if (data.title) {
                   scoreMap.set(data.title, data);
                 }
               });
-
               scores = Array.from(scoreMap.values());
-
-              // キャッシュを更新
-              localStorage.setItem(cacheKey, JSON.stringify({
-                displayName: displayName,
-                scores: scores
-              }));
-              localStorage.setItem(lastSyncKey, now.toString());
-            } else {
-              localStorage.setItem(lastSyncKey, now.toString());
             }
+
+            // キャッシュ更新
+            localStorage.setItem(cacheKey, JSON.stringify({
+              displayName: displayName,  // ← 最新の名前で保存
+              scores: scores
+            }));
+            localStorage.setItem(lastSyncKey, now.toString());
+
           } catch (error) {
             console.warn('差分取得エラー:', error);
           }
@@ -492,13 +494,13 @@
               const pct = (count / total * 100).toFixed(2);
               if (title.includes("ランプ")) {
                 return `<tr>
-                  <td style="text-align:left; border: 1px solid #ccc;" data-lamp="${key}"><b>${key}</b></td>
+                  <td style="text-align:left; border: 1px solid #ccc;" data-lamp="${escapeHtml(key)}"><b>${escapeHtml(key)}</b></td>
                   <td style="text-align:left; border: 1px solid #ccc;">${count} 譜面</td>
                   <td style="text-align:left; border: 1px solid #ccc;">${pct}%</td>
                 </tr>`;
               } else {
                 return `<tr>
-                  <td style="text-align:left; border: 1px solid #ccc;"><b>${key}</b></td>
+                  <td style="text-align:left; border: 1px solid #ccc;"><b>${escapeHtml(key)}</b></td>
                   <td style="text-align:left; border: 1px solid #ccc;">${count} 譜面</td>
                   <td style="text-align:left; border: 1px solid #ccc;">${pct}%</td>
                 </tr>`;
@@ -684,15 +686,15 @@
               data-cmp-score="${scoreResult}"
             >
               <td class="level-cell">${displayLevel}</td>
-              <td class="title-cell"><a href="${link}" target="_blank">${title}</a></td>
-              <td class="lamp-cell" data-lamp="${lamp}">${lamp}</td>
-              ${cmpActive ? `<td class="col-compare-lamp" data-mylamp="${myLampForTd}" style="text-align:center; font-size:0.88em; white-space:nowrap;">${lampCmpHtml}</td>` : ''}
-              <td>${bp}</td>
+              <td class="title-cell"><a href="${link}" target="_blank">${escapeHtml(title)}</a></td>
+              <td class="lamp-cell" data-lamp="${escapeHtml(lamp)}">${escapeHtml(lamp)}</td>
+              ${cmpActive ? `<td class="col-compare-lamp" data-mylamp="${escapeHtml(myLampForTd)}" style="text-align:center; font-size:0.88em; white-space:nowrap;">${lampCmpHtml}</td>` : ''}
+              <td>${escapeHtml(bp)}</td>
               ${cmpActive ? `<td class="col-compare-bp" style="text-align:center; font-size:0.88em; white-space:nowrap;">${bpCmpHtml}</td>` : ''}
-              <td>${score}</td>
+              <td>${escapeHtml(score)}</td>
               ${cmpActive ? `<td class="col-compare-score" style="text-align:center; font-size:0.88em; white-space:nowrap;">${scoreCmpHtml}</td>` : ''}
-              <td>${scoreRank}</td>
-              <td>${realRank}</td>
+              <td>${escapeHtml(scoreRank)}</td>
+              <td>${escapeHtml(realRank)}</td>
             </tr>`;
         }
 
@@ -908,10 +910,10 @@
         if (myLamp == null && theirLamp == null) return `<span style="color:#aaa;">-</span>`;
         if (myLamp == null) return `<span style="color:#aaa;">-</span>`;
         // 自分はあるが相手がない
-        return `<span data-mylamp-inner="${myLamp || ''}" style="color:#aaa;">${displayText || '-'} <span style="font-size:0.8em;">(-)</span></span>`;
+        return `<span data-mylamp-inner="${escapeHtml(myLamp || '')}" style="color:#aaa;">${escapeHtml(displayText) || '-'} <span style="font-size:0.8em;">(-)</span></span>`;
       }
       // data-mylamp を td に持たせて後でsetLampStyleをあてる
-      return `<span data-mylamp-inner="${myLamp || ''}" style="${colStyle}">${displayText || '-'}</span>`;
+      return `<span data-mylamp-inner="${escapeHtml(myLamp || '')}" style="${colStyle}">${escapeHtml(displayText) || '-'}</span>`;
     }
 
     // 数値比較セル：自分の値 ＋ 差分（+100/-100形式）
@@ -927,7 +929,7 @@
       } else {
         diffStr = ` <span style="font-size:0.85em;color:#aaa;">(-)</span>`;
       }
-      return `<span style="${colStyle}">${myVal}</span>${diffStr}`;
+      return `<span style="${colStyle}">${escapeHtml(myVal)}</span>${diffStr}`;
     }
 
     // 比較パネルの勝敗集計を更新

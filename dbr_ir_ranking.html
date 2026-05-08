@@ -129,6 +129,7 @@
   </table>
 
   <script type="module">
+    import { escapeHtml } from "./html.js";
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
     import {
       getFirestore,
@@ -419,10 +420,10 @@
           <td>${
             d.anonymous
               ? "匿名希望"
-              : `<a href="dbr_ir_playerdata.html?uid=${d.userUid}" target="_blank">${d.displayName}</a>`
+              : `<a href="dbr_ir_playerdata.html?uid=${escapeHtml(d.userUid)}" target="_blank">${escapeHtml(d.displayName)}</a>`
           }</td>
-          <td class="lamp-cell">${lampCodeToText(d.lamp)}</td>
-          <td>${d.bp === -1 ? "" : d.bp}</td>
+          <td class="lamp-cell">${escapeHtml(lampCodeToText(d.lamp))}</td>
+          <td>${d.bp === -1 ? "" : escapeHtml(d.bp)}</td>
           <td>${score !== null ? score : ""}</td>
           <td>${scoreRank}</td>
           <td>${realScoreRank}</td>
@@ -439,7 +440,7 @@
         if (isOwnData) {
           const wrapper = document.createElement("div");
           wrapper.className = "delete-btn-wrapper";
-          wrapper.innerHTML = `<button class="delete-btn" data-doc-id="${d.docId}">この記録を削除</button>`;
+          wrapper.innerHTML = `<button class="delete-btn" data-doc-id="${escapeHtml(d.docId)}">この記録を削除</button>`;
           tbody.appendChild(wrapper); // trの直後に追加
 
           const btn = wrapper.querySelector(".delete-btn");
