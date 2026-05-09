@@ -466,9 +466,10 @@
               levelMap.set(d.textage, String(d.level));
             }
           }
+          console.log(`[levelMap] songData取得完了: ${levelMap.size}件`);
           return levelMap;
         })
-        .catch(() => levelMap); // 失敗しても空のMapを返すだけ
+        .catch((e) => { console.warn("[levelMap] songData取得失敗:", e); return levelMap; }); // 失敗しても空のMapを返すだけ
       // ===== ここまで =====
 
       const loginBtn = document.getElementById("loginBtn");
@@ -914,18 +915,8 @@
 
         // ===== レベルマップ: ページロード時に開始済みのPromiseを参照 =====
         // すでに完了していれば即時反映、まだなら取得完了後にセルを更新する
-        let levelMapReady = levelMap.size > 0;
-
-        if (!levelMapReady) {
-          // まだ取得中 → 完了後にスピナーを置き換える
-          levelMapPromise.then(() => {
-            document.querySelectorAll("#previewTableBody td.col-level-ir[data-textage]").forEach(td => {
-              const lv = levelMap.get(td.dataset.textage);
-              td.innerHTML = lv ? `☆${lv}` : `<span style="color:#bbb;font-size:0.8rem;">-</span>`;
-            });
-          });
-        }
-        // ===== ここまで =====
+        const levelMapReady = levelMap.size > 0;
+        // ※ levelMapPromise.then() はテーブル行生成ループの後で登録する（行生成前に登録すると querySelectorAll が空振りするため）
 
         for (const item of sorted) {
           const tr = document.createElement("tr");
@@ -1023,6 +1014,17 @@
 
           previewTableBody.appendChild(tr);
         }
+
+        // ===== レベルマップ: ループ後に登録（行が存在する状態で querySelectorAll を実行するため） =====
+        if (!levelMapReady) {
+          levelMapPromise.then(() => {
+            document.querySelectorAll("#previewTableBody td.col-level-ir[data-textage]").forEach(td => {
+              const lv = levelMap.get(td.dataset.textage);
+              td.innerHTML = lv ? `☆${lv}` : `<span style="color:#bbb;font-size:0.8rem;">-</span>`;
+            });
+          });
+        }
+        // ===== ここまで =====
 
         previewModal.classList.add("active");
       }
