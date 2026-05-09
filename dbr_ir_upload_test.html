@@ -465,10 +465,12 @@
           const list = Array.isArray(songData) ? songData : (songData[0] ?? songData.data ?? Object.values(songData)[0] ?? []);
           // キーは textageid + 難易度記号（例: "eden(A)"）= item.textage と同じ形式
           // 同じ textageid でも難易度ごとに level が異なるため、title 末尾の "(X)" をサフィックスとして付加する
+          // level が空・未査定の譜面も「未査定」として登録し、acdelete フラグも保持する
           for (const d of list) {
-            if (d.textageid && d.title && d.level && d.level !== "未査定" && d.level !== "") {
+            if (d.textageid && d.title) {
               const suffix = d.title.match(/\([A-Z]\)$/)?.[0] ?? "";
-              levelMap.set(d.textageid + suffix, String(d.level));
+              const lv = (d.level && d.level !== "未査定") ? d.level : "未査定";
+              levelMap.set(d.textageid + suffix, { level: lv, acdelete: !!d.acdelete });
             }
           }
           console.log(`[levelMap] songData取得完了: ${levelMap.size}件`);
@@ -1006,8 +1008,13 @@
           // item.textage は "textageid(A)" 形式で levelMap のキーと一致する
           levelTd.dataset.textage = item.textage || "";
           if (levelMapReady) {
-            const lv = item.textage ? levelMap.get(item.textage) : null;
-            levelTd.innerHTML = lv ? `☆${lv}` : `<span style="color:#bbb;font-size:0.8rem;">-</span>`;
+            const entry = item.textage ? levelMap.get(item.textage) : null;
+            const prefix = entry?.acdelete ? "†☆" : "☆";
+            levelTd.innerHTML = entry
+              ? (entry.level === "未査定"
+                  ? `<span style="color:#bbb;font-size:0.8rem;">${prefix}未査定</span>`
+                  : `${prefix}${entry.level}`)
+              : `<span style="color:#bbb;font-size:0.8rem;">-</span>`;
           } else {
             levelTd.innerHTML = `<span class="lv-spinner"></span>`;
           }
@@ -1025,8 +1032,13 @@
         if (!levelMapReady) {
           levelMapPromise.then(() => {
             document.querySelectorAll("#previewTableBody td.col-level-ir[data-textage]").forEach(td => {
-              const lv = levelMap.get(td.dataset.textage);
-              td.innerHTML = lv ? `☆${lv}` : `<span style="color:#bbb;font-size:0.8rem;">-</span>`;
+              const entry = levelMap.get(td.dataset.textage);
+              const prefix = entry?.acdelete ? "†☆" : "☆";
+              td.innerHTML = entry
+                ? (entry.level === "未査定"
+                    ? `<span style="color:#bbb;font-size:0.8rem;">${prefix}未査定</span>`
+                    : `${prefix}${entry.level}`)
+                : `<span style="color:#bbb;font-size:0.8rem;">-</span>`;
             });
           });
         }
