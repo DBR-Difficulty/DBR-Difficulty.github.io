@@ -461,7 +461,10 @@
         .then(header => fetch(header.data_url))
         .then(r => r.json())
         .then(songData => {
-          for (const d of songData) {
+          // レスポンスが配列でない場合（{data:[...]}等のラップ形式）に対応
+          const list = Array.isArray(songData) ? songData : (songData[0] ?? songData.data ?? Object.values(songData)[0] ?? []);
+          console.log(`[levelMap] songDataの型: ${Array.isArray(songData) ? "配列" : typeof songData}, 件数: ${list.length}`, songData);
+          for (const d of list) {
             if (d.textage && d.level && d.level !== "未査定") {
               levelMap.set(d.textage, String(d.level));
             }

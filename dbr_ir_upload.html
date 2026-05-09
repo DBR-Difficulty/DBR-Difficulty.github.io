@@ -318,31 +318,6 @@
       color: #333;
       min-width: 8rem;
     }
-
-    /* レベル列 */
-    .col-level-ir {
-      min-width: 3.5rem;
-      text-align: center;
-      font-size: 0.85rem;
-      font-weight: bold;
-      color: #444;
-      white-space: nowrap;
-    }
-
-    /* レベル読み込み中スピナー */
-    @keyframes lv-spin {
-      to { transform: rotate(360deg); }
-    }
-    .lv-spinner {
-      display: inline-block;
-      width: 0.85rem;
-      height: 0.85rem;
-      border: 2px solid #ccc;
-      border-top-color: #888;
-      border-radius: 50%;
-      animation: lv-spin 0.7s linear infinite;
-      vertical-align: middle;
-    }
   </style>
   <body>
     <!-- Google Tag Manager (noscript) -->
@@ -425,7 +400,6 @@
           <table>
             <thead>
               <tr>
-                <th>Lv</th>
                 <th>譜面</th>
                 <th>ランプ</th>
                 <th>BP</th>
@@ -452,24 +426,6 @@
         doc, getDoc, setDoc, collection, query, where, getDocs, deleteDoc,
         translateAuthError
       } from "./main.js";
-
-      // ===== レベルマップ: ページロード時点でフェッチ開始 =====
-      // プレビューが開くころには取得済みであることを期待する
-      const levelMap = new Map(); // key: textageKey → level string
-      const levelMapPromise = fetch("./dbralleheader.json")
-        .then(r => r.json())
-        .then(header => fetch(header.data_url))
-        .then(r => r.json())
-        .then(songData => {
-          for (const d of songData) {
-            if (d.textage && d.level && d.level !== "未査定") {
-              levelMap.set(d.textage, String(d.level));
-            }
-          }
-          return levelMap;
-        })
-        .catch(() => levelMap); // 失敗しても空のMapを返すだけ
-      // ===== ここまで =====
 
       const loginBtn = document.getElementById("loginBtn");
       const logoutBtn = document.getElementById("logoutBtn");
@@ -912,21 +868,6 @@
         // テーブル行生成
         previewTableBody.innerHTML = "";
 
-        // ===== レベルマップ: ページロード時に開始済みのPromiseを参照 =====
-        // すでに完了していれば即時反映、まだなら取得完了後にセルを更新する
-        let levelMapReady = levelMap.size > 0;
-
-        if (!levelMapReady) {
-          // まだ取得中 → 完了後にスピナーを置き換える
-          levelMapPromise.then(() => {
-            document.querySelectorAll("#previewTableBody td.col-level-ir[data-textage]").forEach(td => {
-              const lv = levelMap.get(td.dataset.textage);
-              td.innerHTML = lv ? `☆${lv}` : `<span style="color:#bbb;font-size:0.8rem;">-</span>`;
-            });
-          });
-        }
-        // ===== ここまで =====
-
         for (const item of sorted) {
           const tr = document.createElement("tr");
           tr.dataset.status = item.status;
@@ -1003,19 +944,6 @@
           tr.innerHTML = `
             <td style="max-width:220px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${fullTitle}">${cleanTitle}<span style="font-size:0.9em;">(${item.difficulty})</span></td>
           `;
-
-          // --- レベルセル（先頭に挿入） ---
-          const levelTd = document.createElement("td");
-          levelTd.className = "col-level-ir";
-          levelTd.dataset.textage = item.textage || "";
-          if (levelMapReady) {
-            const lv = item.textage ? levelMap.get(item.textage) : null;
-            levelTd.innerHTML = lv ? `☆${lv}` : `<span style="color:#bbb;font-size:0.8rem;">-</span>`;
-          } else {
-            levelTd.innerHTML = `<span class="lv-spinner"></span>`;
-          }
-          tr.prepend(levelTd);
-
           tr.appendChild(lampTd);
           tr.appendChild(bpTd);
           tr.appendChild(scoreTd);
