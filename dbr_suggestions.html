@@ -1,0 +1,1461 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DBR難易度表 提案状況一覧</title>
+<!-- 難易度表静的JSONのURL（INF/削除曲判定に使用） -->
+<meta name="dbralle-data" content="./dbralleheader_experimental.json">
+<style>
+
+/* ============================================================
+   共通リセット
+   ============================================================ */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ============================================================
+   CSS変数 — モダンUI (data-theme="modern", デフォルト)
+   ============================================================ */
+:root {
+  --bg:         #1a1c20;
+  --surface:    #22252c;
+  --surface2:   #2a2e38;
+  --border:     #363b47;
+  --accent:     #4f9cf9;
+  --accent2:    #f97b4f;
+  --accent3:    #6ecf8e;
+  --warn:       #f9c94f;
+  --text:       #e2e6f0;
+  --text-sub:   #8a93a8;
+  --objection:  #3a2a1a;
+  --obj-border: #f97b4f55;
+  --radius:     0.375rem;
+  --tab-h:      2.625rem;
+}
+
+/* ============================================================
+   CSS変数 — クラシックUI (data-theme="classic")
+   ============================================================ */
+[data-theme="classic"] {
+  --bg:         #ffffff;
+  --surface:    #f0f0f0;
+  --surface2:   #e0e0e0;
+  --border:     #aaaaaa;
+  --accent:     #0000c0;
+  --accent2:    #cc0000;
+  --accent3:    #008800;
+  --warn:       #cc8800;
+  --text:       #111111;
+  --text-sub:   #555555;
+  --objection:  #fff8e8;
+  --obj-border: #ccaa66;
+}
+
+/* ============================================================
+   ボディ
+   ============================================================ */
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  min-height: 100vh;
+  transition: background 0.2s, color 0.2s;
+  overflow-x: hidden;
+}
+
+/* ============================================================
+   ヘッダー
+   ============================================================ */
+/* --- 共通設定 --- */
+header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0.6rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+header h1 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.badge {
+  font-size: 0.7rem;
+  background: var(--accent);
+  color: #fff;
+  padding: 0.0625rem 0.4375rem;
+  border-radius: 99px;
+  font-weight: 700;
+}
+
+.spacer { flex: 1; }
+
+/* テーマ切替ボタン */
+#theme-toggle {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-sub);
+  border-radius: var(--radius);
+  padding: 0.25rem 0.625rem;
+  cursor: pointer;
+  font-size: 0.75rem;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+#theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+
+/* 再読み込みボタン */
+#reload-btn {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-sub);
+  border-radius: var(--radius);
+  padding: 0.25rem 0.625rem;
+  cursor: pointer;
+  font-size: 0.75rem;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+#reload-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ナビゲーションリンクボタン */
+.nav-link-btn {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-sub);
+  border-radius: var(--radius);
+  padding: 0.25rem 0.625rem;
+  cursor: pointer;
+  font-size: 0.75rem;
+  transition: all 0.15s;
+  white-space: nowrap;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+.nav-link-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ============================================================
+   クラシックUI — ページタイトルエリア
+   ============================================================ */
+[data-theme="classic"] header {
+  background: #ffffff;
+  border-bottom: 1px solid #aaa;
+}
+
+[data-theme="classic"] header h1 {
+  display: block !important;
+  color: #111;
+}
+
+/* ============================================================
+   タブバー
+   ============================================================ */
+.tab-bar {
+  display: flex;
+  background: var(--surface);
+  border-bottom: 2px solid var(--border);
+  padding: 0 1rem;
+  gap: 2px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.tab-bar::-webkit-scrollbar { display: none; }
+
+.tab-btn {
+  height: var(--tab-h);
+  padding: 0 1rem;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  color: var(--text-sub);
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  transition: color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  flex-shrink: 0;
+}
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active {
+  color: var(--text);
+  border-bottom-color: var(--accent);
+}
+[data-theme="classic"] .tab-btn.active {
+  color: #ffff88;
+  border-bottom-color: #ffff88;
+}
+
+.tab-btn .count {
+  font-size: 0.7rem;
+  background: var(--surface2);
+  padding: 0.0625rem 0.375rem;
+  border-radius: 99px;
+  color: var(--text-sub);
+}
+.tab-btn.active .count { color: var(--text); }
+
+/* クラシック: タブバー */
+[data-theme="classic"] .tab-bar {
+  background: #dddddd;
+}
+[data-theme="classic"] .tab-btn {
+  color: #333;
+}
+[data-theme="classic"] .tab-btn:hover { color: #000; }
+[data-theme="classic"] .tab-btn.active {
+  color: #000080;
+  border-bottom-color: #000080;
+}
+[data-theme="classic"] .tab-btn .count {
+  background: #bbbbbb;
+  color: #444;
+}
+[data-theme="classic"] .tab-btn.active .count { color: #000080; }
+
+/* ============================================================
+   フィルターバー
+   ============================================================ */
+.filter-bar {
+  padding: 0.5rem 1rem;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.filter-bar input[type="text"] {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  padding: 0.1875rem 0.5625rem;
+  font-size: 0.82rem;
+  outline: none;
+  width: 12.5rem;
+  transition: border-color 0.15s;
+}
+.filter-bar input[type="text"]:focus { border-color: var(--accent); }
+.filter-bar input[type="text"]::placeholder { color: var(--text-sub); }
+
+.obj-filter-btn {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-sub);
+  border-radius: var(--radius);
+  padding: 0.1875rem 0.5625rem;
+  cursor: pointer;
+  font-size: 0.78rem;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.obj-filter-btn.active {
+  border-color: var(--accent2);
+  color: var(--accent2);
+  background: #3a1e0e44;
+}
+
+.result-count {
+  margin-left: auto;
+  font-size: 0.75rem;
+  color: var(--text-sub);
+}
+
+.inf-filter-btn {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-sub);
+  border-radius: var(--radius);
+  padding: 0.1875rem 0.5625rem;
+  cursor: pointer;
+  font-size: 0.78rem;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.inf-filter-btn.active {
+  border-color: var(--accent3);
+  color: var(--accent3);
+  background: #0e3a1a44;
+}
+.inf-filter-btn.loading {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.del-filter-btn {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-sub);
+  border-radius: var(--radius);
+  padding: 0.1875rem 0.5625rem;
+  cursor: pointer;
+  font-size: 0.78rem;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.del-filter-btn.active {
+  border-color: var(--text-sub);
+  color: var(--text);
+  background: #2a2a2a88;
+}
+.del-filter-btn.loading {
+  opacity: 0.5;
+  cursor: default;
+}
+
+[data-theme="classic"] .inf-filter-btn {
+  background: #f5f5f5;
+  color: #333;
+  border: 1px solid #888;
+}
+[data-theme="classic"] .inf-filter-btn.active {
+  border-color: #006600;
+  color: #006600;
+  background: #efffef;
+}
+[data-theme="classic"] .del-filter-btn {
+  background: #f5f5f5;
+  color: #333;
+  border: 1px solid #888;
+}
+[data-theme="classic"] .del-filter-btn.active {
+  border-color: #444;
+  color: #111;
+  background: #e8e8e8;
+}
+
+/* レベル範囲フィルター */
+.level-range-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.78rem;
+  color: var(--text-sub);
+  white-space: nowrap;
+}
+.level-range-wrap input[type="number"] {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  padding: 0.1875rem 0.375rem;
+  font-size: 0.78rem;
+  width: 3.5rem;
+  outline: none;
+  transition: border-color 0.15s;
+  -moz-appearance: textfield;
+}
+.level-range-wrap input[type="number"]::-webkit-outer-spin-button,
+.level-range-wrap input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+.level-range-wrap input[type="number"]:focus { border-color: var(--accent); }
+.level-range-wrap input[type="number"]::placeholder { color: var(--text-sub); }
+.level-range-label {
+  color: var(--text-sub);
+  font-size: 0.78rem;
+}
+
+[data-theme="classic"] .level-range-wrap input[type="number"] {
+  background: #fff;
+  color: #333;
+  border: 1px solid #ccc;
+}
+[data-theme="classic"] .level-range-wrap input[type="number"]:focus { border-color: #666; }
+[data-theme="classic"] .level-range-label { color: #555; }
+
+/* クラシック: フィルターバー */
+[data-theme="classic"] .filter-bar {
+  background: #f5f5f5;
+}
+[data-theme="classic"] .filter-bar input[type="text"] {
+  background: #fff;
+  color: #333;
+  border: 1px solid #ccc;
+}
+[data-theme="classic"] .filter-bar input[type="text"]:focus { border-color: #666; }
+[data-theme="classic"] .filter-bar input[type="text"]::placeholder { color: #999; }
+[data-theme="classic"] .obj-filter-btn {
+  background: #f5f5f5;
+  color: #333;
+  border: 1px solid #888;
+}
+[data-theme="classic"] .obj-filter-btn.active {
+  border-color: #cc6600;
+  color: #cc6600;
+  background: #fff8f0;
+}
+[data-theme="classic"] .result-count { color: #555; }
+
+/* フィルタークリアボタン */
+.filter-clear-btn {
+  margin-left: 0.5rem;
+  padding: 0.125rem 0.5rem;
+  font-size: 0.7rem;
+  cursor: pointer;
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-sub);
+  border-radius: var(--radius);
+  transition: all 0.2s;
+}
+
+.filter-clear-btn:hover {
+  background: var(--surface2);
+  color: var(--text);
+  border-color: var(--text-sub);
+}
+
+[data-theme="classic"] .filter-clear-btn {
+  border: 1px solid #ccc;
+  background: #f9f9f9;
+  color: #666;
+}
+
+[data-theme="classic"] .filter-clear-btn:hover {
+  background: #eee;
+  border-color: #888;
+}
+
+/* ============================================================
+   テーブルラッパー
+   ============================================================ */
+.table-wrap {
+  overflow-x: auto;
+  padding: 0.5rem 0.5rem 2rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+
+thead th {
+  background: var(--surface2);
+  color: var(--text-sub);
+  font-weight: 600;
+  font-size: 0.63rem;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  padding: 0.375rem 0.375rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+tbody tr {
+  border-bottom: 1px solid var(--border);
+  transition: background 0.1s;
+}
+tbody tr:hover { background: var(--surface2); }
+
+td {
+  padding: 0.4375rem 0.625rem;
+  vertical-align: top;
+  color: var(--text);
+}
+
+/* クラシック: テーブル */
+[data-theme="classic"] .table-wrap {
+  background: #ffffff;
+}
+[data-theme="classic"] thead th {
+  background: #aaaaaa;
+  color: #111;
+  text-transform: none;
+  letter-spacing: 0;
+  border-bottom: 1px solid #888;
+  border-right: 1px solid #888;
+}
+[data-theme="classic"] thead th:last-child { border-right: none; }
+[data-theme="classic"] tbody tr {
+  background: #eeeeee;
+  border-bottom: 1px solid #cccccc;
+}
+[data-theme="classic"] tbody tr:hover { background: #dddddd; }
+[data-theme="classic"] td {
+  color: #111;
+  border-right: 1px solid #cccccc;
+}
+[data-theme="classic"] td:last-child { border-right: none; }
+
+/* ============================================================
+   セル別
+   ============================================================ */
+.col-date  { white-space: nowrap; width: 4.25rem; color: var(--text-sub); font-size: 0.68rem; padding-left: 0.3125rem; padding-right: 0.3125rem; }
+.col-level { white-space: nowrap; font-weight: 700; width: 3.375rem; padding-left: 0.3125rem; padding-right: 0.3125rem; }
+.col-rec   { width: 2rem; min-width: 2rem; text-align: center; padding-left: 0.15rem; padding-right: 0.15rem; }
+.col-title { min-width: 5.5rem; }
+.col-main  { min-width: 9rem; }
+.obj-cell  { min-width: 9rem; max-width: 20rem; }
+
+[data-theme="classic"] .col-date { color: #555; }
+
+/* レベル値 */
+.level-val {
+  font-size: 0.75rem;
+  color: var(--accent);
+}
+[data-theme="classic"] .level-val {
+  color: #0000c0;
+  font-weight: bold;
+}
+
+/* レベル変更矢印 */
+.level-arrow {
+  display: flex;
+  align-items: center;
+  gap: 0.1rem;
+  white-space: wrap;
+  font-size: 0.75rem;
+}
+.level-arrow .from { color: var(--text-sub); vertical-align: middle; font-size: 0.65rem;  }
+.level-arrow .arr  { color: var(--text-sub); vertical-align: middle; font-size: 0.45rem; }
+.level-arrow .to   { color: var(--accent3); font-weight: 700; }
+[data-theme="classic"] .level-arrow .from { color: #555; }
+[data-theme="classic"] .level-arrow .arr  { color: #555; }
+[data-theme="classic"] .level-arrow .to   { color: #006600; font-weight: bold; }
+
+/* rec チップ（モダン） */
+.rec-chip {
+  display: inline-block;
+  padding: 0.0625rem 0.4375rem;
+  border-radius: 99px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.rec-star    { background: #3a2a0e; color: var(--warn);    border: 1px solid #f9c94f55; }
+.rec-circle2 { background: #0e3a22; color: var(--accent3); border: 1px solid #6ecf8e55; }
+.rec-circle  { background: #1a2e3a; color: var(--accent);  border: 1px solid #4f9cf955; }
+.rec-tri     { background: #2a2a1a; color: #c8c87a;        border: 1px solid #c8c87a55; }
+.rec-none    { background: var(--surface2); color: var(--text-sub); border: 1px solid var(--border); }
+
+/* rec チップ（クラシック）*/
+[data-theme="classic"] .rec-chip {
+  background: none !important;
+  border: none !important;
+  padding: 0.15rem 0.5rem;
+  color: #111 !important;
+  font-weight: bold;
+}
+
+.rec-arrow { display: flex; align-items: center; gap: 0.375rem; }
+
+/* 異議バブル（モダン） */
+.obj-thread { display: flex; flex-direction: column; gap: 0.25rem; }
+.obj-bubble {
+  background: var(--objection);
+  border: 1px solid var(--obj-border);
+  border-radius: var(--radius);
+  padding: 0.25rem 0.5rem;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: #d4b89a;
+}
+.obj-bubble:nth-child(even) {
+  background: #1a2a1a;
+  border-color: #6ecf8e44;
+  color: #9ad4b8;
+  margin-left: 0.625rem;
+}
+.obj-idx {
+  font-size: 0.65rem;
+  color: var(--text-sub);
+  margin-bottom: 0.0625rem;
+  font-weight: 700;
+}
+.obj-none {
+  color: var(--text-sub);
+  font-size: 0.75rem;
+}
+
+/* 異議バブル（クラシック） */
+[data-theme="classic"] .obj-bubble {
+  background: #f5e8d0;
+  border: 1px solid #aaa;
+  color: #333;
+  border-radius: 2px;
+}
+[data-theme="classic"] .obj-bubble:nth-child(even) {
+  background: #d0f5e0;
+  border-color: #888;
+  color: #222;
+  margin-left: 0.5rem;
+}
+[data-theme="classic"] .obj-idx { color: #666; }
+[data-theme="classic"] .obj-none { color: #888; }
+
+/* ローディング・エラー */
+.state-box {
+  padding: 3rem 1rem;
+  text-align: center;
+  color: var(--text-sub);
+}
+.spinner {
+  width: 1.75rem;
+  height: 1.75rem;
+  border: 0.1875rem solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  margin: 0 auto 0.8rem;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.error-msg { color: var(--accent2); }
+
+[data-theme="classic"] .state-box { color: #555; }
+[data-theme="classic"] .spinner { border-color: #ccc; border-top-color: #333; }
+
+/* ソートヘッダー */
+thead th.sortable {
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+}
+thead th.sortable:hover { color: var(--text); }
+thead th.sortable .sort-icon {
+  display: inline-block;
+  margin-left: 0.1875rem;
+  font-size: 0.5rem;
+  opacity: 0.35;
+  vertical-align: middle;
+}
+thead th.sortable.sort-asc .sort-icon,
+thead th.sortable.sort-desc .sort-icon { opacity: 1; color: var(--accent); }
+[data-theme="classic"] thead th.sortable.sort-asc .sort-icon,
+[data-theme="classic"] thead th.sortable.sort-desc .sort-icon { color: #0000c0; }
+
+/* タブパネル表示 */
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+@media (max-width: 600px) {
+  .filter-bar input[type="text"] { width: 100%; }
+}
+
+/* ============================================================
+   モバイル対応 (スマホ)
+   ============================================================ */
+@media (max-width: 640px) {
+
+  /* ヘッダー: タイトルを全幅に、ボタン群を右寄せ */
+  header {
+    gap: 0.4rem;
+  }
+  header h1 {
+    font-size: 1rem;
+    flex: 1 1 100%;
+    order: -1;
+  }
+  .badge {
+    font-size: 0.65rem;
+  }
+  .spacer { display: none; }
+
+  /* フィルターバー */
+  .filter-bar {
+    padding: 0.5rem 0.75rem;
+    gap: 0.4rem;
+  }
+  .filter-bar input[type="text"] {
+    width: 100%;
+    font-size: 0.85rem;
+    padding: 0.3125rem 0.625rem;
+  }
+  .obj-filter-btn,
+  .inf-filter-btn,
+  .del-filter-btn {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+  }
+  .level-range-wrap {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+  .level-range-wrap input[type="number"] {
+    width: 3.75rem;
+    font-size: 0.8rem;
+  }
+  .result-count {
+    margin-left: 0;
+    width: 100%;
+    text-align: right;
+  }
+
+  /* テーブル: 小さいフォントとコンパクトなパディング */
+  table {
+    font-size: 0.75rem;
+  }
+  thead th {
+    padding: 0.3125rem 0.3125rem;
+    font-size: 0.57rem;
+  }
+  td {
+    padding: 0.3125rem 0.4375rem;
+  }
+
+  /* 列幅の調整 */
+  .col-date  { width: 3.5rem; font-size: 0.62rem; }
+  .col-level { width: 3.5rem; font-size: 0.62rem; }
+  .col-rec   { width: 1.875rem; }
+  .col-title { min-width: 3.5rem; }
+  .col-main  { min-width: 8rem; }
+  .obj-cell  { min-width: 8rem; max-width: 15rem; }
+
+  /* 異議バブル */
+  .obj-bubble {
+    font-size: 0.72rem;
+    padding: 0.1875rem 0.375rem;
+  }
+  .obj-bubble:nth-child(even) {
+    margin-left: 0.375rem;
+  }
+
+  /* ローディング */
+  .state-box {
+    padding: 2rem 0.75rem;
+  }
+
+  /* table-wrap の横スクロール強化 */
+  .table-wrap {
+    padding: 0.25rem 0 1.5rem;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+</style>
+</head>
+<body data-theme="modern">
+<header>
+  <h1 id="page-title">DBR難易度表 提案状況一覧</h1>
+  
+  <span class="badge" id="last-updated">読み込み中…</span>
+  
+  <button id="theme-toggle" title="UIを切り替え">☀ ライトモード</button>
+  <button id="reload-btn">↺ 再読み込み</button>
+  <a href="dbr_suggestions_log.html" class="nav-link-btn">提案履歴を見る</a>
+  <a href="index.html" class="nav-link-btn">TOPへ戻る</a>
+  
+  <span class="spacer"></span>
+</header>
+
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="new">
+    新規提案 <span class="count" id="cnt-new">-</span>
+  </button>
+  <button class="tab-btn" data-tab="change">
+    変更提案 <span class="count" id="cnt-change">-</span>
+  </button>
+  <button class="tab-btn" data-tab="recommend">
+    おすすめ提案 <span class="count" id="cnt-rec">-</span>
+  </button><button class="tab-btn" data-tab="subdivision">
+    細分化待ち <span class="count" id="cnt-sub">-</span>
+  </button><button class="tab-btn" data-tab="revision">
+    修正依頼 <span class="count" id="cnt-rev">-</span>
+  </button>
+</div>
+
+<div class="filter-bar">
+  <input type="text" id="search-input" placeholder="曲名・コメントで絞り込み">
+  <button class="obj-filter-btn" id="obj-only-btn">異議ありのみ</button>
+  <button class="inf-filter-btn loading" id="inf-only-btn" title="難易度表JSONを読み込み中…">INF有のみ</button>
+  <button class="del-filter-btn loading" id="ac-only-btn" title="難易度表JSONを読み込み中…">AC有のみ</button>
+  <div class="level-range-wrap">
+    <span class="level-range-label">☆</span>
+    <input type="number" id="level-min" placeholder="" min="1" max="14" step="0.01" title="レベル下限">
+    <span class="level-range-label">〜</span>
+    <span class="level-range-label">☆</span>
+    <input type="number" id="level-max" placeholder="" min="1" max="14" step="0.01" title="レベル上限">
+    <button id="filter-clear-btn" class="filter-clear-btn" title="絞り込みをすべて解除">クリア</button>
+  </div>
+  <span class="result-count" id="result-count"></span>
+</div>
+
+<!-- 新規提案 -->
+<div class="tab-panel active" id="panel-new">
+  <div class="table-wrap">
+    <div class="state-box" id="loading-new"><div class="spinner"></div>読み込み中…</div>
+    <table id="table-new" style="display:none">
+      <thead>
+        <tr>
+          <th class="col-date sortable" data-sort-tab="new" data-sort-key="date">提案日<span class="sort-icon">⇅</span></th>
+          <th class="col-level sortable" data-sort-tab="new" data-sort-key="level">提案Lv<span class="sort-icon">⇅</span></th>
+          <th class="col-rec">薦</th>
+          <th class="col-title">曲名(難易度)</th>
+          <th class="col-main">コメント</th>
+          <th class="col-main">備考</th>
+          <th class="obj-cell">異議申し立て</th>
+        </tr>
+      </thead>
+      <tbody id="body-new"></tbody>
+    </table>
+    <div class="state-box" id="empty-new" style="display:none">提案はありません</div>
+  </div>
+</div>
+
+<!-- 変更提案 -->
+<div class="tab-panel" id="panel-change">
+  <div class="table-wrap">
+    <div class="state-box" id="loading-change"><div class="spinner"></div>読み込み中…</div>
+    <table id="table-change" style="display:none">
+      <thead>
+        <tr>
+          <th class="col-date sortable" data-sort-tab="change" data-sort-key="date">提案日<span class="sort-icon">⇅</span></th>
+          <th class="col-level sortable" data-sort-tab="change" data-sort-key="level_to">Lv変更<span class="sort-icon">⇅</span></th>
+          <th class="col-title">曲名(難易度)</th>
+          <th class="col-main">提案理由</th>
+          <th class="obj-cell">異議申し立て</th>
+        </tr>
+      </thead>
+      <tbody id="body-change"></tbody>
+    </table>
+    <div class="state-box" id="empty-change" style="display:none">提案はありません</div>
+  </div>
+</div>
+
+<!-- おすすめ提案 -->
+<div class="tab-panel" id="panel-recommend">
+  <div class="table-wrap">
+    <div class="state-box" id="loading-rec"><div class="spinner"></div>読み込み中…</div>
+    <table id="table-rec" style="display:none">
+      <thead>
+        <tr>
+          <th class="col-date sortable" data-sort-tab="recommend" data-sort-key="date">提案日<span class="sort-icon">⇅</span></th>
+          <th>おすすめ度変更</th>
+          <th class="col-title">曲名(難易度)</th>
+          <th class="col-main">提案理由</th>
+          <th class="obj-cell">異議申し立て</th>
+        </tr>
+      </thead>
+      <tbody id="body-rec"></tbody>
+    </table>
+    <div class="state-box" id="empty-rec" style="display:none">提案はありません</div>
+  </div>
+</div>
+
+<!-- 細分化待ち -->
+<div class="tab-panel" id="panel-subdivision">
+  <div class="table-wrap">
+    <div class="state-box" id="loading-sub"><div class="spinner"></div>読み込み中…</div>
+    <table id="table-sub" style="display:none">
+      <thead>
+        <tr>
+          <th class="col-date sortable" data-sort-tab="subdivision" data-sort-key="date">提案日<span class="sort-icon">⇅</span></th>
+          <th class="col-level sortable" data-sort-tab="subdivision" data-sort-key="level">希望Lv<span class="sort-icon">⇅</span></th>
+          <th class="col-title">曲名(難易度)</th>
+          <th class="col-main">希望時コメント</th>
+          <th class="obj-cell">異議申し立て</th>
+        </tr>
+      </thead>
+      <tbody id="body-sub"></tbody>
+    </table>
+    <div class="state-box" id="empty-sub" style="display:none">提案はありません</div>
+  </div>
+</div>
+
+<!-- 修正依頼 -->
+<div class="tab-panel" id="panel-revision">
+  <div class="table-wrap">
+    <div class="state-box" id="loading-rev"><div class="spinner"></div>読み込み中…</div>
+    <table id="table-rev" style="display:none">
+      <thead>
+        <tr>
+          <th class="col-date sortable" data-sort-tab="revision" data-sort-key="date">報告日時<span class="sort-icon">⇅</span></th>
+          <th class="col-main">内容</th>
+          <th class="col-main">回答</th>
+        </tr>
+      </thead>
+      <tbody id="body-rev"></tbody>
+    </table>
+    <div class="state-box" id="empty-rev" style="display:none">修正依頼はありません</div>
+  </div>
+</div>
+
+<script>
+const GAS_PROPOSALS_URL = "https://script.google.com/macros/s/AKfycbzLcryGU1xVPXwA1l-iEKA6yhoZKLc2Fcu_e-aC4f1xxjq13fwvPRfOcg7PkrFSwSY/exec";
+
+// -------------------------------------------------------------------
+// 難易度表静的JSONから INF/削除曲名セットを構築
+// -------------------------------------------------------------------
+let infTitleSet     = null;  // null = 未ロード, Set = ロード済み
+let deletedTitleSet = null;
+let dbrDataLoading  = false;
+
+async function loadDBRData() {
+  if (dbrDataLoading || (infTitleSet !== null)) return;
+  dbrDataLoading = true;
+
+  const metaUrl = document.querySelector("meta[name='dbralle-data']")?.content;
+  if (!metaUrl) {
+    // メタタグ未設定：ボタンを無効のまま
+    console.warn("[proposals] meta[name='dbralle-data'] が見つかりません");
+    return;
+  }
+
+  try {
+    // ヘッダーJSONかデータJSON直指定かを自動判定
+    // ヘッダーJSONの場合は data_url プロパティを持つ
+    let dataUrl = metaUrl;
+    const headerRes = await fetch(metaUrl);
+    if (!headerRes.ok) throw new Error(`HTTP ${headerRes.status}`);
+    const headerOrData = await headerRes.json();
+
+    let songArray;
+    if (Array.isArray(headerOrData)) {
+      // 直接データJSON（配列）
+      songArray = headerOrData;
+    } else if (headerOrData.data_url) {
+      // ヘッダーJSON → data_url を取得
+      const dataRes = await fetch(headerOrData.data_url);
+      if (!dataRes.ok) throw new Error(`HTTP ${dataRes.status}`);
+      songArray = await dataRes.json();
+    } else {
+      throw new Error("JSONフォーマット不明");
+    }
+
+    infTitleSet     = new Set();
+    deletedTitleSet = new Set();
+
+    songArray.forEach(song => {
+      if (!song.title) return;
+      const t = song.title;
+      if (song.inf)      infTitleSet.add(t);
+      if (song.acdelete) deletedTitleSet.add(t);
+    });
+
+    // ボタンを有効化
+    const infBtn = document.getElementById("inf-only-btn");
+    const acBtn  = document.getElementById("ac-only-btn");
+    if (infBtn) {
+      infBtn.classList.remove("loading");
+      infBtn.title = `INFに収録されている曲のみ表示`;
+    }
+    if (acBtn) {
+      acBtn.classList.remove("loading");
+      acBtn.title = `現行AC作品でプレーできる曲のみ表示`;
+    }
+
+    if (infOnly || acOnly) renderCurrent();
+
+  } catch (err) {
+    console.error("[proposals] 難易度表JSON読み込み失敗:", err);
+    const infBtn = document.getElementById("inf-only-btn");
+    const delBtn = document.getElementById("del-only-btn");
+    if (infBtn) { infBtn.classList.remove("loading"); infBtn.title = "データ取得失敗"; }
+    if (delBtn) { delBtn.classList.remove("loading"); delBtn.title = "データ取得失敗"; }
+    // 空Setにして「該当なし」として扱う
+    infTitleSet     = new Set();
+    deletedTitleSet = new Set();
+  } finally {
+    dbrDataLoading = false;
+  }
+}
+
+// -------------------------------------------------------------------
+// テーマ切替（localStorage で永続化）
+// -------------------------------------------------------------------
+const THEME_KEY = "dbr_proposals_theme";
+let currentTheme = localStorage.getItem(THEME_KEY) || "modern";
+
+function applyTheme(theme) {
+  currentTheme = theme;
+  document.body.dataset.theme = theme;
+  const btn = document.getElementById("theme-toggle");
+  btn.textContent = theme === "modern" ? "☀ ライトモード" : "☾ ダークモード";
+  localStorage.setItem(THEME_KEY, theme);
+}
+
+// -------------------------------------------------------------------
+// データ管理
+// -------------------------------------------------------------------
+let allData = { new_proposals: [], change_proposals: [], recommend_proposals: [], subdivision_proposals: [], revision_requests: [] };
+let currentTab = "new";
+let objOnly = false;
+let infOnly = false;
+let acOnly = false;
+let searchQuery = "";
+let levelMin = null;
+let levelMax = null;
+
+// ソート状態: { tab: { key, dir } }  dir: "asc"|"desc"|null
+const sortState = {
+  new: { key: null, dir: null },
+  change: { key: null, dir: null },
+  recommend: { key: null, dir: null },
+  subdivision: { key: null, dir: null },
+  revision: { key: null, dir: null },
+};
+
+// -------------------------------------------------------------------
+// 初期化
+// -------------------------------------------------------------------
+document.addEventListener("DOMContentLoaded", () => {
+  applyTheme(currentTheme);
+
+  loadData();
+  loadDBRData();  // 難易度表JSONを非同期で先読み
+
+  document.getElementById("theme-toggle").addEventListener("click", () => {
+    applyTheme(currentTheme === "modern" ? "classic" : "modern");
+  });
+
+  document.getElementById("reload-btn").addEventListener("click", loadData);
+
+  document.querySelectorAll(".tab-btn").forEach(btn => {
+    btn.addEventListener("click", () => switchTab(btn.dataset.tab));
+  });
+
+  document.getElementById("search-input").addEventListener("input", e => {
+    searchQuery = e.target.value.trim().toLowerCase();
+    renderCurrent();
+  });
+
+  document.getElementById("obj-only-btn").addEventListener("click", () => {
+    objOnly = !objOnly;
+    document.getElementById("obj-only-btn").classList.toggle("active", objOnly);
+    renderCurrent();
+  });
+
+  document.getElementById("inf-only-btn").addEventListener("click", () => {
+    if (document.getElementById("inf-only-btn").classList.contains("loading")) return;
+    infOnly = !infOnly;
+    if (infOnly) acOnly = false; 
+    document.getElementById("inf-only-btn").classList.toggle("active", infOnly);
+    document.getElementById("ac-only-btn").classList.remove("active");
+    renderCurrent();
+  });
+
+  document.getElementById("ac-only-btn").addEventListener("click", () => {
+    if (document.getElementById("ac-only-btn").classList.contains("loading")) return;
+    acOnly = !acOnly;
+    if (acOnly) infOnly = false;
+    document.getElementById("ac-only-btn").classList.toggle("active", acOnly);
+    document.getElementById("inf-only-btn").classList.remove("active");
+    renderCurrent();
+  });
+
+  document.getElementById("level-min").addEventListener("input", e => {
+    const val = parseFloat(e.target.value);
+    levelMin = isNaN(val) ? null : val;
+    renderCurrent();
+  });
+
+  document.getElementById("level-max").addEventListener("input", e => {
+    const val = parseFloat(e.target.value);
+    levelMax = isNaN(val) ? null : val;
+    renderCurrent();
+  });
+
+  document.getElementById("filter-clear-btn").addEventListener("click", () => {
+    // 値のリセット
+    searchQuery = "";
+    objOnly = false;
+    infOnly = false;
+    acOnly = false;
+    levelMin = null;
+    levelMax = null;
+
+    // UIの反映
+    document.getElementById("search-input").value = "";
+    document.getElementById("level-min").value = "";
+    document.getElementById("level-max").value = "";
+    document.getElementById("obj-only-btn").classList.remove("active");
+    document.getElementById("inf-only-btn").classList.remove("active");
+    document.getElementById("ac-only-btn").classList.remove("active");
+
+    // ソートリセット
+    ["new","change","recommend","subdivision","revision"].forEach(tab => {
+      sortState[tab].key = null;
+      sortState[tab].dir = null;
+      updateSortHeaders(tab);
+    });
+
+    renderCurrent();
+  });
+
+  // ソートヘッダークリック
+  document.querySelectorAll("thead th.sortable").forEach(th => {
+    th.addEventListener("click", () => {
+      const tab = th.dataset.sortTab;
+      const key = th.dataset.sortKey;
+      const st  = sortState[tab];
+      if (st.key === key) {
+        // 同じキー: asc→desc→asc のトグル
+        st.dir = st.dir === "asc" ? "desc" : "asc";
+      } else {
+        st.key = key; st.dir = "asc";
+      }
+      updateSortHeaders(tab);
+      renderCurrent();
+    });
+  });
+});
+
+// ソートヘッダーのクラス更新
+function updateSortHeaders(tab) {
+  document.querySelectorAll(`thead th.sortable[data-sort-tab="${tab}"]`).forEach(th => {
+    const key = th.dataset.sortKey;
+    const st  = sortState[tab];
+    th.classList.remove("sort-asc","sort-desc");
+    const icon = th.querySelector(".sort-icon");
+    if (st.key === key && st.dir) {
+      th.classList.add(st.dir === "asc" ? "sort-asc" : "sort-desc");
+      if (icon) icon.textContent = st.dir === "asc" ? "↑" : "↓";
+    } else {
+      if (icon) icon.textContent = "⇅";
+    }
+  });
+}
+
+// 日付文字列を数値化（YYYY/M/D or YYYY/MM/DD 両対応）
+function parseDateNum(str) {
+  if (!str) return 0;
+  const parts = String(str).split("/");
+  if (parts.length !== 3) return 0;
+  const y = parseInt(parts[0], 10);
+  const m = parseInt(parts[1], 10);
+  const d = parseInt(parts[2], 10);
+  if (isNaN(y)||isNaN(m)||isNaN(d)) return 0;
+  return y * 10000 + m * 100 + d;
+}
+
+// ソート適用
+function applySort(rows, tab) {
+  const st = sortState[tab];
+  if (!st.key || !st.dir) return rows;
+  const key = st.key;
+  const asc = st.dir === "asc";
+  return [...rows].sort((a, b) => {
+    let va, vb;
+    if (key === "date") {
+      va = parseDateNum(a.date);
+      vb = parseDateNum(b.date);
+    } else {
+      va = parseFloat(a[key]);
+      vb = parseFloat(b[key]);
+      if (isNaN(va)) va = -Infinity;
+      if (isNaN(vb)) vb = -Infinity;
+    }
+    return asc ? va - vb : vb - va;
+  });
+}
+async function loadData() {
+  document.getElementById("last-updated").textContent = "読み込み中…";
+  showLoading(true);
+  try {
+    const res = await fetch(GAS_PROPOSALS_URL);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    allData = await res.json();
+
+    const now = new Date();
+    document.getElementById("last-updated").textContent =
+      `${now.getHours()}:${String(now.getMinutes()).padStart(2,"0")} 更新`;
+
+    document.getElementById("cnt-new").textContent    = allData.new_proposals.length;
+    document.getElementById("cnt-change").textContent = allData.change_proposals.length;
+    document.getElementById("cnt-rec").textContent    = allData.recommend_proposals.length;
+    document.getElementById("cnt-sub").textContent    = allData.subdivision_proposals.length;
+    document.getElementById("cnt-rev").textContent    = (allData.revision_requests || []).length;
+
+    showLoading(false);
+    renderCurrent();
+  } catch (err) {
+    showLoading(false);
+    document.getElementById("last-updated").textContent = "取得失敗";
+    showError(err.message);
+  }
+}
+
+function showLoading(on) {
+  ["new","change","rec","sub","rev"].forEach(id => {
+    const el = document.getElementById(`loading-${id}`);
+    if (el) el.style.display = on ? "block" : "none";
+  });
+}
+
+function showError(msg) {
+  ["new","change","rec","sub","rev"].forEach(id => {
+    const el = document.getElementById(`loading-${id}`);
+    if (el) el.innerHTML = `<div class="error-msg">⚠ 取得に失敗しました: ${escHtml(msg)}</div>`;
+  });
+}
+
+// -------------------------------------------------------------------
+// タブ切替
+// -------------------------------------------------------------------
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === tab));
+  document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+
+  const panelMap = {
+    "new": "panel-new",
+    "change": "panel-change",
+    "recommend": "panel-recommend",
+    "subdivision": "panel-subdivision",
+    "revision": "panel-revision"
+  };
+  const panelId = panelMap[tab];
+  
+  if (panelId) {
+    document.getElementById(panelId).classList.add("active");
+  }
+  renderCurrent();
+}
+
+function renderCurrent() {
+  if      (currentTab === "new")         renderNew();
+  else if (currentTab === "change")      renderChange();
+  else if (currentTab === "recommend")   renderRecommend();
+  else if (currentTab === "subdivision") renderSubdivision();
+  else if (currentTab === "revision")    renderRevision();
+}
+
+// -------------------------------------------------------------------
+// フィルタリング共通
+// -------------------------------------------------------------------
+function applyFilter(rows, searchFields) {
+  return rows.filter(row => {
+    if (objOnly && (!row.objections || row.objections.length === 0)) return false;
+    
+    // INF有のみ：Setに含まれていない曲を除外
+    if (infOnly && infTitleSet !== null && !infTitleSet.has(row.title)) return false;
+    
+    // AC有のみ：削除フラグSetに含まれている曲を除外（ロジックを反転）
+    if (acOnly && deletedTitleSet !== null && deletedTitleSet.has(row.title)) return false;
+
+    // レベル範囲
+    // --- レベル範囲フィルタ（level_from または level_to が範囲内なら表示） ---
+    if (levelMin !== null || levelMax !== null) {
+      if (currentTab !== "recommend") {
+        if (row.level_from !== undefined || row.level_to !== undefined) {
+          // 変更提案の場合
+          const valFrom = parseFloat(row.level_from);
+          const valTo   = parseFloat(row.level_to);
+          const isFromIn = !isNaN(valFrom) && (levelMin === null || valFrom >= levelMin) && (levelMax === null || valFrom <= levelMax);
+          const isToIn   = !isNaN(valTo)   && (levelMin === null || valTo   >= levelMin) && (levelMax === null || valTo   <= levelMax);
+          if (!isFromIn && !isToIn) return false;
+        } else {
+          // 新規・細分化待ちの場合
+          const levelVal = parseFloat(row.level);
+          if (isNaN(levelVal)) return false;
+          if (levelMin !== null && levelVal < levelMin) return false;
+          if (levelMax !== null && levelVal > levelMax) return false;
+        }
+      }
+    }
+
+    if (searchQuery) {
+      const haystack = searchFields.map(f => (row[f] || "").toLowerCase()).join(" ");
+      if (!haystack.includes(searchQuery)) return false;
+    }
+    return true;
+  });
+}
+
+// -------------------------------------------------------------------
+// 新規提案 描画
+// -------------------------------------------------------------------
+function renderNew() {
+  let rows = applyFilter(allData.new_proposals, ["title","comment","remarks"]);
+  rows = applySort(rows, "new");
+  document.getElementById("result-count").textContent = `${rows.length} 件`;
+
+  const tbody = document.getElementById("body-new");
+  const table = document.getElementById("table-new");
+  const empty = document.getElementById("empty-new");
+
+  if (rows.length === 0) { table.style.display = "none"; empty.style.display = "block"; return; }
+  table.style.display = "table";
+  empty.style.display = "none";
+
+  tbody.innerHTML = rows.map(r => `
+    <tr>
+      <td class="col-date">${escHtml(r.date)}</td>
+      <td class="col-level"><span class="level-val">☆${escHtml(r.level)}</span></td>
+      <td class="col-rec">${recChip(r.recommend)}</td>
+      <td class="col-title">${escHtml(r.title)}</td>
+      <td class="col-main">${longText(r.comment)}</td>
+      <td class="col-main">${longText(r.remarks)}</td>
+      <td class="obj-cell">${objThread(r.objections)}</td>
+    </tr>
+  `).join("");
+}
+
+// -------------------------------------------------------------------
+// 変更提案 描画
+// -------------------------------------------------------------------
+function renderChange() {
+  let rows = applyFilter(allData.change_proposals, ["title","reason"]);
+  rows = applySort(rows, "change");
+  document.getElementById("result-count").textContent = `${rows.length} 件`;
+
+  const tbody = document.getElementById("body-change");
+  const table = document.getElementById("table-change");
+  const empty = document.getElementById("empty-change");
+
+  if (rows.length === 0) { table.style.display = "none"; empty.style.display = "block"; return; }
+  table.style.display = "table";
+  empty.style.display = "none";
+
+  tbody.innerHTML = rows.map(r => `
+    <tr>
+      <td class="col-date">${escHtml(r.date)}</td>
+      <td class="col-level">
+        <div class="level-arrow">
+          <span class="from">☆${escHtml(r.level_from)}</span>
+          <span class="arr">⇒</span>
+          <span class="to">☆${escHtml(r.level_to)}</span>
+        </div>
+      </td>
+      <td class="col-title">${escHtml(r.title)}</td>
+      <td class="col-main">${longText(r.reason)}</td>
+      <td class="obj-cell">${objThread(r.objections)}</td>
+    </tr>
+  `).join("");
+}
+
+// -------------------------------------------------------------------
+// おすすめ提案 描画
+// -------------------------------------------------------------------
+function renderRecommend() {
+  let rows = applyFilter(allData.recommend_proposals, ["title","reason"]);
+  rows = applySort(rows, "recommend");
+  document.getElementById("result-count").textContent = `${rows.length} 件`;
+
+  const tbody = document.getElementById("body-rec");
+  const table = document.getElementById("table-rec");
+  const empty = document.getElementById("empty-rec");
+
+  if (rows.length === 0) { table.style.display = "none"; empty.style.display = "block"; return; }
+  table.style.display = "table";
+  empty.style.display = "none";
+
+  tbody.innerHTML = rows.map(r => `
+    <tr>
+      <td class="col-date">${escHtml(r.date)}</td>
+      <td>
+        <div class="rec-arrow">
+          ${recChip(r.rec_from)}
+          <span style="color:var(--text-sub)">⇒</span>
+          ${recChip(r.rec_to)}
+        </div>
+      </td>
+      <td class="col-title">${escHtml(r.title)}</td>
+      <td class="col-main">${longText(r.reason)}</td>
+      <td class="obj-cell">${objThread(r.objections)}</td>
+    </tr>
+  `).join("");
+}
+
+// 細分化待ちの描画関数
+function renderSubdivision() {
+  let rows = applyFilter(allData.subdivision_proposals, ["title","comment"]);
+  rows = applySort(rows, "subdivision");
+  document.getElementById("result-count").textContent = `${rows.length} 件`;
+
+  const tbody = document.getElementById("body-sub");
+  const table = document.getElementById("table-sub");
+  const empty = document.getElementById("empty-sub");
+
+  if (rows.length === 0) { table.style.display = "none"; empty.style.display = "block"; return; }
+  table.style.display = "table";
+  empty.style.display = "none";
+
+  tbody.innerHTML = rows.map(r => `
+    <tr>
+      <td class="col-date">${escHtml(r.date)}</td>
+      <td class="col-level"><span class="level-val">☆${escHtml(r.level)}</span></td>
+      <td class="col-title">${escHtml(r.title)}</td>
+      <td class="col-main">${longText(r.comment)}</td>
+      <td class="obj-cell">${objThread(r.objections)}</td>
+    </tr>
+  `).join("");
+}
+
+// 修正依頼の描画関数
+function renderRevision() {
+  const allRows = allData.revision_requests || [];
+  let rows = allRows.filter(row => {
+    if (searchQuery) {
+      const haystack = [row.content, row.answer].map(f => (f || "").toLowerCase()).join(" ");
+      if (!haystack.includes(searchQuery)) return false;
+    }
+    return true;
+  });
+  rows = applySort(rows, "revision");
+  document.getElementById("result-count").textContent = `${rows.length} 件`;
+
+  const tbody = document.getElementById("body-rev");
+  const table = document.getElementById("table-rev");
+  const empty = document.getElementById("empty-rev");
+
+  if (rows.length === 0) { table.style.display = "none"; empty.style.display = "block"; return; }
+  table.style.display = "table";
+  empty.style.display = "none";
+
+  tbody.innerHTML = rows.map(r => `
+    <tr>
+      <td class="col-date">${escHtml(r.date)}</td>
+      <td class="col-main">${longText(r.content)}</td>
+      <td class="col-main">${longText(r.answer)}</td>
+    </tr>
+  `).join("");
+}
+
+// -------------------------------------------------------------------
+// UI ヘルパー
+// -------------------------------------------------------------------
+function escHtml(str) {
+  if (!str) return "";
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function longText(str) {
+  if (!str) return `<span class="obj-none">-</span>`;
+  return `<div class="long-text">${escHtml(str).replace(/\n/g, "<br>")}</div>`;
+}
+
+function objThread(objections) {
+  if (!objections || objections.length === 0) {
+    return `<span class="obj-none">-</span>`;
+  }
+  const items = objections.map((o, i) => `
+    <div class="obj-bubble">
+      <div class="obj-idx">${i % 2 === 0 ? "異議" : "反論"} ${Math.floor(i/2)+1}</div>
+      ${escHtml(o).replace(/\n/g,"<br>")}
+    </div>
+  `).join("");
+  return `<div class="obj-thread">${items}</div>`;
+}
+
+function recChip(val) {
+  if (!val) return `<span class="rec-chip rec-none">　</span>`;
+  const map = {
+    "☆": ["rec-star",    "☆"],
+    "◎": ["rec-circle2", "◎"],
+    "○": ["rec-circle",  "○"],
+    "△": ["rec-tri",     "△"],
+  };
+  const [cls, label] = map[val] || ["rec-none", val];
+  return `<span class="rec-chip ${cls}">${label}</span>`;
+}
+</script>
+</body>
+</html>

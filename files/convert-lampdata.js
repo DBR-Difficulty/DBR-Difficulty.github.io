@@ -129,7 +129,8 @@
     "FiZZλ_PØT!OИ": "FiZZλ_PØT!0И",
     "Get set， Go! feat.Kanae Asaba": "Get set, Go! feat.Kanae Asaba",
     "I Was The One(80's EUROBEAT STYLE)": "I Was The One (80's EUROBEAT STYLE)",
-    "Time to Empress":"Time To Empress"
+    "Time to Empress":"Time To Empress",
+    "恋愛=精度×認識力": "恋愛＝精度×認識力"
 
 
     // 必要に応じてここに追加
@@ -232,6 +233,8 @@
     ["traces","N"],
     ["Twelfth Style","N"],
     ["Xepher","N"],
+    ["雪月花","N"],
+    ["冥","N"],
   ];
 
   const lampData = {};
