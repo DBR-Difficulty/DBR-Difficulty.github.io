@@ -463,10 +463,12 @@
         .then(songData => {
           // レスポンスが配列でない場合（{data:[...]}等のラップ形式）に対応
           const list = Array.isArray(songData) ? songData : (songData[0] ?? songData.data ?? Object.values(songData)[0] ?? []);
-          console.log(`[levelMap] songDataの型: ${Array.isArray(songData) ? "配列" : typeof songData}, 件数: ${list.length}`, songData);
+          // キーは textageid + 難易度記号（例: "eden(A)"）= item.textage と同じ形式
+          // 同じ textageid でも難易度ごとに level が異なるため、title 末尾の "(X)" をサフィックスとして付加する
           for (const d of list) {
-            if (d.textage && d.level && d.level !== "未査定") {
-              levelMap.set(d.textage, String(d.level));
+            if (d.textageid && d.title && d.level && d.level !== "未査定" && d.level !== "") {
+              const suffix = d.title.match(/\([A-Z]\)$/)?.[0] ?? "";
+              levelMap.set(d.textageid + suffix, String(d.level));
             }
           }
           console.log(`[levelMap] songData取得完了: ${levelMap.size}件`);
@@ -1001,6 +1003,7 @@
           // --- レベルセル（先頭に挿入） ---
           const levelTd = document.createElement("td");
           levelTd.className = "col-level-ir";
+          // item.textage は "textageid(A)" 形式で levelMap のキーと一致する
           levelTd.dataset.textage = item.textage || "";
           if (levelMapReady) {
             const lv = item.textage ? levelMap.get(item.textage) : null;
