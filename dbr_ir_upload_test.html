@@ -1125,16 +1125,24 @@
         btn.disabled = true;
         btn.textContent = "生成中…";
         try {
-          const target = document.getElementById("previewList");
+          const list = document.getElementById("previewList");
+          const target = document.querySelector("#previewList table");
+          // スクロールを一時的に先頭に戻す（全行キャプチャのため）
+          const prevScroll = list.scrollTop;
+          list.scrollTop = 0;
           const canvas = await html2canvas(target, {
             backgroundColor: "#ffffff",
             scale: 2,
             scrollX: 0,
-            scrollY: -window.scrollY,
-            windowWidth: target.scrollWidth,
-            width: target.scrollWidth,
-            height: target.scrollHeight,
+            scrollY: 0,
+            x: 0,
+            y: 0,
+            width: target.offsetWidth,
+            height: target.offsetHeight,
+            windowWidth: target.offsetWidth,
+            windowHeight: target.offsetHeight,
           });
+          list.scrollTop = prevScroll;
           const ua = navigator.userAgent.toLowerCase();
           const isiOS = /iphone|ipad|ipod/.test(ua);
           if (isiOS) {
