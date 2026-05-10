@@ -1119,21 +1119,29 @@
         previewModal.classList.add("active");
       }
 
-      // 画像として保存
+      // 画像として保存// 画像として保存
       document.getElementById("saveImageBtn").addEventListener("click", async () => {
         const btn = document.getElementById("saveImageBtn");
         btn.disabled = true;
         btn.textContent = "生成中…";
+        
         try {
           const list = document.getElementById("previewList");
           const table = list.querySelector("table");
 
-          // previewListのoverflow/height制約を一時解除し、テーブルをborderなしのラッパーへ移動してキャプチャ
-          // → CSSクラスはそのまま有効、border・スクロールバー由来の余白を排除
-          const wrapper = document.createElement("div");
-          wrapper.style.cssText = "position:fixed;top:0;left:0;z-index:-9999;background:#fff;";
-          document.body.appendChild(wrapper);
-          wrapper.appendChild(table);  // listからwrapperへ移動（クローンではない）
+          if (!table) {
+             throw new Error("テーブルが見つかりません。");
+          }
+
+          // 【変更点1】テーブルを別の場所に移動させず、現在の親要素(list)のスクロール制限を一時的に解除する
+          // これによりCSSの継承が外れず、デザインが維持されます
+          const origOverflow = list.style.overflow;
+          const origMaxHeight = list.style.maxHeight;
+          const origHeight = list.style.height;
+
+          list.style.overflow = "visible";
+          list.style.maxHeight = "none";
+          list.style.height = "auto";
 
           // レイアウト確定を待つ
           await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
@@ -1141,24 +1149,27 @@
           const w = table.offsetWidth;
           const h = table.offsetHeight;
           let canvas;
+          
           try {
             canvas = await html2canvas(table, {
-              backgroundColor: "#ffffff",
+              // 【変更点2】背景色を元のstyle.css（#222222）に合わせる
+              // "#ffffff" のままだと、セル間の隙間などが白く浮いてしまうため変更しています
+              backgroundColor: "#222222", 
               scale: 2,
               scrollX: 0,
               scrollY: 0,
-              x: 0,
-              y: 0,
               width: w,
               height: h,
               windowWidth: w,
               windowHeight: h,
             });
           } finally {
-            // 成功・失敗どちらでも必ずテーブルをlistに戻す
-            list.appendChild(table);
-            document.body.removeChild(wrapper);
+            // 【変更点3】処理が成功しても失敗しても、必ず元のスクロール状態（表示領域）に戻す
+            list.style.overflow = origOverflow;
+            list.style.maxHeight = origMaxHeight;
+            list.style.height = origHeight;
           }
+
           const ua = navigator.userAgent.toLowerCase();
           const isiOS = /iphone|ipad|ipod/.test(ua);
           if (isiOS) {
