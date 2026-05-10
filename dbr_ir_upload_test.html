@@ -21,6 +21,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link href="style/style.css" rel="stylesheet">
     <script src="style/jquery-2.0.2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   </head>
   <style>
     body {
@@ -178,6 +179,22 @@
       font-size: 0.95rem;
       margin-bottom: 0.5rem;
       color: #444;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    #previewSummaryText {
+      flex: 1;
+    }
+
+    #saveImageBtn {
+      margin-top: 0;
+      padding: 0.25rem 0.65rem;
+      font-size: 0.8rem;
+      font-weight: normal;
+      white-space: nowrap;
+      flex-shrink: 0;
     }
 
     /* 警告バナー */
@@ -419,7 +436,7 @@
     <div id="previewModal">
       <div id="previewModalInner">
         <h2>アップロード内容</h2>
-        <div id="previewSummary"></div>
+        <div id="previewSummary"><span id="previewSummaryText"></span><button id="saveImageBtn">内容を画像で取得</button></div>
         <div id="warningBanner"></div>
         <div id="previewList">
           <table>
@@ -945,7 +962,7 @@
         // ひとまずステータス順で行を生成する（後でlevelMapを使ってソートし直す）
         const sorted = [...displayItems].sort((a, b) => statusOrder[a.status] - statusOrder[b.status]);
 
-        previewSummary.innerHTML =
+        document.getElementById("previewSummaryText").innerHTML =
           `<b>${cntUpload}件</b>がアップロードされます。` +
           (cntImproved ? ` <span style="color:#1a6fc4">更新: ${cntImproved}件</span>` : "") +
           (cntNew ? ` <span style="color:#228822">新規: ${cntNew}件</span>` : "") +
@@ -1101,6 +1118,43 @@
 
         previewModal.classList.add("active");
       }
+
+      // 画像として保存
+      document.getElementById("saveImageBtn").addEventListener("click", async () => {
+        const btn = document.getElementById("saveImageBtn");
+        btn.disabled = true;
+        btn.textContent = "生成中…";
+        try {
+          const target = document.getElementById("previewList");
+          const canvas = await html2canvas(target, {
+            backgroundColor: "#ffffff",
+            scale: 2,
+            scrollX: 0,
+            scrollY: -window.scrollY,
+            windowWidth: target.scrollWidth,
+            width: target.scrollWidth,
+            height: target.scrollHeight,
+          });
+          const ua = navigator.userAgent.toLowerCase();
+          const isiOS = /iphone|ipad|ipod/.test(ua);
+          if (isiOS) {
+            // iOS: 新しいタブで開く（長押し保存）
+            const dataUrl = canvas.toDataURL("image/png");
+            const win = window.open();
+            win.document.write(`<img src="${dataUrl}" style="max-width:100%">`);
+          } else {
+            const a = document.createElement("a");
+            a.href = canvas.toDataURL("image/png");
+            a.download = "dbr_ir_preview.png";
+            a.click();
+          }
+        } catch (e) {
+          alert("画像の生成に失敗しました。: " + e.message);
+        } finally {
+          btn.disabled = false;
+          btn.textContent = "内容を画像で取得";
+        }
+      });
 
       // キャンセル
       previewCancelBtn.addEventListener("click", () => {
