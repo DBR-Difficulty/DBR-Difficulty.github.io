@@ -1126,35 +1126,41 @@
         btn.textContent = "生成中…";
         try {
           const list = document.getElementById("previewList");
-          const table = list.querySelector("table");
-          // overflow・max-height を一時解除して全行展開状態にする
-          const prevOverflow = list.style.overflowY;
-          const prevMaxHeight = list.style.maxHeight;
-          list.style.overflowY = "visible";
-          list.style.maxHeight = "none";
-          list.scrollTop = 0;
-          // 解除後のtableの実幅を正解の幅とする（スクロールバー領域を除くため）
-          const exactW = table.offsetWidth;
-          const exactH = list.scrollHeight;
-          const rawCanvas = await html2canvas(list, {
+          const origTable = list.querySelector("table");
+
+          // テーブルをbody直下にクローンしてキャプチャ（border・スクロールバー・stickyの影響を排除）
+          const clone = origTable.cloneNode(true);
+          clone.style.cssText = [
+            "position:fixed",
+            "top:0",
+            "left:0",
+            "width:" + origTable.offsetWidth + "px",
+            "border-collapse:collapse",
+            "font-size:0.88rem",
+            "font-family:inherit",
+            "visibility:hidden",   // 一瞬見えないように
+            "z-index:-9999",
+          ].join(";");
+          document.body.appendChild(clone);
+          // レイアウト確定を待つ
+          await new Promise(r => requestAnimationFrame(r));
+          clone.style.visibility = "visible";
+
+          const w = clone.offsetWidth;
+          const h = clone.offsetHeight;
+          const canvas = await html2canvas(clone, {
             backgroundColor: "#ffffff",
             scale: 2,
             scrollX: 0,
             scrollY: 0,
             x: 0,
             y: 0,
-            width: exactW,
-            height: exactH,
-            windowWidth: exactW,
-            windowHeight: exactH,
+            width: w,
+            height: h,
+            windowWidth: w,
+            windowHeight: h,
           });
-          list.style.overflowY = prevOverflow;
-          list.style.maxHeight = prevMaxHeight;
-          // scale:2 なのでcanvas座標は2倍
-          const canvas = document.createElement("canvas");
-          canvas.width = exactW * 2;
-          canvas.height = exactH * 2;
-          canvas.getContext("2d").drawImage(rawCanvas, 0, 0);
+          document.body.removeChild(clone);
           const ua = navigator.userAgent.toLowerCase();
           const isiOS = /iphone|ipad|ipod/.test(ua);
           if (isiOS) {
