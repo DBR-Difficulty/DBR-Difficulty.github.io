@@ -1238,13 +1238,47 @@
           const SCALE = 2;
           const CANVAS_MAX_H = 16384;
           const CANVAS_MAX_AREA = 268435456; // 16384 * 16384
-          // 1チャンクあたりの論理px高さ（scale後が CANVAS_MAX_H 以内に収まる値）
-          const chunkLogicalH = Math.floor(Math.min(
+          // 1チャンクあたりの論理px上限高さ（scale後が CANVAS_MAX_H 以内に収まる値）
+          const chunkMaxLogicalH = Math.floor(Math.min(
             CANVAS_MAX_H / SCALE,
             CANVAS_MAX_AREA / (Math.ceil(exactW * SCALE)) / SCALE
           ));
-          const chunks = Math.ceil(exactH / chunkLogicalH);
 
+          // tableを基準とした各行の底辺Y座標を収集し、
+          // チャンク境界を必ず行の区切り（セルの境目）に合わせる。
+          const tableTop = table.getBoundingClientRect().top;
+          const allRows = Array.from(table.querySelectorAll("tr"));
+          // 各行の「tableからの相対bottomY（論理px）」
+          const rowBottoms = allRows.map(tr => {
+            const rect = tr.getBoundingClientRect();
+            return Math.round(rect.bottom - tableTop);
+          });
+
+          // チャンクの [yStart, yEnd] ペアを行境界で決定する
+          const chunkRanges = [];
+          let chunkStart = 0;
+          while (chunkStart < exactH) {
+            const limit = chunkStart + chunkMaxLogicalH;
+            if (limit >= exactH) {
+              // 最終チャンク
+              chunkRanges.push([chunkStart, exactH]);
+              break;
+            }
+            // limit以下で最も大きい行底辺を探す
+            let cutY = limit;
+            for (let i = rowBottoms.length - 1; i >= 0; i--) {
+              if (rowBottoms[i] <= limit) {
+                cutY = rowBottoms[i];
+                break;
+              }
+            }
+            // 行がlimitより全部大きい（1行がチャンク上限超え）なら強制カット
+            if (cutY <= chunkStart) cutY = limit;
+            chunkRanges.push([chunkStart, cutY]);
+            chunkStart = cutY;
+          }
+
+          const chunks = chunkRanges.length;
           const windowW = document.documentElement.scrollWidth;
           const windowH = document.documentElement.scrollHeight;
 
@@ -1283,12 +1317,12 @@
             }
 
           } else {
-            // ── 分割出力（複数PNG）──
+            // ── 分割出力（複数PNG・行境界で分割）──
             alert(`データが多いため、${chunks}枚に分割して保存します。`);
 
             for (let i = 0; i < chunks; i++) {
-              const yStart = i * chunkLogicalH;
-              const thisH = Math.min(chunkLogicalH, exactH - yStart);
+              const [yStart, yEnd] = chunkRanges[i];
+              const thisH = yEnd - yStart;
 
               const rawCanvas = await html2canvas(table, {
                 backgroundColor: "#ffffff",
