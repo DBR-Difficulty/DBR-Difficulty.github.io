@@ -1119,7 +1119,7 @@
         previewModal.classList.add("active");
       }
 
-      // 画像として保存// 画像として保存
+      // 画像として保存
       document.getElementById("saveImageBtn").addEventListener("click", async () => {
         const btn = document.getElementById("saveImageBtn");
         btn.disabled = true;
@@ -1133,27 +1133,34 @@
              throw new Error("テーブルが見つかりません。");
           }
 
-          // 【変更点1】テーブルを別の場所に移動させず、現在の親要素(list)のスクロール制限を一時的に解除する
-          // これによりCSSの継承が外れず、デザインが維持されます
+          // --- 修正のポイント ---
+          // 1. 親の制限を解除し、テーブルを一時的にインラインブロック化して「中身の幅」に縮める
           const origOverflow = list.style.overflow;
           const origMaxHeight = list.style.maxHeight;
           const origHeight = list.style.height;
+          const origTableDisplay = table.style.display;
+          const origTableWidth = table.style.width;
 
           list.style.overflow = "visible";
           list.style.maxHeight = "none";
           list.style.height = "auto";
+          
+          // テーブルを内容量に合わせる（右側の余白を消すため）
+          table.style.display = "inline-table"; 
+          table.style.width = "auto";
 
           // レイアウト確定を待つ
           await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
 
+          // 余白を含まない純粋なテーブルのサイズを取得
           const w = table.offsetWidth;
           const h = table.offsetHeight;
+
           let canvas;
-          
           try {
             canvas = await html2canvas(table, {
-              // 【変更点2】背景色を元のstyle.css（#222222）に合わせる
-              // "#ffffff" のままだと、セル間の隙間などが白く浮いてしまうため変更しています
+              // 2. 背景を真っ黒ではなく、少し明るいグレー（tableflame等の背景）にする
+              // または、透過を避けるために白（#ffffff）に戻し、CSS側で各行に色を持たせる
               backgroundColor: "#222222", 
               scale: 2,
               scrollX: 0,
@@ -1162,18 +1169,22 @@
               height: h,
               windowWidth: w,
               windowHeight: h,
+              // 3. CSSの適用をより確実にするオプション
+              logging: false,
+              useCORS: true
             });
           } finally {
-            // 【変更点3】処理が成功しても失敗しても、必ず元のスクロール状態（表示領域）に戻す
+            // 元のスタイルに戻す
             list.style.overflow = origOverflow;
             list.style.maxHeight = origMaxHeight;
             list.style.height = origHeight;
+            table.style.display = origTableDisplay;
+            table.style.width = origTableWidth;
           }
 
           const ua = navigator.userAgent.toLowerCase();
           const isiOS = /iphone|ipad|ipod/.test(ua);
           if (isiOS) {
-            // iOS: 新しいタブで開く（長押し保存）
             const dataUrl = canvas.toDataURL("image/png");
             const win = window.open();
             win.document.write(`<img src="${dataUrl}" style="max-width:100%">`);
