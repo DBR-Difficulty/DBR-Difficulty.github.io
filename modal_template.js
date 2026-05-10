@@ -460,93 +460,9 @@ function setupModal(columnsToShow) {
                 </label><br>
 
                 <label>コメント（任意）:<br><textarea name="comment_new" rows="3" style="width:100%; margin-top: 0.2rem;"></textarea></label><br>
-                <small>※おすすめコメント、譜面傾向、解説、攻略情報などなんでも（表に反映されます）</small><br>
-                                
-                <label>INFINITAS収録有無（任意）:
-                    <select name="inf_new" id="infPresence" style="margin-top: 0.5rem;">
-                        <option value="">（選択）</option>
-                        <option value="INF無し">INF無し</option>
-                        <option value="○">INF有り</option>
-                    </select>
-                </label><br>
-
-                <div id="unlockFields" style="display:none;">
-                    <label>INFINITAS解禁区分（任意）:<br>
-
-                    <select name="unlock_type" id="unlockTypeSelect">
-                        <option value="">（選択）</option>
-                        <option value="default">デフォルト曲</option>
-                        <option value="BIT解禁">BIT解禁</option>
-                        <option value="INFINITAS 楽曲パック">INFINITAS 楽曲パック</option>
-                        <option value="pop'n music セレクション 楽曲パック">pop'n music セレクション 楽曲パック</option>
-                        <option value="スタートアップセレクション 楽曲パック">スタートアップセレクション 楽曲パック</option>
-                        <option value="jubeat セレクション 楽曲パック">jubeat セレクション 楽曲パック</option>
-                        <option value="SOUND VOLTEX セレクション 楽曲パック">SOUND VOLTEX セレクション 楽曲パック</option>
-                        <option value="GITADORA セレクション 楽曲パック">GITADORA セレクション 楽曲パック</option>
-                        <option value="BPL セレクション 楽曲パック">BPL セレクション 楽曲パック</option>
-                        <option value="東方Project セレクション 楽曲パック">東方Project セレクション 楽曲パック</option>
-                        <option value="ULTIMATE MOBILE セレクション 楽曲パック">ULTIMATE MOBILE セレクション 楽曲パック</option>
-                        <option value="DJPOINT解禁">DJPOINT解禁</option>
-                    </select>
-                    <span id="unlockVolInput" style="display:none;">
-                    vol.<input type="text" name="unlock_vol" style="width: 3ch;"
-                    inputmode="numeric"
-                    pattern="[0-9]+"
-                    maxlength="3"
-                    oninput="this.value = this.value.replace(/[^\\d]/g, '')">
-                    </span>
-                    </label><br>
-                </div>
-
-                <label>
-                    <input type="checkbox" id="detailedScoreInfo" name="detailedScoreInfo" style="margin-top: 0.75rem;"/>
-                    詳細な譜面情報を提供する
-                </label>
-
-                <div id="detailedScoreFields" style="display:none;">
-                    <label>SP総ノーツ数（任意）: 
-                        <input type="text" name="notes_sp" inputmode="numeric"
-                            pattern="[0-9]+"
-                            maxlength="4"
-                            oninput="this.value = this.value.replace(/[^\\d]/g, ''); if (this.value.startsWith('0')) this.value = this.value.slice(1);"
-                            value="${halfNotes != null ? halfNotes : ''}" style="width: 4ch; margin-top: 0.5rem;">
-                    </label>
-                    <br>
-                    <label>SP皿枚数（任意）: 
-                        <input type="text" name="sara_sp" inputmode="numeric"
-                            pattern="[0-9]+"
-                            maxlength="4"
-                            oninput="this.value = this.value.replace(/[^\\d]/g, ''); if (this.value.startsWith('0')) this.value = this.value.slice(1);"
-                            value="${halfScratch != null ? halfScratch : ''}" style="width: 4ch; margin-top: 0.5rem;">
-                    </label>
-                    <br>
-                    <label>BPM（任意）: 
-                        <input type="text" name="bpm" inputmode="numeric" 
-                            pattern="^[0-9]+(?:-[0-9]+)?$" 
-                            maxlength="7" 
-                            oninput="this.value = this.value.replace(/[^0-9-]/g, '').replace(/(?<=\d)(?=\d{2,4}$)/, '-'); if (this.value.startsWith('0')) this.value = this.value.slice(1);"
-                            value="${modalData.bpm || ''}" style="width: 7ch; margin-top: 0.5rem;">
-                    </label><br>
-                    <small>
-                        ※<b>ソフランする場合「最小値-最大値」で記載してください</b>（例：95-210）
-                    </small>
-                    <br>
-                    <label>TexTageID（任意）: 
-                        <input type="text" name="textage_id" value="${textageID || ''}"/ style="margin-top: 1rem;" inputmode="url">
-                    </label><br>
-                    <small>
-                        ※<b>TexTageで対象の譜面画像を表示した際のURL</b><br>
-                        https://textage.cc/score/バージョン/<b>（ここを記載してください）</b>.html
-                    </small><br>
-                    <label>動画URL（任意）: 
-                        <input type="text" name="video_url" value="${videoURL || ''}"/ style="margin-top: 1rem;" inputmode="url">
-                    </label><br>
-                    <small>
-                        <b>※提案者ご自身の動画か掲載許可を得た動画URLでお願いします</b><br>
-                        この項目が既に記載されている場合はそのまま送信してください<br>
-                        2動画以上掲載したい場合、送信後に備考欄へ追記してください
-                    </small>
-                </div>
+                <small style="margin-bottom: -1rem; display: block;">※おすすめコメント、譜面傾向、解説、攻略情報などなんでも（表に反映されます）</small><br>
+                <label>備考（任意）:<br><textarea name="remarks_new" rows="3" style="width:100%; margin-top: 0.2rem;"></textarea></label><br>
+                <small>※提案内容の補足など（表に反映されません）</small>
                 `;
             }
 
@@ -577,39 +493,6 @@ function setupModal(columnsToShow) {
             formHtml += `<button type="submit">提案を送信</button></form>`;
             $("#modalActions").append(formHtml);
 
-            // INF有無選択によりINF解禁区分の表示切替
-            $(document).off("change", "#infPresence").on("change", "#infPresence", function () {
-                const show = $(this).val() === "○";
-
-                // INF有無が「○」の場合は表示、それ以外は非表示
-                $("#unlockFields").toggle(show);
-
-                // 表示状態に応じてrequired制御
-                const $vol = $("input[name='unlock_vol']");
-                if (show) {
-                    // 表示時は状況に応じてrequired付ける or 外す
-                    const unlockType = $("#unlockTypeSelect").val();
-                    // BIT解禁などはrequired外し、それ以外はrequiredにする例
-                    const needRequired = unlockType && !unlockType.match(/(default|BIT解禁|DJPOINT解禁)/);
-                    $vol.prop("required", needRequired);
-                } else {
-                    // 非表示時は必ずrequired外す
-                    $vol.prop("required", false);
-                    $vol.val("");
-                    $("#unlockTypeSelect").val("");
-
-                    // unlockTypeSelectの変更があっても、INF有無が「○」でなければ必ず非表示にする
-                    $("#unlockVolInput").hide();
-                }
-            });
-
-            $(document).on("change", "#detailedScoreInfo", function() {
-                if ($(this).is(":checked")) {
-                    $("#detailedScoreFields").show();
-                } else {
-                    $("#detailedScoreFields").hide();
-                }
-            });
 
             $("#proposalForm").off("submit").on("submit", function (e) {
                 e.preventDefault();
@@ -627,22 +510,7 @@ function setupModal(columnsToShow) {
                 `;
                 $("body").append(loadingMessage);  // ローディングを表示
 
-                // INF有無が空欄の場合は、解禁区分関連の値をクリア
-                if ($("#infPresence").val() !== "○") {
-                    $("#unlockTypeSelect").val("");
-                    $("input[name='unlock_vol']").val("");
-                }
-
                 const formData = Object.fromEntries(new FormData(this).entries());
-
-                // チェックボックスが外れている場合、初期値送信
-                if (!$("#detailedScoreInfo").is(":checked")) {
-                    formData.notes_sp = halfNotes != null ? halfNotes : '';
-                    formData.sara_sp = halfScratch != null ? halfScratch : '';
-                    formData.bpm = modalData.bpm != null ? modalData.bpm : '';
-                    formData.textage_id = textageID != null ? textageID : '';
-                    formData.video_url = videoURL != null ? videoURL : '';
-                }
 
                 // 変更提案やおすすめ提案のバリデーション
                 if (type === "change") {
@@ -674,17 +542,6 @@ function setupModal(columnsToShow) {
                     return;
                 }
 
-                // INF解禁区分の作成
-                let unlockStr = "";
-                if (formData.unlock_type) {
-                    unlockStr = formData.unlock_type;
-                    if (!unlockStr.match(/(default|BIT解禁|DJPOINT解禁)/) && formData.unlock_vol?.trim()) {
-                        unlockStr += ` vol.${formData.unlock_vol.trim()}`;
-                    }
-                }
- 
-                const unlockMethod = unlockStr ? parseUnlockMethod(unlockStr) : ""; 
-
                 // 提案データを整理
                 const data = {
                     提案日時: formattedToday
@@ -694,34 +551,17 @@ function setupModal(columnsToShow) {
                     data["バージョン"] = modalData.ver;
                     data["レベル"] = formData.level_new;
                     data["曲名"] = modalData.title;
-                    data["動画URL"] = formData.video_url;
-                    data["TexTageID"] = formData.textage_id;
-                    data["ノーツ数(SP)"] = formData.notes_sp;
-                    data["皿枚数(SP)"] = formData.sara_sp;
-                    data["BPM"] = formData.bpm;
+                    data["動画URL"] = modalData.video || "";
+                    data["TexTageID"] = extractTextageID(modalData.textageHTML);
+                    data["ノーツ数(SP)"] = halfNotes != null ? halfNotes : '';
+                    data["皿枚数(SP)"] = halfScratch != null ? halfScratch : '';
+                    data["BPM"] = modalData.bpm || "";
                     data["おすすめ度"] = formData.recommend_new;
-                    data["INF有無"] =  "";
+                    data["INF有無"] = modalData.inf || "";
                     data["ACプレー不可"] = modalData.level.startsWith("†") ? "○" : ""
                     data["コメント"] = formData.comment_new;
-                    data["INF解禁区分"] = "";
-
-                    // 明示的にINF無しを入力した場合
-                    if (formData.inf_new === "INF無し") {
-                        data["INF有無"] =  "";
-                        data["INF解禁区分"] = "";
-                    } else {
-                        // INF有無とINF解禁区分に値がない場合、modalDataから値をセット
-                        data["INF有無"] = formData.inf_new || modalData.inf || "";
-                        if (unlockMethod === "default") {
-                            data["INF解禁区分"] = "";
-                        } else if (unlockMethod) {
-                            data["INF解禁区分"] = unlockMethod;
-                        } else if (oldUnlockMethod) {
-                            data["INF解禁区分"] = oldUnlockMethod;
-                        } else {
-                            data["INF解禁区分"] = "";
-                        }
-                    }
+                    data["INF解禁区分"] = oldUnlockMethod;
+                    data["備考"] = formData.remarks_new;
 
                     // スプレッドシートに送信
                     sendNewProposalToSheet(data, submitButton, $("#loading"));
@@ -743,19 +583,6 @@ function setupModal(columnsToShow) {
                     sendRecommendProposalToSheet(data, submitButton, $("#loading"));
                 }
             });
-        });
-
-        $(document).off("change", "#unlockTypeSelect").on("change", "#unlockTypeSelect", function () {
-            const val = $(this).val();
-            const $unlockVol = $("input[name='unlock_vol']");
-
-            if (val && !val.match(/(default|BIT解禁|DJPOINT解禁)/)) {
-                $("#unlockVolInput").show();
-                $unlockVol.prop("required", true); // 表示 → 必須
-            } else {
-                $("#unlockVolInput").hide();
-                $unlockVol.val("").prop("required", false); // 非表示 → 必須解除
-            }
         });
 
         modalJustOpened = true;
@@ -800,7 +627,8 @@ function sendNewProposalToSheet(proposalData, submitButton, loadingElement) {
         proposalData["INF有無"],
         proposalData["ACプレー不可"],
         proposalData["コメント"],
-        proposalData["INF解禁区分"]
+        proposalData["INF解禁区分"],
+        proposalData["備考"]
     ];
 
     // proposalType（新規提案 or 変更提案）を追加
@@ -825,23 +653,28 @@ function sendNewProposalToSheet(proposalData, submitButton, loadingElement) {
     })
     .then(response => response.json())
     .then(data => {
-        // ローディング要素を削除
-        loadingElement.remove();
-
         // レスポンスの表示（成功/失敗メッセージ）
         if (data.result === "success") {
-            alert(`新規提案シートに遷移します。\n反映された内容をご確認ください。`);
-            // OKを押した後にスプレッドシートに直接遷移
-            // テスト用
-            // window.location.href = "https://docs.google.com/spreadsheets/d/1wK7m7JO83Dc2v-TqGkWd7DqSNVThvPauzq5QpC8W1_0/edit?gid=1709558806#gid=1709558806";
-            
-            // 本番シート
-            window.location.href = "https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?gid=1709558806#gid=1709558806";
+            loadingElement.remove();
+            $("#modalActions").html(`
+                <hr>
+                <div style="margin-top: 1rem; line-height: 1.8;">
+                    <b>新規提案の送信が成功しました！</b><br>
+                    <b><a href="https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?gid=1709558806#gid=1709558806"
+                        target="_blank" rel="noopener" style="color: #0073e6; text-decoration: underline;">
+                        新規提案シートで反映内容を確認する
+                    </a></b>
+                </div>
+            `);
         } else {
-            alert(`${data.message}`);
-
-            // ボタンを再度有効化
-            submitButton.prop("disabled", false);
+            loadingElement.remove();
+            $("#modalActions").append(`<div style="color: red; margin-top: 0.5rem;">${data.message}<br>
+                    <b><a href="https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?gid=1709558806#gid=1709558806"
+                        target="_blank" rel="noopener" style="color: #0073e6; text-decoration: underline;">
+                        新規提案シートで提案状況を確認する
+                    </a></b>
+                </div>
+            `);
         }
     })
     .catch(error => {
@@ -850,7 +683,7 @@ function sendNewProposalToSheet(proposalData, submitButton, loadingElement) {
 
         console.error("送信エラー:", error);
 
-        alert(`提案内容の送信に失敗しました。`);
+        $("#modalActions").append(`<div style="color: red; margin-top: 0.5rem;">提案内容の送信に失敗しました。</div>`);
 
         // ボタンを再度有効化
         submitButton.prop("disabled", false);
@@ -890,24 +723,28 @@ function sendChangeProposalToSheet(proposalData, submitButton, loadingElement) {
     })
     .then(response => response.json())
     .then(data => {
-        // ローディング要素を削除
-        loadingElement.remove();
-
         // レスポンスの表示（成功/失敗メッセージ）
         if (data.result === "success") {
-            alert(`変更提案シートに遷移します。\n反映された内容をご確認ください。`);
-
-            // OKを押した後にスプレッドシートに直接遷移
-            // テスト用
-            // window.location.href = "https://docs.google.com/spreadsheets/d/1wK7m7JO83Dc2v-TqGkWd7DqSNVThvPauzq5QpC8W1_0/edit?gid=1267054778#gid=1267054778";
-            
-            // 本番シート
-            window.location.href = "https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?gid=1267054778#gid=1267054778";
+            loadingElement.remove();
+            $("#modalActions").html(`
+                <hr>
+                <div style="margin-top: 1rem; line-height: 1.8;">
+                    <b>変更提案の送信が成功しました！</b><br>
+                    <b><a href="https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?gid=1267054778#gid=1267054778"
+                        target="_blank" rel="noopener" style="color: #0073e6; text-decoration: underline;">
+                        変更提案シートで反映内容を確認する
+                    </a></b>
+                </div>
+            `);
         } else {
-            alert(`${data.message}`);
-
-            // ボタンを再度有効化
-            submitButton.prop("disabled", false);
+            loadingElement.remove();
+            $("#modalActions").append(`<div style="color: red; margin-top: 0.5rem;">${data.message}<br>
+                    <b><a href="https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?gid=1267054778#gid=1267054778"
+                        target="_blank" rel="noopener" style="color: #0073e6; text-decoration: underline;">
+                        変更提案シートで提案状況を確認する
+                    </a></b>
+                </div>
+            `);
         }
     })
     .catch(error => {
@@ -916,7 +753,7 @@ function sendChangeProposalToSheet(proposalData, submitButton, loadingElement) {
 
         console.error("送信エラー:", error);
 
-        alert(`提案内容の送信に失敗しました。`);
+        $("#modalActions").append(`<div style="color: red; margin-top: 0.5rem;">提案内容の送信に失敗しました。</div>`);
 
         // ボタンを再度有効化
         submitButton.prop("disabled", false);
@@ -956,23 +793,28 @@ function sendRecommendProposalToSheet(proposalData, submitButton, loadingElement
     })
     .then(response => response.json())
     .then(data => {
-        // ローディング要素を削除
-        loadingElement.remove();
-
         // レスポンスの表示（成功/失敗メッセージ）
         if (data.result === "success") {
-            alert(`おすすめ提案シートに遷移します。\n反映された内容をご確認ください。`);
-            // OKを押した後にスプレッドシートに直接遷移
-            // テスト用
-            // window.location.href = "https://docs.google.com/spreadsheets/d/1wK7m7JO83Dc2v-TqGkWd7DqSNVThvPauzq5QpC8W1_0/edit?pli=1&gid=1779953087#gid=1779953087";
-            
-            // 本番シート
-            window.location.href = "https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?gid=1779953087#gid=1779953087";
+            loadingElement.remove();
+            $("#modalActions").html(`
+                <hr>
+                <div style="margin-top: 1rem; line-height: 1.8;">
+                    <b>おすすめ提案の送信が成功しました！</b><br>
+                    <b><a href="https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?gid=1779953087#gid=1779953087"
+                        target="_blank" rel="noopener" style="color: #0073e6; text-decoration: underline;">
+                        おすすめ提案シートで反映内容を確認する
+                    </a></b>
+                </div>
+            `);
         } else {
-            alert(`${data.message}`);
-
-            // ボタンを再度有効化
-            submitButton.prop("disabled", false);
+            loadingElement.remove();
+            $("#modalActions").append(`<div style="color: red; margin-top: 0.5rem;">${data.message}<br>
+                    <b><a href="https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?gid=1779953087#gid=1779953087"
+                        target="_blank" rel="noopener" style="color: #0073e6; text-decoration: underline;">
+                        おすすめ提案シートで提案状況を確認する
+                    </a></b>
+                </div>
+            `);
         }
     })
     .catch(error => {
@@ -981,7 +823,7 @@ function sendRecommendProposalToSheet(proposalData, submitButton, loadingElement
 
         console.error("送信エラー:", error);
 
-        alert(`提案内容の送信に失敗しました。`);
+        $("#modalActions").append(`<div style="color: red; margin-top: 0.5rem;">提案内容の送信に失敗しました。</div>`);
 
         // ボタンを再度有効化
         submitButton.prop("disabled", false);

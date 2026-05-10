@@ -33,6 +33,8 @@
         <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M5CPZDQB"
         height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <!-- End Google Tag Manager (noscript) -->
+        <!-- 曲検索js -->
+        <script src="title_search.js"></script>
 
         <center>
             <strong><span style="font-size: 2rem;">DBR難易度表(イージー)(未査定有)</span></strong><br>
@@ -83,6 +85,13 @@
                             〜
                             <input type="number" id="splv-max" step="1" style="width:4ch;">
                         </div>
+                    </div>
+                </div>
+                <!-- 曲名検索（保存されません） -->
+                <div class="filter-row" style="gap:0.5em;">
+                    <div class="filter-label">曲名検索:</div>
+                    <div class="search-container">
+                        <input type="text" id="title-search" placeholder="" style="font-size:1em; padding:0.2em 0.4em; min-width:106.5%; box-sizing:border-box;">
                     </div>
                 </div>
                 <div class="filter-row">
@@ -183,6 +192,17 @@
 
                         $("#loading").remove(); // ローディング終了
                         document.getElementById("export-excel-btn").disabled = false; // Excel出力可能
+
+                        // タイトルキャッシュ構築
+                        window.titleNormCache = new Map();
+                        allSongData.forEach(song => {
+                            if (!song.title) return;
+                            const n = normalizeForSearch(song.title, false, true);
+                            window.titleNormCache.set(song.title, {
+                                norm: n,
+                                keep: normalizeForSearch(song.title, true, true),
+                            });
+                        });
 
                         setupModal([
                             "level", "recommend", "ver", "title", "bpm",
@@ -353,6 +373,13 @@
                 document.getElementById("pack-filter-row").style.display =
                     document.getElementById("filter-inf-only").checked ? "" : "none";
 
+                // 曲名検索欄変更時に即時フィルター適用（保存しない）
+                let searchDebounceTimer = null;
+                document.getElementById("title-search").addEventListener("input", () => {
+                    clearTimeout(searchDebounceTimer);
+                    searchDebounceTimer = setTimeout(() => applyFiltersByDOM(), 100);
+                });
+
                 // リセットボタン
                 document.getElementById("reset-filters").onclick = () => {
                     levelSlider.noUiSlider.set([SLIDER_DEFAULTS.levelMin, SLIDER_DEFAULTS.levelMax]);
@@ -367,6 +394,7 @@
                     });
                     document.getElementById("filter-inf-only").checked = false;
                     document.getElementById("pack-filter-row").style.display = "none";
+                    document.getElementById("title-search").value = ""; // 検索欄もリセット
                     resetPackFilter();
                     saveFilterSettings();
                     updateTable();
@@ -396,9 +424,18 @@
                 const hideAcDeleted = document.getElementById("hide-acdeleted").checked;
                 const infOnly = document.getElementById("filter-inf-only").checked;
                 const uncheckedPacks = new Set(getUncheckedPacks());
+                // 曲名検索クエリを正規化
+                const searchQuery = document.getElementById("title-search").value ?? "";
 
                 const sectionCounts = {};
                 const rows = document.querySelectorAll("#table_int tr.tr_normal, #table_int tr.tr_proposed");
+
+                // クエリ側の正規化をループ外で1回だけ計算
+                const trimmedQuery   = searchQuery.trim();
+                const isShortQuery   = trimmedQuery.length < 2;
+                const normQuery      = searchQuery ? normalizeForSearch(searchQuery, false, false) : "";
+                const noSpaceQ       = normQuery.replace(/ /g, '');
+                const keepQuery      = searchQuery ? normalizeForSearch(searchQuery, true,  false) : "";
 
                 rows.forEach(tr => {
                     const level    = parseFloat(tr.dataset.level);
@@ -417,7 +454,39 @@
                     const splvOk      = isNaN(splv)  || (splv  >= splvMin && splv  <= splvMax);
                     const recommendOk = checkedRecommend.has(recommend);
 
-                    const visible = levelOk && splvOk && recommendOk;
+                    // 曲名検索フィルター
+                    const titleEl = tr.querySelector(".col-title a");
+                    const titleText = titleEl ? titleEl.textContent.trim() : "";
+                    let searchOk;
+                    if (!searchQuery) {
+                        searchOk = true;
+                    } else if (isShortQuery) {
+                        const simpleHit = titleText.toLowerCase().includes(trimmedQuery.toLowerCase());
+                        if (simpleHit) {
+                            searchOk = true;
+                        } else if (!shortSpecialTerms.has(trimmedQuery)) {
+                            searchOk = false;
+                        } else {
+                            const cached = window.titleNormCache && window.titleNormCache.get(titleText);
+                            if (!cached) {
+                                searchOk = titleMatchesSearch(titleText, trimmedQuery);
+                            } else {
+                                searchOk = cached.norm.includes(normQuery) ||
+                                           (noSpaceQ.length > 0 && matchesInAnyBlock(cached.norm, noSpaceQ));
+                            }
+                        }
+                    } else {
+                        const cached = window.titleNormCache && window.titleNormCache.get(titleText);
+                        if (!cached) {
+                            searchOk = titleMatchesSearch(titleText, searchQuery);
+                        } else {
+                            searchOk = cached.norm.includes(normQuery) ||
+                                       (noSpaceQ.length > 0 && matchesInAnyBlock(cached.norm, noSpaceQ)) ||
+                                       cached.keep.includes(keepQuery);
+                        }
+                    }
+
+                    const visible = levelOk && splvOk && recommendOk && searchOk;
                     tr.style.display = visible ? "" : "none";
 
                     if (!sectionCounts[sectionKey]) sectionCounts[sectionKey] = 0;

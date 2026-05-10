@@ -14,6 +14,7 @@
   <link rel="icon" href="/favicon.ico" />
   <link href="style/style.css" rel="stylesheet">
   <script src="style/jquery-2.0.2.min.js"></script>
+  <script src="title_search.js"></script>
   <style>
     table.playerdata-table {
       border-collapse: collapse;
@@ -127,8 +128,12 @@
             <label><b>表示オプション</b></label>
             <label><input type="checkbox" id="show-unrated" checked> 未査定譜面を表示</label>
             <label><input type="checkbox" id="hide-acdeleted"> 現行AC削除・未収録曲を除く</label>
-            <label><input type="checkbox" id="only-inf"> INFINITAS収録曲のみ表示（未査定譜面は非対応の場合あり）</label>
+            <label><input type="checkbox" id="only-inf"> INFINITAS収録曲のみ表示</label>
             <label><input type="checkbox" id="katate-cp"> おまけ：片手クリアポイント基準の値を表示</label>
+            <div style="display:flex; align-items:center; gap:0.5em; margin-top:0.3em;">
+              <label for="title-search" style="white-space:nowrap;">曲名検索：</label>
+              <input type="text" id="title-search" placeholder="曲名を入力…" style="font-size:1em; padding:0.2em 0.4em; width:16em; box-sizing:border-box;">
+            </div>
           </div>
         </div>
         <!-- 統計表示部分 -->
@@ -242,6 +247,7 @@
       const showUnrated = document.getElementById("show-unrated").checked;
       const hideAcDeleted = document.getElementById("hide-acdeleted").checked;
       const onlyInf = document.getElementById("only-inf").checked;
+      const searchQuery = (document.getElementById("title-search")?.value ?? "").trim();
 
       return songList.filter(song => {    
         const acdeleted = !!song.acdelete;
@@ -258,7 +264,10 @@
         const splv = parseInt(song.splv);
         const splvOk = isNaN(splv) ? false : (splv >= splvMin && splv <= splvMax);
 
-        return levelOk && splvOk;
+        // 曲名検索
+        const searchOk = !searchQuery || titleMatchesSearch(song.title, searchQuery);
+
+        return levelOk && splvOk && searchOk;
       });
     }
 
@@ -787,6 +796,13 @@
       document.getElementById("only-inf").addEventListener("change", updateOnSliderChange);
       document.getElementById("katate-cp").addEventListener("change", updateOnSliderChange);
 
+      // 曲名検索欄の入力でリアルタイムフィルター（デバウンス付き）
+      let searchDebounceTimer = null;
+      document.getElementById("title-search").addEventListener("input", () => {
+        clearTimeout(searchDebounceTimer);
+        searchDebounceTimer = setTimeout(() => updateOnSliderChange(), 150);
+      });
+
       document.getElementById("reset-filters").onclick = () => {
         // スライダー初期値に戻す
         levelSlider.noUiSlider.set([10.20, 13.01]);
@@ -803,6 +819,9 @@
         document.getElementById("hide-acdeleted").checked = false;
         document.getElementById("only-inf").checked = false;
         document.getElementById("katate-cp").checked = false;
+
+        // 曲名検索欄もリセット
+        document.getElementById("title-search").value = "";
 
         // 再描画
         updateOnSliderChange();

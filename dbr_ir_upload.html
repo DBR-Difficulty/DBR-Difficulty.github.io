@@ -21,6 +21,9 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link href="style/style.css" rel="stylesheet">
     <script src="style/jquery-2.0.2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- ExcelJS CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
   </head>
   <style>
     body {
@@ -178,6 +181,29 @@
       font-size: 0.95rem;
       margin-bottom: 0.5rem;
       color: #444;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    #previewSummaryText {
+      flex: 1;
+    }
+
+    #saveExportLabel {
+      font-size: 0.8rem;
+      color: #444;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    #saveExcelBtn, #saveImageBtn {
+      margin-top: 0;
+      padding: 0.25rem 0.65rem;
+      font-size: 0.8rem;
+      font-weight: normal;
+      white-space: nowrap;
+      flex-shrink: 0;
     }
 
     /* 警告バナー */
@@ -318,6 +344,31 @@
       color: #333;
       min-width: 8rem;
     }
+
+    /* レベル列 */
+    .col-level-ir {
+      min-width: 3.5rem;
+      text-align: center;
+      font-size: 0.85rem;
+      font-weight: bold;
+      color: #444;
+      white-space: nowrap;
+    }
+
+    /* レベル読み込み中スピナー */
+    @keyframes lv-spin {
+      to { transform: rotate(360deg); }
+    }
+    .lv-spinner {
+      display: inline-block;
+      width: 0.85rem;
+      height: 0.85rem;
+      border: 2px solid #ccc;
+      border-top-color: #888;
+      border-radius: 50%;
+      animation: lv-spin 0.7s linear infinite;
+      vertical-align: middle;
+    }
   </style>
   <body>
     <!-- Google Tag Manager (noscript) -->
@@ -394,12 +445,18 @@
     <div id="previewModal">
       <div id="previewModalInner">
         <h2>アップロード内容</h2>
-        <div id="previewSummary"></div>
+        <div id="previewSummary">
+          <span id="previewSummaryText"></span>
+          <span id="saveExportLabel">内容を取得：</span>
+          <button id="saveExcelBtn">Excel</button>
+          <button id="saveImageBtn">PNG</button>
+        </div>
         <div id="warningBanner"></div>
         <div id="previewList">
           <table>
             <thead>
               <tr>
+                <th>Lv</th>
                 <th>譜面</th>
                 <th>ランプ</th>
                 <th>BP</th>
@@ -426,6 +483,26 @@
         doc, getDoc, setDoc, collection, query, where, getDocs, deleteDoc,
         translateAuthError
       } from "./main.js";
+
+      // ===== レベルマップ =====
+      // プレビューが開くころには取得済みであることを期待する
+      const levelMap = new Map(); // key: textageKey → level string
+      const levelMapPromise = fetch("./dbralleheader.json")
+        .then(r => r.json())
+        .then(header => fetch(header.data_url))
+        .then(r => r.json())
+        .then(songData => {
+          const list = Array.isArray(songData) ? songData : (songData[0] ?? songData.data ?? Object.values(songData)[0] ?? []);
+          for (const d of list) {
+            if (d.textageid && d.title) {
+              const suffix = d.title.match(/\([A-Z]\)$/)?.[0] ?? "";
+              const lv = (d.level && d.level !== "未査定") ? d.level : "未査定";
+              levelMap.set(d.textageid + suffix, { level: lv, acdelete: !!d.acdelete });
+            }
+          }
+          return levelMap;
+        })
+        .catch((e) => { console.warn("[levelMap] songData取得失敗:", e); return levelMap; }); // 失敗しても空のMapを返すだけ
 
       const loginBtn = document.getElementById("loginBtn");
       const logoutBtn = document.getElementById("logoutBtn");
@@ -842,11 +919,58 @@
         const cntSkip = items.filter(i => i.status === "skip").length;
         const cntUpload = cntImproved + cntWorsened + cntNew;
 
-        // 並び順: worsened → improved → new → skip（title_onlyはプレビュー非表示）
-        const order = { worsened: 0, improved: 1, new: 2, skip: 3 };
-        const sorted = [...items].filter(i => i.status !== "title_only").sort((a, b) => order[a.status] - order[b.status]);
+        // 並び順: レベルマップ読み込み完了後にレベル順で並び替え（title_onlyはプレビュー非表示）
+        // レベルソート用のキー生成関数
+        // ☆→†☆の順、レベル昇順、未査定→読み込み失敗の順
+        function getLevelSortKey(item) {
+          const entry = item.textage ? levelMap.get(item.textage) : null;
+          const isAcdelete = entry?.acdelete ? 1 : 0; // ☆=0, †☆=1
+          if (!entry) {
+            // 読み込み失敗（levelMapは取得済みだがentryなし）
+            return [3, 0, 0];
+          }
+          if (entry.level === "未査定") {
+            return [2, 0, isAcdelete];
+          }
+          // 数値レベル（"12.83" 等）
+          const lv = parseFloat(entry.level);
+          return [1, isNaN(lv) ? 999 : lv, isAcdelete];
+        }
 
-        previewSummary.innerHTML =
+        const displayItems = [...items].filter(i => i.status !== "title_only");
+
+        // ステータスグループの順序（worsened → improved → new → skip）
+        const statusOrder = { worsened: 0, improved: 1, new: 2, skip: 3 };
+
+        // levelMapがまだ空（読み込み中）の場合は取得完了後にソートし直す
+        function applySortToTableBody(itemList) {
+          const rows = Array.from(previewTableBody.querySelectorAll("tr"));
+          // itemListのtextage+difficultyでrowを対応付け
+          const rowMap = new Map(rows.map(r => [`${r.dataset.textage}_${r.dataset.difficulty}`, r]));
+          const sorted = [...itemList].sort((a, b) => {
+            // まずステータスグループ（更新/悪化/new → skip）
+            const sg = statusOrder[a.status] - statusOrder[b.status];
+            if (sg !== 0) return sg;
+            // 次にレベルキー
+            const ka = getLevelSortKey(a);
+            const kb = getLevelSortKey(b);
+            for (let i = 0; i < ka.length; i++) {
+              if (ka[i] !== kb[i]) return ka[i] - kb[i];
+            }
+            return 0;
+          });
+          // DOM順を並び替え
+          for (const item of sorted) {
+            const key = `${item.textage}_${item.difficulty}`;
+            const row = rowMap.get(key);
+            if (row) previewTableBody.appendChild(row);
+          }
+        }
+
+        // ひとまずステータス順で行を生成する（後でlevelMapを使ってソートし直す）
+        const sorted = [...displayItems].sort((a, b) => statusOrder[a.status] - statusOrder[b.status]);
+
+        document.getElementById("previewSummaryText").innerHTML =
           `<b>${cntUpload}件</b>がアップロードされます。` +
           (cntImproved ? ` <span style="color:#1a6fc4">更新: ${cntImproved}件</span>` : "") +
           (cntNew ? ` <span style="color:#228822">新規: ${cntNew}件</span>` : "") +
@@ -868,9 +992,16 @@
         // テーブル行生成
         previewTableBody.innerHTML = "";
 
+        // ===== レベルマップ =====
+        // すでに完了していれば即時反映、まだなら取得完了後にセルを更新
+        const levelMapReady = levelMap.size > 0;
+        // ※ levelMapPromise.then() はテーブル行生成ループの後で登録
+
         for (const item of sorted) {
           const tr = document.createElement("tr");
           tr.dataset.status = item.status;
+          tr.dataset.textage = item.textage || "";
+          tr.dataset.difficulty = item.difficulty || "";
           if (item.status === "worsened") tr.classList.add("row-worsened");
           // 修正2: スキップ行に専用スタイルを適用
           if (item.status === "skip") tr.classList.add("row-skip");
@@ -944,6 +1075,25 @@
           tr.innerHTML = `
             <td style="max-width:220px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${fullTitle}">${cleanTitle}<span style="font-size:0.9em;">(${item.difficulty})</span></td>
           `;
+
+          // --- レベルセル ---
+          const levelTd = document.createElement("td");
+          levelTd.className = "col-level-ir";
+          // item.textage は "textageid(A)" 形式で levelMap のキーと一致
+          levelTd.dataset.textage = item.textage || "";
+          if (levelMapReady) {
+            const entry = item.textage ? levelMap.get(item.textage) : null;
+            const prefix = entry?.acdelete ? "†☆" : "☆";
+            levelTd.innerHTML = entry
+              ? (entry.level === "未査定"
+                  ? `<span style="color:#bbb;font-size:0.8rem;">${prefix}未査定</span>`
+                  : `${prefix}${entry.level}`)
+              : `<span style="color:#bbb;font-size:0.8rem;">-</span>`;
+          } else {
+            levelTd.innerHTML = `<span class="lv-spinner"></span>`;
+          }
+          tr.prepend(levelTd);
+
           tr.appendChild(lampTd);
           tr.appendChild(bpTd);
           tr.appendChild(scoreTd);
@@ -952,8 +1102,261 @@
           previewTableBody.appendChild(tr);
         }
 
+        if (levelMapReady) {
+          // 既に読み込み済み → 即ソート
+          applySortToTableBody(displayItems);
+        } else {
+          levelMapPromise.then(() => {
+            // セルの中身を更新
+            document.querySelectorAll("#previewTableBody td.col-level-ir[data-textage]").forEach(td => {
+              const entry = levelMap.get(td.dataset.textage);
+              const prefix = entry?.acdelete ? "†☆" : "☆";
+              td.innerHTML = entry
+                ? (entry.level === "未査定"
+                    ? `<span style="color:#bbb;font-size:0.8rem;">${prefix}未査定</span>`
+                    : `${prefix}${entry.level}`)
+                : `<span style="color:#bbb;font-size:0.8rem;">-</span>`;
+            });
+            // セル更新後にレベル順でソート
+            applySortToTableBody(displayItems);
+          });
+        }
+
         previewModal.classList.add("active");
       }
+
+      // Excelとして保存
+      document.getElementById("saveExcelBtn").addEventListener("click", async () => {
+        const btn = document.getElementById("saveExcelBtn");
+        btn.disabled = true;
+        btn.textContent = "生成中…";
+        try {
+          const list = document.getElementById("previewList");
+          const table = list.querySelector("table");
+
+          const wb = new ExcelJS.Workbook();
+          const ws = wb.addWorksheet("プレビュー");
+
+          // ヘッダー行
+          const headers = Array.from(table.querySelectorAll("thead th"))
+            .map(th => th.textContent.trim());
+          const headerRow = ws.addRow(headers);
+          headerRow.eachCell(cell => {
+            cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FF353535" } };
+            cell.font = { color: { argb: "FFFFFFFF" }, bold: true };
+            cell.alignment = { vertical: "middle", horizontal: "left" };
+          });
+
+          // データ行
+          const bodyRows = table.querySelectorAll("tbody tr");
+          bodyRows.forEach(tr => {
+            const cells = Array.from(tr.querySelectorAll("td"));
+            const values = cells.map(td => td.textContent.trim());
+            const row = ws.addRow(values);
+
+            // 状態列（最終列）が「NEW」なら緑背景・白文字
+            const statusCell = row.getCell(headers.length);
+            if (statusCell.value === "NEW") {
+              statusCell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FF228822" } };
+              statusCell.font = { color: { argb: "FFFFFFFF" }, bold: true };
+            }
+
+            // 悪化行（row-worsened）は薄い赤背景
+            if (tr.classList.contains("row-worsened")) {
+              row.eachCell(cell => {
+                cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FFFFF0F0" } };
+              });
+            }
+
+            row.eachCell(cell => {
+              cell.alignment = { vertical: "middle" };
+            });
+          });
+
+          // 列幅を内容に合わせて自動調整
+          ws.columns.forEach(col => {
+            let maxLen = 0;
+            col.eachCell({ includeEmpty: true }, cell => {
+              const len = cell.value ? String(cell.value).length : 0;
+              if (len > maxLen) maxLen = len;
+            });
+            col.width = Math.min(maxLen + 2, 40);
+          });
+
+          // ダウンロード
+          const buffer = await wb.xlsx.writeBuffer();
+          const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+          const a = document.createElement("a");
+          a.href = URL.createObjectURL(blob);
+          const tsXlsx = new Date().toLocaleString("sv").replace(/[-: ]/g, "").replace("T", "_").slice(0, 15);
+          a.download = `dbr_ir_preview_${tsXlsx}.xlsx`;
+          a.click();
+          URL.revokeObjectURL(a.href);
+        } catch (e) {
+          alert("Excelの生成に失敗しました。\n" + e.message);
+          console.error(e);
+        } finally {
+          btn.disabled = false;
+          btn.textContent = "Excel";
+        }
+      });
+
+      // PNGとして保存
+      document.getElementById("saveImageBtn").addEventListener("click", async () => {
+        const btn = document.getElementById("saveImageBtn");
+        btn.disabled = true;
+        btn.textContent = "生成中…";
+
+        const list = document.getElementById("previewList");
+        const prevOverflow = list.style.overflowY;
+        const prevMaxHeight = list.style.maxHeight;
+
+        try {
+          const tsPng = new Date().toLocaleString("sv").replace(/[-: ]/g, "").replace("T", "_").slice(0, 15);
+          const table = list.querySelector("table");
+
+          // overflow・max-height を一時解除して全行展開状態にする
+          list.style.overflowY = "visible";
+          list.style.maxHeight = "none";
+          list.scrollTop = 0;
+
+          // スタイル変更後、ブラウザのレイアウト再計算が完全に終わるまで2フレーム待つ
+          await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+          const exactW = table.offsetWidth;
+          const exactH = table.offsetHeight;
+
+          // 常に scale:2 固定。
+          // ブラウザのcanvas上限（高さ16384px・面積268MB）を超える場合のみ
+          // 高さ方向で分割して複数PNGとして出力する。
+          const SCALE = 2;
+          const CANVAS_MAX_H = 16384;
+          const CANVAS_MAX_AREA = 268435456; // 16384 * 16384
+          // 1チャンクあたりの論理px上限高さ（scale後が CANVAS_MAX_H 以内に収まる値）
+          const chunkMaxLogicalH = Math.floor(Math.min(
+            CANVAS_MAX_H / SCALE,
+            CANVAS_MAX_AREA / (Math.ceil(exactW * SCALE)) / SCALE
+          ));
+
+          // tableを基準とした各行の底辺Y座標を収集し、
+          // チャンク境界を必ず行の区切り（セルの境目）に合わせる。
+          const tableTop = table.getBoundingClientRect().top;
+          const allRows = Array.from(table.querySelectorAll("tr"));
+          // 各行の「tableからの相対bottomY（論理px）」
+          const rowBottoms = allRows.map(tr => {
+            const rect = tr.getBoundingClientRect();
+            return Math.round(rect.bottom - tableTop);
+          });
+
+          // チャンクの [yStart, yEnd] ペアを行境界で決定する
+          const chunkRanges = [];
+          let chunkStart = 0;
+          while (chunkStart < exactH) {
+            const limit = chunkStart + chunkMaxLogicalH;
+            if (limit >= exactH) {
+              // 最終チャンク
+              chunkRanges.push([chunkStart, exactH]);
+              break;
+            }
+            // limit以下で最も大きい行底辺を探す
+            let cutY = limit;
+            for (let i = rowBottoms.length - 1; i >= 0; i--) {
+              if (rowBottoms[i] <= limit) {
+                cutY = rowBottoms[i];
+                break;
+              }
+            }
+            // 行がlimitより全部大きい（1行がチャンク上限超え）なら強制カット
+            if (cutY <= chunkStart) cutY = limit;
+            chunkRanges.push([chunkStart, cutY]);
+            chunkStart = cutY;
+          }
+
+          const chunks = chunkRanges.length;
+          const windowW = document.documentElement.scrollWidth;
+          const windowH = document.documentElement.scrollHeight;
+
+          if (chunks === 1) {
+            // ── 通常出力（1枚）──
+            const rawCanvas = await html2canvas(table, {
+              backgroundColor: "#ffffff",
+              scale: SCALE,
+              scrollX: 0, scrollY: 0,
+              x: 0, y: 0,
+              width: exactW,
+              height: exactH,
+              windowWidth: windowW,
+              windowHeight: windowH,
+            });
+
+            list.style.overflowY = prevOverflow;
+            list.style.maxHeight = prevMaxHeight;
+
+            // canvasが空白でないか確認
+            const pixel = rawCanvas.getContext("2d")
+              .getImageData(0, Math.floor(rawCanvas.height / 2), 1, 1).data;
+            if (pixel[3] === 0) {
+              throw new Error("キャンバスが空白です。ブラウザの上限を超過した可能性があります。");
+            }
+
+            const ua = navigator.userAgent.toLowerCase();
+            if (/iphone|ipad|ipod/.test(ua)) {
+              const win = window.open();
+              win.document.write(`<img src="${rawCanvas.toDataURL("image/png")}" style="max-width:100%">`);
+            } else {
+              const a = document.createElement("a");
+              a.href = rawCanvas.toDataURL("image/png");
+              a.download = `dbr_ir_preview_${tsPng}.png`;
+              a.click();
+            }
+
+          } else {
+            // ── 分割出力（複数PNG・行境界で分割）──
+            alert(`データが多いため、${chunks}枚に分割して保存します。`);
+
+            for (let i = 0; i < chunks; i++) {
+              const [yStart, yEnd] = chunkRanges[i];
+              const thisH = yEnd - yStart;
+
+              const rawCanvas = await html2canvas(table, {
+                backgroundColor: "#ffffff",
+                scale: SCALE,
+                scrollX: 0, scrollY: -yStart,
+                x: 0, y: yStart,
+                width: exactW,
+                height: thisH,
+                windowWidth: windowW,
+                windowHeight: windowH,
+              });
+
+              const pixel = rawCanvas.getContext("2d")
+                .getImageData(0, Math.floor(rawCanvas.height / 2), 1, 1).data;
+              if (pixel[3] === 0) {
+                throw new Error(`${i + 1}枚目のキャンバスが空白です。`);
+              }
+
+              const a = document.createElement("a");
+              a.href = rawCanvas.toDataURL("image/png");
+              a.download = `dbr_ir_preview_${tsPng}_${i + 1}of${chunks}.png`;
+              a.click();
+              // ダウンロードダイアログが連続しないよう少し待つ
+              await new Promise(r => setTimeout(r, 500));
+            }
+
+            list.style.overflowY = prevOverflow;
+            list.style.maxHeight = prevMaxHeight;
+          }
+
+        } catch (e) {
+          list.style.overflowY = prevOverflow;
+          list.style.maxHeight = prevMaxHeight;
+          alert("画像の生成に失敗しました。\n" + e.message);
+          console.error(e);
+        } finally {
+          btn.disabled = false;
+          btn.textContent = "PNG";
+        }
+      });
 
       // キャンセル
       previewCancelBtn.addEventListener("click", () => {
