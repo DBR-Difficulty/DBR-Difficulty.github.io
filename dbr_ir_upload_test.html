@@ -1124,67 +1124,41 @@
         const btn = document.getElementById("saveImageBtn");
         btn.disabled = true;
         btn.textContent = "生成中…";
-        
         try {
           const list = document.getElementById("previewList");
           const table = list.querySelector("table");
-
-          if (!table) {
-             throw new Error("テーブルが見つかりません。");
-          }
-
-          // --- 修正のポイント ---
-          // 1. 親の制限を解除し、テーブルを一時的にインラインブロック化して「中身の幅」に縮める
-          const origOverflow = list.style.overflow;
-          const origMaxHeight = list.style.maxHeight;
-          const origHeight = list.style.height;
-          const origTableDisplay = table.style.display;
-          const origTableWidth = table.style.width;
-
-          list.style.overflow = "visible";
+          // overflow・max-height を一時解除して全行展開状態にする
+          const prevOverflow = list.style.overflowY;
+          const prevMaxHeight = list.style.maxHeight;
+          list.style.overflowY = "visible";
           list.style.maxHeight = "none";
-          list.style.height = "auto";
-          
-          // テーブルを内容量に合わせる（右側の余白を消すため）
-          table.style.display = "inline-table"; 
-          table.style.width = "auto";
-
-          // レイアウト確定を待つ
-          await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
-
-          // 余白を含まない純粋なテーブルのサイズを取得
-          const w = table.offsetWidth;
-          const h = table.offsetHeight;
-
-          let canvas;
-          try {
-            canvas = await html2canvas(table, {
-              // 2. 背景を真っ黒ではなく、少し明るいグレー（tableflame等の背景）にする
-              // または、透過を避けるために白（#ffffff）に戻し、CSS側で各行に色を持たせる
-              backgroundColor: "#222222", 
-              scale: 2,
-              scrollX: 0,
-              scrollY: 0,
-              width: w,
-              height: h,
-              windowWidth: w,
-              windowHeight: h,
-              // 3. CSSの適用をより確実にするオプション
-              logging: false,
-              useCORS: true
-            });
-          } finally {
-            // 元のスタイルに戻す
-            list.style.overflow = origOverflow;
-            list.style.maxHeight = origMaxHeight;
-            list.style.height = origHeight;
-            table.style.display = origTableDisplay;
-            table.style.width = origTableWidth;
-          }
-
+          list.scrollTop = 0;
+          // 解除後のtableの実幅を正解の幅とする（スクロールバー領域を除くため）
+          const exactW = table.offsetWidth;
+          const exactH = list.scrollHeight;
+          const rawCanvas = await html2canvas(list, {
+            backgroundColor: "#ffffff",
+            scale: 2,
+            scrollX: 0,
+            scrollY: 0,
+            x: 0,
+            y: 0,
+            width: exactW,
+            height: exactH,
+            windowWidth: exactW,
+            windowHeight: exactH,
+          });
+          list.style.overflowY = prevOverflow;
+          list.style.maxHeight = prevMaxHeight;
+          // scale:2 なのでcanvas座標は2倍
+          const canvas = document.createElement("canvas");
+          canvas.width = exactW * 2;
+          canvas.height = exactH * 2;
+          canvas.getContext("2d").drawImage(rawCanvas, 0, 0);
           const ua = navigator.userAgent.toLowerCase();
           const isiOS = /iphone|ipad|ipod/.test(ua);
           if (isiOS) {
+            // iOS: 新しいタブで開く（長押し保存）
             const dataUrl = canvas.toDataURL("image/png");
             const win = window.open();
             win.document.write(`<img src="${dataUrl}" style="max-width:100%">`);
