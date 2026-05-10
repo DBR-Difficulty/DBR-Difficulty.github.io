@@ -1196,7 +1196,8 @@
           const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
           const a = document.createElement("a");
           a.href = URL.createObjectURL(blob);
-          a.download = "dbr_ir_preview.xlsx";
+          const tsXlsx = new Date().toLocaleString("sv").replace(/[-: ]/g, "").replace("T", "_").slice(0, 15);
+          a.download = `dbr_ir_preview_${tsXlsx}.xlsx`;
           a.click();
           URL.revokeObjectURL(a.href);
         } catch (e) {
@@ -1219,6 +1220,7 @@
         const prevMaxHeight = list.style.maxHeight;
 
         try {
+          const tsPng = new Date().toLocaleString("sv").replace(/[-: ]/g, "").replace("T", "_").slice(0, 15);
           const table = list.querySelector("table");
 
           // overflow・max-height を一時解除して全行展開状態にする
@@ -1302,7 +1304,7 @@
             const pixel = rawCanvas.getContext("2d")
               .getImageData(0, Math.floor(rawCanvas.height / 2), 1, 1).data;
             if (pixel[3] === 0) {
-              throw new Error("キャンバスが空白です。ブラウザの上限を超えた可能性があります。");
+              throw new Error("キャンバスが空白です。ブラウザの上限を超過した可能性があります。");
             }
 
             const ua = navigator.userAgent.toLowerCase();
@@ -1312,7 +1314,7 @@
             } else {
               const a = document.createElement("a");
               a.href = rawCanvas.toDataURL("image/png");
-              a.download = "dbr_ir_preview.png";
+              a.download = `dbr_ir_preview_${tsPng}.png`;
               a.click();
             }
 
@@ -1343,7 +1345,7 @@
 
               const a = document.createElement("a");
               a.href = rawCanvas.toDataURL("image/png");
-              a.download = `dbr_ir_preview_${i + 1}of${chunks}.png`;
+              a.download = `dbr_ir_preview_${tsPng}_${i + 1}of${chunks}.png`;
               a.click();
               // ダウンロードダイアログが連続しないよう少し待つ
               await new Promise(r => setTimeout(r, 500));
