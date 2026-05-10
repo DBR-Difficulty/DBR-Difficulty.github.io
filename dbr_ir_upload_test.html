@@ -1127,19 +1127,28 @@
         try {
           const list = document.getElementById("previewList");
           const table = list.querySelector("table");
+
           // overflow・max-height を一時解除して全行展開状態にする
           const prevOverflow = list.style.overflowY;
           const prevMaxHeight = list.style.maxHeight;
           list.style.overflowY = "visible";
           list.style.maxHeight = "none";
           list.scrollTop = 0;
-          // スタイル変更後、ブラウザのレイアウト再計算（スクロールバー消滅含む）が
-          // 完全に終わるまで2フレーム待ってから寸法を計測する
+
+          // スタイル変更後、ブラウザのレイアウト再計算が完全に終わるまで2フレーム待つ
           await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
-          // 解除後のtableの実幅を正解の幅とする（スクロールバー領域を除くため）
+
+          // キャプチャ対象は list ではなく table 本体にする。
+          // list には border(1px*2) や border-radius による内部余白があり、
+          // それを含めた幅が windowWidth と食い違うと列幅計算がズレて崩れる。
+          // table を直接対象にすることで border/padding の影響を排除する。
           const exactW = table.offsetWidth;
-          const exactH = list.scrollHeight;
-          const rawCanvas = await html2canvas(list, {
+          const exactH = table.offsetHeight;
+
+          // windowWidth はブラウザの実ビューポート幅を使う。
+          // ここに table 幅などを入れると html2canvas がページ全体を
+          // その幅で再レンダリングしてしまい列幅計算がズレる。
+          const rawCanvas = await html2canvas(table, {
             backgroundColor: "#ffffff",
             scale: 2,
             scrollX: 0,
@@ -1148,26 +1157,24 @@
             y: 0,
             width: exactW,
             height: exactH,
-            windowWidth: exactW,
-            windowHeight: exactH,
+            windowWidth: document.documentElement.scrollWidth,
+            windowHeight: document.documentElement.scrollHeight,
           });
+
           list.style.overflowY = prevOverflow;
           list.style.maxHeight = prevMaxHeight;
-          // scale:2 なのでcanvas座標は2倍
-          const canvas = document.createElement("canvas");
-          canvas.width = exactW * 2;
-          canvas.height = exactH * 2;
-          canvas.getContext("2d").drawImage(rawCanvas, 0, 0);
+
+          // rawCanvas はすでに正しいサイズなのでそのまま使う
           const ua = navigator.userAgent.toLowerCase();
           const isiOS = /iphone|ipad|ipod/.test(ua);
           if (isiOS) {
             // iOS: 新しいタブで開く（長押し保存）
-            const dataUrl = canvas.toDataURL("image/png");
+            const dataUrl = rawCanvas.toDataURL("image/png");
             const win = window.open();
             win.document.write(`<img src="${dataUrl}" style="max-width:100%">`);
           } else {
             const a = document.createElement("a");
-            a.href = canvas.toDataURL("image/png");
+            a.href = rawCanvas.toDataURL("image/png");
             a.download = "dbr_ir_preview.png";
             a.click();
           }
