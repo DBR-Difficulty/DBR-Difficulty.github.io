@@ -1127,50 +1127,41 @@
         try {
           const list = document.getElementById("previewList");
           const table = list.querySelector("table");
-
-          // 1. まずスクロールバーを完全に消し、テーブルをコンテンツ幅に強制する
-          const originalOverflow = list.style.overflow;
-          const originalMaxHeight = list.style.maxHeight;
-          
-          list.style.overflow = "hidden"; // スクロールバーを非表示
-          list.style.maxHeight = "none";  // 高さを全開にする
-          
-          // テーブルが親の100%に広がらないよう一時的にinline-table化
-          const originalTableDisplay = table.style.display;
-          table.style.display = "inline-table";
-
-          // 2. スクロールバーが消え、レイアウトが再計算されるのを確実に待つ
-          await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
-
-          // 3. テーブルの「実際の描画幅」を正確に取得
+          // overflow・max-height を一時解除して全行展開状態にする
+          const prevOverflow = list.style.overflowY;
+          const prevMaxHeight = list.style.maxHeight;
+          list.style.overflowY = "visible";
+          list.style.maxHeight = "none";
+          list.scrollTop = 0;
+          // スタイル変更後、ブラウザのレイアウト再計算（スクロールバー消滅含む）が
+          // 完全に終わるまで2フレーム待ってから寸法を計測する
+          await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+          // 解除後のtableの実幅を正解の幅とする（スクロールバー領域を除くため）
           const exactW = table.offsetWidth;
-          const exactH = table.offsetHeight;
-
-          let canvas;
-          try {
-            canvas = await html2canvas(table, {
-              backgroundColor: "#222222",
-              scale: 2,
-              scrollX: 0,
-              scrollY: 0,
-              // ここでテーブルのジャストサイズを指定
-              width: exactW,
-              height: exactH,
-              windowWidth: exactW,
-              windowHeight: exactH,
-              logging: false,
-              useCORS: true
-            });
-          } finally {
-            // 4. 必ず元のスタイルに戻す
-            list.style.overflow = originalOverflow;
-            list.style.maxHeight = originalMaxHeight;
-            table.style.display = originalTableDisplay;
-          }
-
+          const exactH = list.scrollHeight;
+          const rawCanvas = await html2canvas(list, {
+            backgroundColor: "#ffffff",
+            scale: 2,
+            scrollX: 0,
+            scrollY: 0,
+            x: 0,
+            y: 0,
+            width: exactW,
+            height: exactH,
+            windowWidth: exactW,
+            windowHeight: exactH,
+          });
+          list.style.overflowY = prevOverflow;
+          list.style.maxHeight = prevMaxHeight;
+          // scale:2 なのでcanvas座標は2倍
+          const canvas = document.createElement("canvas");
+          canvas.width = exactW * 2;
+          canvas.height = exactH * 2;
+          canvas.getContext("2d").drawImage(rawCanvas, 0, 0);
           const ua = navigator.userAgent.toLowerCase();
           const isiOS = /iphone|ipad|ipod/.test(ua);
           if (isiOS) {
+            // iOS: 新しいタブで開く（長押し保存）
             const dataUrl = canvas.toDataURL("image/png");
             const win = window.open();
             win.document.write(`<img src="${dataUrl}" style="max-width:100%">`);
