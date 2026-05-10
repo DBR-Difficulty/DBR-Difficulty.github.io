@@ -1126,41 +1126,39 @@
         btn.textContent = "生成中…";
         try {
           const list = document.getElementById("previewList");
-          const origTable = list.querySelector("table");
+          const table = list.querySelector("table");
 
-          // テーブルをbody直下にクローンしてキャプチャ（border・スクロールバー・stickyの影響を排除）
-          const clone = origTable.cloneNode(true);
-          clone.style.cssText = [
-            "position:fixed",
-            "top:0",
-            "left:0",
-            "width:" + origTable.offsetWidth + "px",
-            "border-collapse:collapse",
-            "font-size:0.88rem",
-            "font-family:inherit",
-            "visibility:hidden",   // 一瞬見えないように
-            "z-index:-9999",
-          ].join(";");
-          document.body.appendChild(clone);
+          // previewListのoverflow/height制約を一時解除し、テーブルをborderなしのラッパーへ移動してキャプチャ
+          // → CSSクラスはそのまま有効、border・スクロールバー由来の余白を排除
+          const wrapper = document.createElement("div");
+          wrapper.style.cssText = "position:fixed;top:0;left:0;z-index:-9999;background:#fff;";
+          document.body.appendChild(wrapper);
+          wrapper.appendChild(table);  // listからwrapperへ移動（クローンではない）
+
           // レイアウト確定を待つ
-          await new Promise(r => requestAnimationFrame(r));
-          clone.style.visibility = "visible";
+          await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
 
-          const w = clone.offsetWidth;
-          const h = clone.offsetHeight;
-          const canvas = await html2canvas(clone, {
-            backgroundColor: "#ffffff",
-            scale: 2,
-            scrollX: 0,
-            scrollY: 0,
-            x: 0,
-            y: 0,
-            width: w,
-            height: h,
-            windowWidth: w,
-            windowHeight: h,
-          });
-          document.body.removeChild(clone);
+          const w = table.offsetWidth;
+          const h = table.offsetHeight;
+          let canvas;
+          try {
+            canvas = await html2canvas(table, {
+              backgroundColor: "#ffffff",
+              scale: 2,
+              scrollX: 0,
+              scrollY: 0,
+              x: 0,
+              y: 0,
+              width: w,
+              height: h,
+              windowWidth: w,
+              windowHeight: h,
+            });
+          } finally {
+            // 成功・失敗どちらでも必ずテーブルをlistに戻す
+            list.appendChild(table);
+            document.body.removeChild(wrapper);
+          }
           const ua = navigator.userAgent.toLowerCase();
           const isiOS = /iphone|ipad|ipod/.test(ua);
           if (isiOS) {
