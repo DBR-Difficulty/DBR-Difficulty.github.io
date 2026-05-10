@@ -1124,13 +1124,15 @@
         const btn = document.getElementById("saveImageBtn");
         btn.disabled = true;
         btn.textContent = "生成中…";
+
+        const list = document.getElementById("previewList");
+        const prevOverflow = list.style.overflowY;
+        const prevMaxHeight = list.style.maxHeight;
+
         try {
-          const list = document.getElementById("previewList");
           const table = list.querySelector("table");
 
           // overflow・max-height を一時解除して全行展開状態にする
-          const prevOverflow = list.style.overflowY;
-          const prevMaxHeight = list.style.maxHeight;
           list.style.overflowY = "visible";
           list.style.maxHeight = "none";
           list.scrollTop = 0;
@@ -1138,48 +1140,108 @@
           // スタイル変更後、ブラウザのレイアウト再計算が完全に終わるまで2フレーム待つ
           await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
-          // キャプチャ対象は list ではなく table 本体にする。
-          // list には border(1px*2) や border-radius による内部余白があり、
-          // それを含めた幅が windowWidth と食い違うと列幅計算がズレて崩れる。
-          // table を直接対象にすることで border/padding の影響を排除する。
           const exactW = table.offsetWidth;
           const exactH = table.offsetHeight;
 
-          // windowWidth はブラウザの実ビューポート幅を使う。
-          // ここに table 幅などを入れると html2canvas がページ全体を
-          // その幅で再レンダリングしてしまい列幅計算がズレる。
-          const rawCanvas = await html2canvas(table, {
-            backgroundColor: "#ffffff",
-            scale: 2,
-            scrollX: 0,
-            scrollY: 0,
-            x: 0,
-            y: 0,
-            width: exactW,
-            height: exactH,
-            windowWidth: document.documentElement.scrollWidth,
-            windowHeight: document.documentElement.scrollHeight,
-          });
+          // ブラウザのcanvas上限は多くの環境で高さ16384px（面積制限もある）。
+          // scale:2 を掛けるとピクセル高さが2倍になるため、
+          // 上限を超えないよう scale を動的に決定する。
+          const CANVAS_MAX_H = 16384;
+          const CANVAS_MAX_AREA = 268435456; // 16384 * 16384
+          let scale = 2;
+          while (scale > 0.5) {
+            const ph = Math.ceil(exactH * scale);
+            const pw = Math.ceil(exactW * scale);
+            if (ph <= CANVAS_MAX_H && pw * ph <= CANVAS_MAX_AREA) break;
+            scale -= 0.25;
+          }
 
+          // それでも超える場合（scale 0.5 でも無理）は分割PNGで出力
+          const canvasH = Math.ceil(exactH * scale);
+          const canvasW = Math.ceil(exactW * scale);
+          const needsSplit = canvasH > CANVAS_MAX_H || canvasW * canvasH > CANVAS_MAX_AREA;
+
+          const windowW = document.documentElement.scrollWidth;
+          const windowH = document.documentElement.scrollHeight;
+
+          if (!needsSplit) {
+            // ── 通常出力（1枚）──
+            const rawCanvas = await html2canvas(table, {
+              backgroundColor: "#ffffff",
+              scale,
+              scrollX: 0, scrollY: 0,
+              x: 0, y: 0,
+              width: exactW,
+              height: exactH,
+              windowWidth: windowW,
+              windowHeight: windowH,
+            });
+
+            list.style.overflowY = prevOverflow;
+            list.style.maxHeight = prevMaxHeight;
+
+            // canvasが空白でないか確認（左上1pxが白のみ＝空の可能性）
+            const ctx = rawCanvas.getContext("2d");
+            const pixel = ctx.getImageData(0, Math.floor(rawCanvas.height / 2), 1, 1).data;
+            if (pixel[3] === 0) {
+              throw new Error("キャンバスが空白です。データが多すぎる可能性があります。");
+            }
+
+            const ua = navigator.userAgent.toLowerCase();
+            if (/iphone|ipad|ipod/.test(ua)) {
+              const win = window.open();
+              win.document.write(`<img src="${rawCanvas.toDataURL("image/png")}" style="max-width:100%">`);
+            } else {
+              const a = document.createElement("a");
+              a.href = rawCanvas.toDataURL("image/png");
+              a.download = "dbr_ir_preview.png";
+              a.click();
+            }
+            if (scale < 2) {
+              alert(`データが多いため、画質を ${scale}x（通常2x）に落として出力しました。`);
+            }
+
+          } else {
+            // ── 分割出力（複数PNG）──
+            // scale 0.5 でも1枚に収まらない場合、高さ方向でチャンク分割する
+            const chunkScale = 0.5;
+            // chunkH: 論理px単位での1チャンクあたりの高さ
+            const chunkH = Math.floor(CANVAS_MAX_H / chunkScale);
+            const chunks = Math.ceil(exactH / chunkH);
+            alert(`データが多いため、${chunks}枚に分割して保存します。`);
+
+            for (let i = 0; i < chunks; i++) {
+              const yStart = i * chunkH;
+              const thisH = Math.min(chunkH, exactH - yStart);
+
+              const rawCanvas = await html2canvas(table, {
+                backgroundColor: "#ffffff",
+                scale: chunkScale,
+                scrollX: 0, scrollY: -yStart,
+                x: 0, y: yStart,
+                width: exactW,
+                height: thisH,
+                windowWidth: windowW,
+                windowHeight: windowH,
+              });
+
+              const a = document.createElement("a");
+              a.href = rawCanvas.toDataURL("image/png");
+              a.download = `dbr_ir_preview_${i + 1}of${chunks}.png`;
+              a.click();
+              // ダウンロードダイアログが連続しないよう少し待つ
+              await new Promise(r => setTimeout(r, 500));
+            }
+
+            list.style.overflowY = prevOverflow;
+            list.style.maxHeight = prevMaxHeight;
+          }
+
+        } catch (e) {
           list.style.overflowY = prevOverflow;
           list.style.maxHeight = prevMaxHeight;
-
-          // rawCanvas はすでに正しいサイズなのでそのまま使う
-          const ua = navigator.userAgent.toLowerCase();
-          const isiOS = /iphone|ipad|ipod/.test(ua);
-          if (isiOS) {
-            // iOS: 新しいタブで開く（長押し保存）
-            const dataUrl = rawCanvas.toDataURL("image/png");
-            const win = window.open();
-            win.document.write(`<img src="${dataUrl}" style="max-width:100%">`);
-          } else {
-            const a = document.createElement("a");
-            a.href = rawCanvas.toDataURL("image/png");
-            a.download = "dbr_ir_preview.png";
-            a.click();
-          }
-        } catch (e) {
-          alert("画像の生成に失敗しました。: " + e.message);
+          alert("画像の生成に失敗しました。\n" + e.message);
+          console.error(e);
         } finally {
           btn.disabled = false;
           btn.textContent = "内容を画像で取得";
