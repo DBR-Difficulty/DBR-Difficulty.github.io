@@ -738,6 +738,44 @@ thead th.sortable.sort-desc .sort-icon { opacity: 1; color: var(--accent); }
     padding: 0.25rem 0 1.5rem;
     -webkit-overflow-scrolling: touch;
   }
+
+  /* テーブル全体を縮小*/
+  .table-wrap table {
+    zoom: 0.5;
+  }
+
+  /* タブバー: 横スクロールをやめて全ボタンを均等幅で1行に収める */
+  .tab-bar {
+    overflow-x: visible;
+    padding: 0;
+  }
+  /* margin-bottom: -2px でボタンがバーの外にはみ出す問題を解消するため
+     バー自体の border-bottom を消し、ボタンのアクティブ線で代替する */
+  .tab-bar {
+    border-bottom: none;
+    box-shadow: 0 2px 0 0 var(--border); /* border-bottom の代わり（スタック可） */
+  }
+  .tab-btn {
+    flex: 1 1 0;          /* 全ボタンが均等幅に伸縮 */
+    flex-shrink: 1;
+    min-width: 0;         /* flex で縮めるために必要 */
+    padding: 0 0.25rem;
+    font-size: 0.72rem;
+    margin-bottom: 0;
+    justify-content: center;
+    /* アクティブ線をボタン下端に描く（バーにかぶせる方式から変更） */
+    border-bottom: 2px solid transparent;
+  }
+  .tab-btn.active {
+    border-bottom-color: var(--accent);
+  }
+  [data-theme="classic"] .tab-btn.active {
+    border-bottom-color: #ffff88;
+  }
+  .tab-btn .count {
+    font-size: 0.6rem;
+    padding: 0 0.25rem;
+  }
 }
 </style>
 </head>

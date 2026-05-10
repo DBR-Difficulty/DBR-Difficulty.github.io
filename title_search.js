@@ -43,7 +43,7 @@ const titleSpecials = [
     ['ECHIDNA','えちだな','えきどな'],
     ['IX','あいえっくす','ないん','ブラッドメタル'],    
     ['Aegis','あえぎす','いーじす'],
-    ['ÆTHER','えーてる'],
+    ['ÆTHER','ATHER','えーてる'],
     ['Fascination MAXX','ふぁっしねーしょんまっくす'],
     ['eRAseRmOToRpHAntOM','えれふぁんとぱおーん','いれーさーもーたーふぁんとむ'],
 
@@ -233,7 +233,7 @@ const titleSpecials = [
     ['BLACK.by X-Cross Fade','ぶらっくばいえっくすくろすふぇーど','ぶらっくばいくろすふぇーど'],
     ['CaptivAte2～覚醒～','きゃぷてぃべーとつーかくせい'],
     ['C-C-C-N-N-N','しーしーしーえぬえぬえぬ'],
-    ['DEATH†ZIGOQ ～怒りの高速爆走野郎～','ですじごくいかりのこうそくばくそうやろう'],
+    ['DEATH†ZIGOQ ～怒りの高速爆走野郎～','デス地獄','ですじごくいかりのこうそくばくそうやろう'],
     ['DUAL STRIKER','でゅあるすとらいかー'],
     ['EBONY & IVORY','えぼあぼ','えぼにーあんどあいぼりー','ラグタイムチップチューン'],
     ['Elemental Creation','えれめんたるくりえいしょん','えれめんたるくりえーしょん','ハードルネッサンス'],
@@ -284,7 +284,7 @@ const titleSpecials = [
     ['EMOTiON TRiPPER','えもーしょんとりっぱー'],
     ['COSMIC RAY','こずみっくれい'],
     ['-65℃','まいなすろくじゅうごど'],
-    ['《PL|RAYER》','ぷれいやー'],
+    ['《PL|RAYER》','PLAYER','PRAYER','ぷれいやー'],
     ['#The_Relentless','ざりれんとれす'],
     ['∀','たーんえーす'],
     ['199024club -Re:BounceKiller-','いちきゅうきゅうぜろにーよんくらぶりばうんすきらー'],
@@ -2061,9 +2061,9 @@ const titleSpecials = [
     ['532nm','ふぁいぶすりーつーなのめーとる','ハードコア'],
     ['EXTREME MACH COLLIDER','えくすとりーむまっはこらいだー','えくすとりーむまっはこれだー'],
     ['VOLCANIC BIGBEAT','ヴぉるかにっくびっぐびーと','ヴぉるけにっくびっくびーと'],
-    ['X-DEN','かいでん'],
-    ['.59','てんごく'],
-    ['G59','じごく'],
+    ['X-DEN','皆伝','かいでん'],
+    ['.59','天国','てんごく'],
+    ['G59','地獄','じごく'],
     ['QQQ','さんきゅー'],
     ['Xlø','くろ'],
     ['ιgniЯRuina','いぐにるいな'],
@@ -2345,6 +2345,19 @@ for (const [pattern, ...rest] of titleSpecials) {
     }
 }
 
+// スペース区切りの各ブロック内でのみ部分一致するか確認する。
+// ブロックをまたいだマッチは許可しない。
+// （例: "harmonia はるもにあ にゅーぷれ" → ブロック1="harmonia", ブロック2="はるもにあ", ブロック3="にゅーぷれ"）
+function matchesInAnyBlock(normStr, noSpaceQuery) {
+    if (!noSpaceQuery) return false;
+    const blocks = normStr.split(' ');
+    for (const block of blocks) {
+        const noSpaceBlock = block.replace(/ /g, '');  // blockにスペースはないが念のため
+        if (noSpaceBlock.includes(noSpaceQuery)) return true;
+    }
+    return false;
+}
+
 function normalizeForSearch(str, keepSymbols = false, isTitleSide = true) {
     if (!str) return "";
     let s = str;
@@ -2455,6 +2468,7 @@ function normalizeForSearch(str, keepSymbols = false, isTitleSide = true) {
         s = s.replace(/-/g, ' ');
         s = s.replace(/\*/g, '');
         s = s.replace(/:/g,  '');
+        s = s.replace(/|/g,  '');
     }
 
     s = s.replace(/\u00a0/g, ' ');
@@ -2515,9 +2529,8 @@ function titleMatchesSearch(titleText, searchQuery) {
         const normQuery = normalizeForSearch(trimmed, false, false);
         const normTitle = normalizeForSearch(titleText, false, true);
         if (normTitle.includes(normQuery)) return true;
-        const noSpaceTitle = normTitle.replace(/ /g, '');
         const noSpaceQuery = normQuery.replace(/ /g, '');
-        if (noSpaceQuery.length > 0 && noSpaceTitle.includes(noSpaceQuery)) return true;
+        if (noSpaceQuery.length > 0 && matchesInAnyBlock(normTitle, noSpaceQuery)) return true;
         return false;
     }
 
@@ -2525,9 +2538,8 @@ function titleMatchesSearch(titleText, searchQuery) {
     const normTitle = normalizeForSearch(titleText,   false, true);
     if (normTitle.includes(normQuery)) return true;
 
-    const noSpaceTitle = normTitle.replace(/ /g, '');
     const noSpaceQuery = normQuery.replace(/ /g, '');
-    if (noSpaceQuery.length > 0 && noSpaceTitle.includes(noSpaceQuery)) return true;
+    if (noSpaceQuery.length > 0 && matchesInAnyBlock(normTitle, noSpaceQuery)) return true;
 
     const keepTitle = normalizeForSearch(titleText,   true, true);
     const keepQuery = normalizeForSearch(searchQuery, true, false);
@@ -2551,7 +2563,7 @@ function cachedTitleMatchesSearch(titleText, searchQuery) {
         const normQuery = normalizeForSearch(trimmed, false, false);
         const noSpaceQ  = normQuery.replace(/ /g, '');
         if (cached.norm.includes(normQuery)) return true;
-        if (noSpaceQ.length > 0 && cached.noSpace.includes(noSpaceQ)) return true;
+        if (noSpaceQ.length > 0 && matchesInAnyBlock(cached.norm, noSpaceQ)) return true;
         return false;
     }
 
@@ -2560,9 +2572,9 @@ function cachedTitleMatchesSearch(titleText, searchQuery) {
 
     const normQuery  = normalizeForSearch(searchQuery, false, false);
     const noSpaceQ   = normQuery.replace(/ /g, '');
-    if (cached.norm.includes(normQuery))                           return true;
-    if (noSpaceQ.length > 0 && cached.noSpace.includes(noSpaceQ)) return true;
+    if (cached.norm.includes(normQuery))                                   return true;
+    if (noSpaceQ.length > 0 && matchesInAnyBlock(cached.norm, noSpaceQ))  return true;
     const keepQuery  = normalizeForSearch(searchQuery, true, false);
-    if (cached.keep.includes(keepQuery))                           return true;
+    if (cached.keep.includes(keepQuery))                                   return true;
     return false;
 }

@@ -211,9 +211,8 @@
                             if (!song.title) return;
                             const n = normalizeForSearch(song.title, false, true);
                             window.titleNormCache.set(song.title, {
-                                norm:    n,
-                                noSpace: n.replace(/ /g, ''),
-                                keep:    normalizeForSearch(song.title, true, true),
+                                norm: n,
+                                keep: normalizeForSearch(song.title, true, true),
                             });
                         });
 
@@ -484,7 +483,7 @@
                                 searchOk = titleMatchesSearch(titleText, trimmedQuery);
                             } else {
                                 searchOk = cached.norm.includes(normQuery) ||
-                                           (noSpaceQ.length > 0 && cached.noSpace.includes(noSpaceQ));
+                                           (noSpaceQ.length > 0 && matchesInAnyBlock(cached.norm, noSpaceQ));
                             }
                         }
                     } else {
@@ -493,7 +492,7 @@
                             searchOk = titleMatchesSearch(titleText, searchQuery);
                         } else {
                             searchOk = cached.norm.includes(normQuery) ||
-                                       (noSpaceQ.length > 0 && cached.noSpace.includes(noSpaceQ)) ||
+                                       (noSpaceQ.length > 0 && matchesInAnyBlock(cached.norm, noSpaceQ)) ||
                                        cached.keep.includes(keepQuery);
                         }
                     }
