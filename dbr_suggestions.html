@@ -739,41 +739,40 @@ thead th.sortable.sort-desc .sort-icon { opacity: 1; color: var(--accent); }
     -webkit-overflow-scrolling: touch;
   }
 
-  /* テーブル全体を50%に縮小 (zoom はレイアウトも追従するため横はみ出しが解消される) */
+  /* テーブル全体を縮小 */
   .table-wrap table {
     zoom: 0.5;
   }
 
-  /* タブバー: 横スクロールをやめて全ボタンを均等幅で1行に収める */
+  /* タブバー: 2列折り返し
+     5タブの場合 → 1行目3つ(各約33%)、2行目2つ(各約33%、中央揃え)
+     margin-bottom: -2px によるはみ出し問題を解消するため
+     border-bottom を box-shadow に差し替え、ボタン側で線を引く */
   .tab-bar {
     overflow-x: visible;
+    flex-wrap: wrap;
     padding: 0;
-  }
-  /* margin-bottom: -2px でボタンがバーの外にはみ出す問題を解消するため
-     バー自体の border-bottom を消し、ボタンのアクティブ線で代替する */
-  .tab-bar {
     border-bottom: none;
-    box-shadow: 0 2px 0 0 var(--border); /* border-bottom の代わり（スタック可） */
+    box-shadow: 0 2px 0 0 var(--border);
   }
   .tab-btn {
-    flex: 1 1 0;          /* 全ボタンが均等幅に伸縮 */
-    flex-shrink: 1;
-    min-width: 0;         /* flex で縮めるために必要 */
+    flex: 1 1 30%;        /* 3つで1行になる幅。4つ目から折り返し */
+    min-width: 0;
     padding: 0 0.25rem;
-    font-size: 0.72rem;
+    font-size: 0.78rem;
     margin-bottom: 0;
     justify-content: center;
-    /* アクティブ線をボタン下端に描く（バーにかぶせる方式から変更） */
     border-bottom: 2px solid transparent;
+    height: 2.25rem;
   }
   .tab-btn.active {
     border-bottom-color: var(--accent);
   }
   [data-theme="classic"] .tab-btn.active {
-    border-bottom-color: #ffff88;
+    border-bottom-color: #000080;
   }
   .tab-btn .count {
-    font-size: 0.6rem;
+    font-size: 0.62rem;
     padding: 0 0.25rem;
   }
 }
