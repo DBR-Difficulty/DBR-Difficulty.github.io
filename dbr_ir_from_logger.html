@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-M5CPZDQB');</script>
+    <!-- End Google Tag Manager -->
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png" />
+    <meta name="msapplication-TileImage" content="/mstile-150x150.png" />
+    <link rel="manifest" href="/manifest.json" />
+
+    <meta charset="UTF-8" />
+    <title>DBR IR - Loggerからデータを受け取る</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="style/style.css" rel="stylesheet">
+  </head>
+  <style>
+    body {
+      font-family: "Noto Sans JP", sans-serif;
+      font-size: 1rem;
+      line-height: 1.6;
+      color: #333;
+      background-color: #fff;
+      padding: 1.25rem;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-size: 1.4rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .status-box {
+      border-radius: 0.5rem;
+      padding: 0.85rem 1rem;
+      margin: 1rem 0;
+      font-size: 0.95rem;
+    }
+
+    .status-waiting {
+      background: #eef7f8;
+      border: 1px solid #9fd0d8;
+      color: #1a5f6a;
+    }
+
+    .status-ok {
+      background: #eafaf1;
+      border: 1px solid #7dcea0;
+      color: #1e6e44;
+    }
+
+    .status-error {
+      background: #fdf2f2;
+      border: 1px solid #f1a5a5;
+      color: #922b21;
+    }
+
+    .login-box {
+      background: #fafafa;
+      border: 1px solid #ddd;
+      border-radius: 0.5rem;
+      padding: 1.25rem;
+      margin: 1rem 0;
+    }
+
+    .login-box input[type="email"],
+    .login-box input[type="password"] {
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
+      padding: 0.45rem 0.65rem;
+      margin-bottom: 0.6rem;
+      border: 1px solid #bbb;
+      border-radius: 0.375rem;
+      font-size: 1rem;
+    }
+
+    button {
+      background-color: #f5f5f5;
+      color: #000;
+      border: 1px solid #888;
+      border-radius: 0.375rem;
+      padding: 0.5rem 1.2rem;
+      margin-top: 0.5rem;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background-color 0.2s ease;
+    }
+
+    button:hover:not(:disabled) {
+      background-color: #e8e8e8;
+    }
+
+    button:disabled {
+      background-color: #dcdcdc;
+      color: #888;
+      cursor: not-allowed;
+      border: 1px solid #ccc;
+    }
+
+    #proceedBtn {
+      background-color: #1a6fc4;
+      color: #fff;
+      border: none;
+      padding: 0.6rem 1.5rem;
+      font-size: 1rem;
+      margin-top: 1rem;
+      width: 100%;
+    }
+
+    #proceedBtn:hover:not(:disabled) {
+      background-color: #155a9e;
+    }
+
+    .subtext {
+      font-size: 0.875rem;
+      color: #666;
+      margin-top: 0.4rem;
+    }
+
+    a {
+      color: #1a6fc4;
+    }
+
+    #userInfo {
+      font-size: 0.9rem;
+      color: #555;
+      margin: 0.4rem 0 0 0;
+    }
+
+    .spinner-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin: 1rem 0;
+      color: #888;
+      font-size: 0.9rem;
+    }
+
+    .spinner {
+      width: 1.1rem;
+      height: 1.1rem;
+      border: 3px solid #ddd;
+      border-top-color: #888;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      flex-shrink: 0;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+  <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M5CPZDQB"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <h1>DBR Logger → IR データ連携</h1>
+
+    <!-- JSON受信ステータス -->
+    <div id="statusBox" class="status-box status-waiting">
+      DBR LoggerからのJSONデータを待機中です……
+    </div>
+
+    <!-- JSON受信待ち中スピナー -->
+    <div id="waitingSpinner" class="spinner-wrap">
+      <div class="spinner"></div>
+      <span>Loggerからのデータを受信しています</span>
+    </div>
+
+    <!-- ログインセクション（JSONを受信してから表示） -->
+    <div id="loginSection" style="display:none;">
+      <div id="loginBox" class="login-box">
+        <strong>DBR IRにログインしてください</strong>
+        <p class="subtext">ログイン後、受け取ったデータを自動でアップロードページに引き渡します。</p>
+        <input type="email" id="email" placeholder="メールアドレス" autocomplete="username">
+        <input type="password" id="password" placeholder="パスワード" autocomplete="current-password">
+        <button id="loginBtn">ログイン</button>
+        <p class="subtext" style="margin-top:0.6rem;">
+          <a href="dbr_ir_register.html">新規登録はこちら</a>
+        </p>
+      </div>
+
+      <!-- ログイン済み時の表示 -->
+      <div id="loggedInBox" style="display:none;">
+        <p id="userInfo"></p>
+        <button id="proceedBtn">アップロードページへ進む →</button>
+        <p class="subtext">受け取ったデータが自動で読み込まれます。</p>
+      </div>
+    </div>
+
+    <p style="margin-top:2rem;"><a href="index.html">TOPに戻る</a></p>
+
+    <script type="module">
+      import {
+        auth,
+        signInWithEmailAndPassword, signOut, onAuthStateChanged,
+        translateAuthError
+      } from "./main.js";
+
+      // ===== 定数 =====
+      const LOGGER_ORIGIN = "https://dbr-logger.github.io";
+      const UPLOAD_PAGE   = "dbr_ir_upload_test.html";
+      const SESSION_KEY   = "dbr_ir_from_logger_json";
+      const SESSION_FNAME = "dbr_ir_from_logger_filename";
+
+      // ===== DOM =====
+      const statusBox      = document.getElementById("statusBox");
+      const waitingSpinner = document.getElementById("waitingSpinner");
+      const loginSection   = document.getElementById("loginSection");
+      const loginBox       = document.getElementById("loginBox");
+      const loggedInBox    = document.getElementById("loggedInBox");
+      const loginBtn       = document.getElementById("loginBtn");
+      const proceedBtn     = document.getElementById("proceedBtn");
+      const userInfo       = document.getElementById("userInfo");
+
+      // ===== 状態 =====
+      let receivedJson     = null;  // 受信したJSONテキスト
+      let receivedFilename = "dbr-logger.json";
+      let currentUser      = null;
+      let jsonReady        = false;
+      let authReady        = false;
+
+      // ===== ユーティリティ =====
+      function setStatus(type, msg) {
+        statusBox.className = `status-box status-${type}`;
+        statusBox.textContent = msg;
+      }
+
+      function validateLoggerJson(text) {
+        let parsed;
+        try {
+          parsed = JSON.parse(text);
+        } catch {
+          return { ok: false, reason: "JSONとして解析できないデータを受信しました。" };
+        }
+        // DBR LoggerのJSON形式チェック（lamp/bp/score/textageKey の存在を確認）
+        if (
+          typeof parsed !== "object" || parsed === null ||
+          !("lamp" in parsed) || !("bp" in parsed) ||
+          !("score" in parsed) || !("textageKey" in parsed)
+        ) {
+          return { ok: false, reason: "受信したデータがDBR LoggerのJSON形式ではありません。" };
+        }
+        return { ok: true };
+      }
+
+      // ===== UIの更新 =====
+      function updateUI() {
+        if (!jsonReady) return; // JSON未受信なら何もしない
+
+        waitingSpinner.style.display = "none";
+        loginSection.style.display = "block";
+
+        if (currentUser) {
+          loginBox.style.display = "none";
+          loggedInBox.style.display = "block";
+          userInfo.textContent = `ログイン中: ${currentUser.email}`;
+          proceedBtn.disabled = false;
+        } else {
+          loginBox.style.display = "block";
+          loggedInBox.style.display = "none";
+        }
+      }
+
+      // ===== postMessageでJSON受信 =====
+      window.addEventListener("message", (event) => {
+        // 送信元originチェック
+        if (event.origin !== LOGGER_ORIGIN) return;
+
+        const data = event.data;
+        if (!data || data.type !== "dbr-ir-import-json") return;
+
+        const validation = validateLoggerJson(data.payload);
+        if (!validation.ok) {
+          setStatus("error", `⚠️ ${validation.reason}`);
+          waitingSpinner.style.display = "none";
+          return;
+        }
+
+        receivedJson     = data.payload;
+        receivedFilename = data.filename || "dbr-logger.json";
+        jsonReady        = true;
+
+        // sessionStorageに一時保存（ログイン後のページ遷移を越えて渡す）
+        try {
+          sessionStorage.setItem(SESSION_KEY,   receivedJson);
+          sessionStorage.setItem(SESSION_FNAME, receivedFilename);
+        } catch (e) {
+          setStatus("error", "⚠️ データの一時保存に失敗しました。ブラウザのストレージ設定を確認してください。");
+          return;
+        }
+
+        setStatus("ok", "✅ DBR LoggerからJSONデータを受信しました。");
+        updateUI();
+      });
+
+      // ===== Loggerへ「受け取り準備完了」を通知 =====
+      // window.openerがあれば（Loggerから開かれた場合）readyメッセージを返す
+      if (window.opener) {
+        try {
+          window.opener.postMessage({ type: "dbr-ir-import-ready" }, LOGGER_ORIGIN);
+        } catch (e) {
+          console.warn("openerへのpostMessageに失敗:", e);
+        }
+      } else {
+        // 直接アクセスの場合：sessionStorageに既存データがあれば復元
+        const stored = sessionStorage.getItem(SESSION_KEY);
+        if (stored) {
+          const validation = validateLoggerJson(stored);
+          if (validation.ok) {
+            receivedJson     = stored;
+            receivedFilename = sessionStorage.getItem(SESSION_FNAME) || "dbr-logger.json";
+            jsonReady        = true;
+            setStatus("ok", "✅ DBR LoggerからJSONデータを受信済みです。");
+          }
+        } else {
+          // openerもsessionStorageもない → Loggerから来ていない直アクセス
+          setStatus("error", "⚠️ このページはDBR Loggerから開く必要があります。");
+          waitingSpinner.style.display = "none";
+        }
+      }
+
+      // ===== Firebase Auth =====
+      onAuthStateChanged(auth, (user) => {
+        currentUser = user;
+        authReady   = true;
+        updateUI();
+      });
+
+      // ===== ログイン =====
+      loginBtn.addEventListener("click", async () => {
+        const email    = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+        if (!email || !password) {
+          alert("メールアドレスとパスワードを入力してください。");
+          return;
+        }
+        loginBtn.disabled = true;
+        loginBtn.textContent = "ログイン中…";
+        try {
+          const cred = await signInWithEmailAndPassword(auth, email, password);
+          if (!cred.user.emailVerified) {
+            await signOut(auth);
+            alert("メールアドレスが確認されていません。メール内のリンクをクリックしてください。");
+            return;
+          }
+          // onAuthStateChanged が呼ばれて updateUI() が走るので ここでは何もしない
+        } catch (e) {
+          alert("ログインに失敗しました。: " + translateAuthError(e));
+        } finally {
+          loginBtn.disabled = false;
+          loginBtn.textContent = "ログイン";
+        }
+      });
+
+      // ===== アップロードページへ遷移 =====
+      proceedBtn.addEventListener("click", () => {
+        // sessionStorageにデータが入っていることを確認してから遷移
+        if (!sessionStorage.getItem(SESSION_KEY)) {
+          // 念のため再セット
+          if (receivedJson) {
+            sessionStorage.setItem(SESSION_KEY,   receivedJson);
+            sessionStorage.setItem(SESSION_FNAME, receivedFilename);
+          } else {
+            alert("JSONデータが見つかりません。DBR Loggerから再度操作してください。");
+            return;
+          }
+        }
+        // アップロードページへ遷移（Logger連携フラグをクエリパラメータで通知）
+        window.location.href = UPLOAD_PAGE + "?from=logger";
+      });
+    </script>
+  </body>
+</html>

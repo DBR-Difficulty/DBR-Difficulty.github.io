@@ -484,7 +484,7 @@
         translateAuthError
       } from "./main.js";
 
-      // ===== レベルマップ: ページロード時点でフェッチ開始 =====
+      // ===== レベルマップ =====
       // プレビューが開くころには取得済みであることを期待する
       const levelMap = new Map(); // key: textageKey → level string
       const levelMapPromise = fetch("./dbralleheader.json")
@@ -492,11 +492,7 @@
         .then(header => fetch(header.data_url))
         .then(r => r.json())
         .then(songData => {
-          // レスポンスが配列でない場合（{data:[...]}等のラップ形式）に対応
           const list = Array.isArray(songData) ? songData : (songData[0] ?? songData.data ?? Object.values(songData)[0] ?? []);
-          // キーは textageid + 難易度記号（例: "eden(A)"）= item.textage と同じ形式
-          // 同じ textageid でも難易度ごとに level が異なるため、title 末尾の "(X)" をサフィックスとして付加する
-          // level が空・未査定の譜面も「未査定」として登録し、acdelete フラグも保持する
           for (const d of list) {
             if (d.textageid && d.title) {
               const suffix = d.title.match(/\([A-Z]\)$/)?.[0] ?? "";
@@ -504,11 +500,9 @@
               levelMap.set(d.textageid + suffix, { level: lv, acdelete: !!d.acdelete });
             }
           }
-          console.log(`[levelMap] songData取得完了: ${levelMap.size}件`);
           return levelMap;
         })
         .catch((e) => { console.warn("[levelMap] songData取得失敗:", e); return levelMap; }); // 失敗しても空のMapを返すだけ
-      // ===== ここまで =====
 
       const loginBtn = document.getElementById("loginBtn");
       const logoutBtn = document.getElementById("logoutBtn");
@@ -712,6 +706,11 @@
           playerDataLink.classList.remove("label-disabled");
           displayNameLabel.classList.remove("label-disabled");
           anonymousLabel.classList.remove("label-disabled");
+
+          // ===== DBR Logger連携：sessionStorageからJSONを自動ロード =====
+          if (new URLSearchParams(window.location.search).get("from") === "logger") {
+            loadFromLoggerIfPresent();
+          }
         } else {
           currentUserUid = null;
           document.getElementById("loginForm").style.display = "block";
@@ -998,10 +997,10 @@
         // テーブル行生成
         previewTableBody.innerHTML = "";
 
-        // ===== レベルマップ: ページロード時に開始済みのPromiseを参照 =====
-        // すでに完了していれば即時反映、まだなら取得完了後にセルを更新する
+        // ===== レベルマップ =====
+        // すでに完了していれば即時反映、まだなら取得完了後にセルを更新
         const levelMapReady = levelMap.size > 0;
-        // ※ levelMapPromise.then() はテーブル行生成ループの後で登録する（行生成前に登録すると querySelectorAll が空振りするため）
+        // ※ levelMapPromise.then() はテーブル行生成ループの後で登録
 
         for (const item of sorted) {
           const tr = document.createElement("tr");
@@ -1082,10 +1081,10 @@
             <td style="max-width:220px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${fullTitle}">${cleanTitle}<span style="font-size:0.9em;">(${item.difficulty})</span></td>
           `;
 
-          // --- レベルセル（先頭に挿入） ---
+          // --- レベルセル ---
           const levelTd = document.createElement("td");
           levelTd.className = "col-level-ir";
-          // item.textage は "textageid(A)" 形式で levelMap のキーと一致する
+          // item.textage は "textageid(A)" 形式で levelMap のキーと一致
           levelTd.dataset.textage = item.textage || "";
           if (levelMapReady) {
             const entry = item.textage ? levelMap.get(item.textage) : null;
@@ -1108,7 +1107,6 @@
           previewTableBody.appendChild(tr);
         }
 
-        // ===== レベルマップ: ループ後に登録（行が存在する状態で querySelectorAll を実行するため） =====
         if (levelMapReady) {
           // 既に読み込み済み → 即ソート
           applySortToTableBody(displayItems);
@@ -1128,7 +1126,6 @@
             applySortToTableBody(displayItems);
           });
         }
-        // ===== ここまで =====
 
         previewModal.classList.add("active");
       }
@@ -1539,6 +1536,61 @@
           setLoading(false);
         }
       });
+
+      // ===== DBR Logger連携：sessionStorageからJSONを自動ロードしてプレビューを開く =====
+      function loadFromLoggerIfPresent() {
+        const SESSION_KEY   = "dbr_ir_from_logger_json";
+        const SESSION_FNAME = "dbr_ir_from_logger_filename";
+
+        const jsonText = sessionStorage.getItem(SESSION_KEY);
+        if (!jsonText) return;
+
+        const filename = sessionStorage.getItem(SESSION_FNAME) || "dbr-logger.json";
+
+        // 使用後は即座に削除（再読み込みや戻るボタンで二重ロードを防ぐ）
+        sessionStorage.removeItem(SESSION_KEY);
+        sessionStorage.removeItem(SESSION_FNAME);
+
+        // File オブジェクトを生成して file input にセット
+        let file;
+        try {
+          file = new File([jsonText], filename, { type: "application/json" });
+        } catch (e) {
+          alert("DBR LoggerからのJSONファイルの読み込みに失敗しました。: " + e.message);
+          return;
+        }
+
+        const dt = new DataTransfer();
+        dt.items.add(file);
+        fileInput.files = dt.files;
+
+        // ファイル名表示を更新
+        document.getElementById("fileName").textContent = filename;
+
+        // Logger連携バナーを表示
+        const banner = document.createElement("div");
+        banner.id = "loggerBanner";
+        banner.style.cssText = [
+          "background:#eafaf1",
+          "border:1px solid #7dcea0",
+          "border-radius:0.5rem",
+          "padding:0.6rem 1rem",
+          "margin-bottom:0.75rem",
+          "font-size:0.9rem",
+          "color:#1e6e44"
+        ].join(";");
+        banner.textContent = "✅ DBR LoggerからJSONデータを受け取りました。内容を確認して送信してください。";
+
+        // ファイル選択ラベルの直前にバナーを挿入
+        const fileLabel = document.querySelector('label[for="jsonFileInput"]');
+        fileLabel.parentNode.insertBefore(banner, fileLabel);
+
+        // 少し遅延させてからプレビューを自動表示
+        // （onAuthStateChanged 内から呼ばれるため、DOM/状態の確定を待つ）
+        setTimeout(() => {
+          uploadBtn.click();
+        }, 300);
+      }
     </script>
   </body>
 </html>
