@@ -273,11 +273,21 @@
           loggedInBox.style.display = "none";
         }
       }
+      const ALLOWED_ORIGINS = [
+        "https://dbr-logger.github.io",
+        "http://localhost",
+        "http://127.0.0.1",
+      ];
+
+      function isAllowedOrigin(origin) {
+        return ALLOWED_ORIGINS.some(o => origin === o || origin.startsWith(o + ":"));
+      }
 
       // ===== postMessageでJSON受信 =====
       window.addEventListener("message", (event) => {
         // 送信元originチェック
-        if (event.origin !== LOGGER_ORIGIN) return;
+        // if (event.origin !== LOGGER_ORIGIN) return;
+        if (!isAllowedOrigin(event.origin)) return;
 
         const data = event.data;
         if (!data || data.type !== "dbr-ir-import-json") return;
@@ -310,7 +320,8 @@
       // window.openerがあれば（Loggerから開かれた場合）readyメッセージを返す
       if (window.opener) {
         try {
-          window.opener.postMessage({ type: "dbr-ir-import-ready" }, LOGGER_ORIGIN);
+          // window.opener.postMessage({ type: "dbr-ir-import-ready" }, LOGGER_ORIGIN);
+          window.opener.postMessage({ type: "dbr-ir-import-ready" }, "*");
         } catch (e) {
           console.warn("openerへのpostMessageに失敗:", e);
         }
