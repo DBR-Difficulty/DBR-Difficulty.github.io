@@ -195,8 +195,9 @@
       <!-- ログイン済み時の表示 -->
       <div id="loggedInBox" style="display:none;">
         <p id="userInfo"></p>
-        <button id="proceedBtn">アップロードページへ進む →</button>
-        <p class="subtext">受け取ったデータが自動で読み込まれます。</p>
+        <p class="subtext">アップロードページへ移動中…</p>
+        <!-- 自動遷移に失敗した場合のフォールバック -->
+        <button id="proceedBtn" style="display:none;">アップロードページへ進む →</button>
       </div>
     </div>
 
@@ -256,6 +257,24 @@
         return { ok: true };
       }
 
+      // ===== ページ遷移 =====
+      function navigateToUpload() {
+        if (!sessionStorage.getItem(SESSION_KEY)) {
+          if (receivedJson) {
+            sessionStorage.setItem(SESSION_KEY,   receivedJson);
+            sessionStorage.setItem(SESSION_FNAME, receivedFilename);
+          } else {
+            return false;
+          }
+        }
+        try {
+          window.location.href = UPLOAD_PAGE + "?from=logger";
+          return true;
+        } catch (e) {
+          return false;
+        }
+      }
+
       // ===== UIの更新 =====
       function updateUI() {
         if (!jsonReady) return; // JSON未受信なら何もしない
@@ -267,7 +286,13 @@
           loginBox.style.display = "none";
           loggedInBox.style.display = "block";
           userInfo.textContent = `ログイン中: ${currentUser.email}`;
-          proceedBtn.disabled = false;
+          // 自動遷移を試みる
+          const ok = navigateToUpload();
+          if (!ok) {
+            // 遷移失敗時はフォールバックボタンを表示
+            proceedBtn.style.display = "";
+            proceedBtn.disabled = false;
+          }
         } else {
           loginBox.style.display = "block";
           loggedInBox.style.display = "none";
@@ -378,19 +403,10 @@
 
       // ===== アップロードページへ遷移 =====
       proceedBtn.addEventListener("click", () => {
-        // sessionStorageにデータが入っていることを確認してから遷移
-        if (!sessionStorage.getItem(SESSION_KEY)) {
-          // 念のため再セット
-          if (receivedJson) {
-            sessionStorage.setItem(SESSION_KEY,   receivedJson);
-            sessionStorage.setItem(SESSION_FNAME, receivedFilename);
-          } else {
-            alert("JSONデータが見つかりません。DBR Loggerから再度操作してください。");
-            return;
-          }
+        const ok = navigateToUpload();
+        if (!ok) {
+          alert("JSONデータが見つかりません。DBR Loggerから再度操作してください。");
         }
-        // アップロードページへ遷移（Logger連携フラグをクエリパラメータで通知）
-        window.location.href = UPLOAD_PAGE + "?from=logger";
       });
     </script>
   </body>
