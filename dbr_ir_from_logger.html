@@ -201,7 +201,9 @@
       </div>
     </div>
 
-    <p style="margin-top:2rem;"><a href="index.html">TOPに戻る</a></p>
+    <p style="margin-top:2rem;">
+      <a href="#" onclick="window.close(); return false;">閉じる</a>
+    </p>
 
     <script type="module">
       import {
@@ -212,7 +214,7 @@
 
       // ===== 定数 =====
       const LOGGER_ORIGIN = "https://dbr-logger.github.io";
-      const UPLOAD_PAGE   = "dbr_ir_upload_test.html";
+      const UPLOAD_PAGE   = "dbr_ir_upload.html";
       const SESSION_KEY   = "dbr_ir_from_logger_json";
       const SESSION_FNAME = "dbr_ir_from_logger_filename";
 

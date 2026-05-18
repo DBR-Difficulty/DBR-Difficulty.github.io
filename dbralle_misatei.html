@@ -472,7 +472,7 @@
                                 searchOk = titleMatchesSearch(titleText, trimmedQuery);
                             } else {
                                 searchOk = cached.norm.includes(normQuery) ||
-                                           (noSpaceQ.length > 0 && matchesInAnyBlock(cached.norm, noSpaceQ));
+                                           (noSpaceQ.length > 0 && (cached.norm.replace(/ /g, '').includes(noSpaceQ) || matchesInAnyBlock(cached.norm, noSpaceQ)));
                             }
                         }
                     } else {
@@ -481,7 +481,7 @@
                             searchOk = titleMatchesSearch(titleText, searchQuery);
                         } else {
                             searchOk = cached.norm.includes(normQuery) ||
-                                       (noSpaceQ.length > 0 && matchesInAnyBlock(cached.norm, noSpaceQ)) ||
+                                       (noSpaceQ.length > 0 && (cached.norm.replace(/ /g, '').includes(noSpaceQ) || matchesInAnyBlock(cached.norm, noSpaceQ))) ||
                                        cached.keep.includes(keepQuery);
                         }
                     }

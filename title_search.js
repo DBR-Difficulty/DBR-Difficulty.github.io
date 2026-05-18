@@ -2530,7 +2530,10 @@ function titleMatchesSearch(titleText, searchQuery) {
         const normTitle = normalizeForSearch(titleText, false, true);
         if (normTitle.includes(normQuery)) return true;
         const noSpaceQuery = normQuery.replace(/ /g, '');
-        if (noSpaceQuery.length > 0 && matchesInAnyBlock(normTitle, noSpaceQuery)) return true;
+        if (noSpaceQuery.length > 0) {
+            if (normTitle.replace(/ /g, '').includes(noSpaceQuery)) return true;
+            if (matchesInAnyBlock(normTitle, noSpaceQuery)) return true;
+        }
         return false;
     }
 
@@ -2539,7 +2542,10 @@ function titleMatchesSearch(titleText, searchQuery) {
     if (normTitle.includes(normQuery)) return true;
 
     const noSpaceQuery = normQuery.replace(/ /g, '');
-    if (noSpaceQuery.length > 0 && matchesInAnyBlock(normTitle, noSpaceQuery)) return true;
+    if (noSpaceQuery.length > 0) {
+        if (normTitle.replace(/ /g, '').includes(noSpaceQuery)) return true;
+        if (matchesInAnyBlock(normTitle, noSpaceQuery)) return true;
+    }
 
     const keepTitle = normalizeForSearch(titleText,   true, true);
     const keepQuery = normalizeForSearch(searchQuery, true, false);
@@ -2563,7 +2569,10 @@ function cachedTitleMatchesSearch(titleText, searchQuery) {
         const normQuery = normalizeForSearch(trimmed, false, false);
         const noSpaceQ  = normQuery.replace(/ /g, '');
         if (cached.norm.includes(normQuery)) return true;
-        if (noSpaceQ.length > 0 && matchesInAnyBlock(cached.norm, noSpaceQ)) return true;
+        if (noSpaceQ.length > 0) {
+            if (cached.norm.replace(/ /g, '').includes(noSpaceQ)) return true;
+            if (matchesInAnyBlock(cached.norm, noSpaceQ)) return true;
+        }
         return false;
     }
 
@@ -2573,7 +2582,10 @@ function cachedTitleMatchesSearch(titleText, searchQuery) {
     const normQuery  = normalizeForSearch(searchQuery, false, false);
     const noSpaceQ   = normQuery.replace(/ /g, '');
     if (cached.norm.includes(normQuery))                                   return true;
-    if (noSpaceQ.length > 0 && matchesInAnyBlock(cached.norm, noSpaceQ))  return true;
+    if (noSpaceQ.length > 0) {
+        if (cached.norm.replace(/ /g, '').includes(noSpaceQ))             return true;
+        if (matchesInAnyBlock(cached.norm, noSpaceQ))                     return true;
+    }
     const keepQuery  = normalizeForSearch(searchQuery, true, false);
     if (cached.keep.includes(keepQuery))                                   return true;
     return false;
