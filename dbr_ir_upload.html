@@ -707,9 +707,12 @@
           displayNameLabel.classList.remove("label-disabled");
           anonymousLabel.classList.remove("label-disabled");
 
-          // ===== DBR Logger連携：sessionStorageからJSONを自動ロード =====
-          if (new URLSearchParams(window.location.search).get("from") === "logger") {
+          // ===== DBR Logger連携 / 拡張機能連携：sessionStorageからJSONを自動ロード =====
+          const fromParam = new URLSearchParams(window.location.search).get("from");
+          if (fromParam === "logger") {
             loadFromLoggerIfPresent();
+          } else if (fromParam === "extend") {
+            loadFromExtendIfPresent();
           }
         } else {
           currentUserUid = null;
@@ -1580,6 +1583,61 @@
           "color:#1e6e44"
         ].join(";");
         banner.textContent = "✅ DBR LoggerからJSONデータを受け取りました。内容を確認して送信してください。";
+
+        // ファイル選択ラベルの直前にバナーを挿入
+        const fileLabel = document.querySelector('label[for="jsonFileInput"]');
+        fileLabel.parentNode.insertBefore(banner, fileLabel);
+
+        // 少し遅延させてからプレビューを自動表示
+        // （onAuthStateChanged 内から呼ばれるため、DOM/状態の確定を待つ）
+        setTimeout(() => {
+          uploadBtn.click();
+        }, 300);
+      }
+
+      // ===== 拡張機能連携：sessionStorageからJSONを自動ロードしてプレビューを開く =====
+      function loadFromExtendIfPresent() {
+        const SESSION_KEY   = "dbr_ir_from_extend_json";
+        const SESSION_FNAME = "dbr_ir_from_extend_filename";
+
+        const jsonText = sessionStorage.getItem(SESSION_KEY);
+        if (!jsonText) return;
+
+        const filename = sessionStorage.getItem(SESSION_FNAME) || "dbr-extend.json";
+
+        // 使用後は即座に削除（再読み込みや戻るボタンで二重ロードを防ぐ）
+        sessionStorage.removeItem(SESSION_KEY);
+        sessionStorage.removeItem(SESSION_FNAME);
+
+        // File オブジェクトを生成して file input にセット
+        let file;
+        try {
+          file = new File([jsonText], filename, { type: "application/json" });
+        } catch (e) {
+          alert("拡張機能からのJSONファイルの読み込みに失敗しました。: " + e.message);
+          return;
+        }
+
+        const dt = new DataTransfer();
+        dt.items.add(file);
+        fileInput.files = dt.files;
+
+        // ファイル名表示を更新
+        document.getElementById("fileName").textContent = filename;
+
+        // 拡張機能連携バナーを表示
+        const banner = document.createElement("div");
+        banner.id = "loggerBanner";
+        banner.style.cssText = [
+          "background:#eafaf1",
+          "border:1px solid #7dcea0",
+          "border-radius:0.5rem",
+          "padding:0.6rem 1rem",
+          "margin-bottom:0.75rem",
+          "font-size:0.9rem",
+          "color:#1e6e44"
+        ].join(";");
+        banner.textContent = "✅ 拡張機能からJSONデータを受け取りました。内容を確認して送信してください。";
 
         // ファイル選択ラベルの直前にバナーを挿入
         const fileLabel = document.querySelector('label[for="jsonFileInput"]');

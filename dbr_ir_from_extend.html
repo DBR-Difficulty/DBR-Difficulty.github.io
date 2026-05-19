@@ -17,7 +17,7 @@
     <link rel="manifest" href="/manifest.json" />
 
     <meta charset="UTF-8" />
-    <title>DBR IR - Loggerからデータを受け取る</title>
+    <title>DBR IR - 拡張機能からデータを受け取る</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link href="style/style.css" rel="stylesheet">
   </head>
@@ -166,17 +166,17 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
 
-    <h1>DBR Logger → IR データ連携</h1>
+    <h1>DBR 拡張機能 → IR データ連携</h1>
 
     <!-- JSON受信ステータス -->
     <div id="statusBox" class="status-box status-waiting">
-      DBR LoggerからのJSONデータを待機中です……
+      拡張機能からのJSONデータを待機中です……
     </div>
 
     <!-- JSON受信待ち中スピナー -->
     <div id="waitingSpinner" class="spinner-wrap">
       <div class="spinner"></div>
-      <span>Loggerからのデータを受信しています</span>
+      <span>拡張機能からのデータを受信しています</span>
     </div>
 
     <!-- ログインセクション（JSONを受信してから表示） -->
@@ -213,10 +213,9 @@
       } from "./main.js";
 
       // ===== 定数 =====
-      const LOGGER_ORIGIN = "https://dbr-logger.github.io";
       const UPLOAD_PAGE   = "dbr_ir_upload.html";
-      const SESSION_KEY   = "dbr_ir_from_logger_json";
-      const SESSION_FNAME = "dbr_ir_from_logger_filename";
+      const SESSION_KEY   = "dbr_ir_from_extend_json";
+      const SESSION_FNAME = "dbr_ir_from_extend_filename";
 
       // ===== DOM =====
       const statusBox      = document.getElementById("statusBox");
@@ -230,7 +229,7 @@
 
       // ===== 状態 =====
       let receivedJson     = null;  // 受信したJSONテキスト
-      let receivedFilename = "dbr-logger.json";
+      let receivedFilename = "dbr-extend.json";
       let currentUser      = null;
       let jsonReady        = false;
       let authReady        = false;
@@ -254,7 +253,7 @@
           !("lamp" in parsed) || !("bp" in parsed) ||
           !("score" in parsed) || !("textageKey" in parsed)
         ) {
-          return { ok: false, reason: "受信したデータがDBR LoggerのJSON形式ではありません。" };
+          return { ok: false, reason: "受信したデータがDBR拡張機能のJSON形式ではありません。" };
         }
         return { ok: true };
       }
@@ -270,7 +269,7 @@
           }
         }
         try {
-          window.location.href = UPLOAD_PAGE + "?from=logger";
+          window.location.href = UPLOAD_PAGE + "?from=extend";
           return true;
         } catch (e) {
           return false;
@@ -300,8 +299,9 @@
           loggedInBox.style.display = "none";
         }
       }
+
       const ALLOWED_ORIGINS = [
-        "https://dbr-logger.github.io"
+        "https://dbr-difficulty.github.io"
       ];
 
       function isAllowedOrigin(origin) {
@@ -311,7 +311,6 @@
       // ===== postMessageでJSON受信 =====
       window.addEventListener("message", (event) => {
         // 送信元originチェック
-        // if (event.origin !== LOGGER_ORIGIN) return;
         if (!isAllowedOrigin(event.origin)) return;
 
         const data = event.data;
@@ -325,7 +324,7 @@
         }
 
         receivedJson     = data.payload;
-        receivedFilename = data.filename || "dbr-logger.json";
+        receivedFilename = data.filename || "dbr-extend.json";
         jsonReady        = true;
 
         // sessionStorageに一時保存（ログイン後のページ遷移を越えて渡す）
@@ -337,15 +336,14 @@
           return;
         }
 
-        setStatus("ok", "✅ DBR LoggerからJSONデータを受信しました。");
+        setStatus("ok", "✅ 拡張機能からJSONデータを受信しました。");
         updateUI();
       });
 
-      // ===== Loggerへ「受け取り準備完了」を通知 =====
-      // window.openerがあれば（Loggerから開かれた場合）readyメッセージを返す
+      // ===== 拡張機能へ「受け取り準備完了」を通知 =====
+      // window.openerがあれば（拡張機能から開かれた場合）readyメッセージを返す
       if (window.opener) {
         try {
-          // window.opener.postMessage({ type: "dbr-ir-import-ready" }, LOGGER_ORIGIN);
           window.opener.postMessage({ type: "dbr-ir-import-ready" }, "*");
         } catch (e) {
           console.warn("openerへのpostMessageに失敗:", e);
@@ -357,13 +355,13 @@
           const validation = validateLoggerJson(stored);
           if (validation.ok) {
             receivedJson     = stored;
-            receivedFilename = sessionStorage.getItem(SESSION_FNAME) || "dbr-logger.json";
+            receivedFilename = sessionStorage.getItem(SESSION_FNAME) || "dbr-extend.json";
             jsonReady        = true;
-            setStatus("ok", "✅ DBR LoggerからJSONデータを受信済みです。");
+            setStatus("ok", "✅ 拡張機能からJSONデータを受信済みです。");
           }
         } else {
-          // openerもsessionStorageもない → Loggerから来ていない直アクセス
-          setStatus("error", "⚠️ このページはDBR Loggerから開く必要があります。");
+          // openerもsessionStorageもない → 直接アクセス
+          setStatus("error", "⚠️ このページはDBR難易度表拡張機能の「DBR IRへ送信」ボタンから開く必要があります。");
           waitingSpinner.style.display = "none";
         }
       }
@@ -405,7 +403,7 @@
       proceedBtn.addEventListener("click", () => {
         const ok = navigateToUpload();
         if (!ok) {
-          alert("JSONデータが見つかりません。DBR Loggerから再度操作してください。");
+          alert("JSONデータが見つかりません。拡張機能から再度操作してください。");
         }
       });
     </script>
