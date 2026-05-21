@@ -13,6 +13,7 @@ import {
   doc,
   getDoc,
   setDoc,
+  addDoc,
   collection,
   query,
   where,
@@ -105,6 +106,6 @@ export {
   signOut,
   deleteUser,
   onAuthStateChanged,
-  doc, getDoc, setDoc, collection, query, where, getDocs, deleteDoc,
+  doc, getDoc, setDoc, addDoc, collection, query, where, getDocs, deleteDoc,
   translateAuthError
 };

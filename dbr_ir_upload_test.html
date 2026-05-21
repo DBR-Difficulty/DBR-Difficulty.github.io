@@ -480,7 +480,7 @@
       import {
         auth, db,
         signInWithEmailAndPassword, signOut, deleteUser, onAuthStateChanged,
-        doc, getDoc, setDoc, collection, query, where, getDocs, deleteDoc,
+        doc, getDoc, setDoc, addDoc, collection, query, where, getDocs, deleteDoc,
         translateAuthError
       } from "./main.js";
 
@@ -650,6 +650,254 @@
         return scores;
       }
 
+      // ===== ranking_cache 構築ユーティリティ =====
+      // upload.html ロード時（ログイン後）にバックグラウンドで呼び出す。
+      //
+      // 処理の流れ：
+      //   0. DDoS対策：rankingcache_lastsync_${uid} が DIFF_CHECK_INTERVAL 以内ならスキップ
+      //   1. ranking_cache/{uid} の rankingUpdatedAt を確認（1 read）
+      //   2. score_updates から rankingUpdatedAt より新しいドキュメントを取得
+      //      ・delFlag なし → 更新曲 titlesToUpdate に追加
+      //      ・delFlag あり → 削除曲 titlesToDelete に追加
+      //      ・同一タイトルが両方にある場合は updatedAt が新しい方を優先
+      //   3. 自分がプレイしている曲だけに絞る
+      //   4. 対象曲ごとに ranking_${title} ローカルキャッシュを優先利用（あればFirestoreスキップ）
+      //      なければ Firestore から全員分取得し ranking_${title} キャッシュも更新
+      //   5. Firestore 書き込み + ローカルキャッシュ更新
+
+      async function buildRankingCacheIfNeeded(uid) {
+        const localKey        = `rankingcache_${uid}`;
+        const lastSyncKey     = `rankingcache_lastsync_${uid}`;
+        const now             = Date.now();
+
+        // --- 0. DDoS対策：DIFF_CHECK_INTERVAL 以内なら何もしない ---
+        const lastSync = parseInt(localStorage.getItem(lastSyncKey) || "0");
+        if ((now - lastSync) < DIFF_CHECK_INTERVAL) return;
+        localStorage.setItem(lastSyncKey, now.toString());
+
+        // --- 1. 自分の rankingUpdatedAt を取得（1 read）---
+        let myRankingUpdatedAt = null;
+        try {
+          const snap = await getDoc(doc(db, "ranking_cache", uid));
+          if (snap.exists()) {
+            myRankingUpdatedAt = snap.data().rankingUpdatedAt ?? null;
+          }
+        } catch (e) {
+          console.warn("ranking_cache 確認失敗:", e);
+          return;
+        }
+
+        // --- 2. score_updates から新しいドキュメントを取得し delFlag で振り分け ---
+        // titlesToUpdate: 更新された曲 → Firestore から再取得して順位算出
+        // titlesToDelete: 削除された曲 → ranking_${title} キャッシュからそのユーザーを除去
+        //
+        // 同一タイトルが更新・削除の両方にある場合は updatedAt が新しい方を優先する
+        //   削除が後 → titlesToDelete に残す（ドキュメントはなくなっている）
+        //   更新が後 → titlesToUpdate に残す（ドキュメントは存在する）
+        const titleUpdatedAt = new Map(); // title → { type: "update"|"delete", updatedAt }
+        try {
+          const q = myRankingUpdatedAt !== null
+            ? query(collection(db, "score_updates"), where("updatedAt", ">", myRankingUpdatedAt))
+            : query(collection(db, "score_updates")); // 未計算なら全件対象
+          const snap = await getDocs(q);
+          snap.forEach(d => {
+            const data  = d.data();
+            const isDelFlag = !!data.delFlag;
+            const type  = isDelFlag ? "delete" : "update";
+            const ts    = data.updatedAt ?? 0;
+            (data.titles ?? []).forEach(t => {
+              const existing = titleUpdatedAt.get(t);
+              if (!existing || ts > existing.updatedAt) {
+                titleUpdatedAt.set(t, { type, updatedAt: ts });
+              }
+            });
+          });
+        } catch (e) {
+          console.warn("score_updates 取得失敗:", e);
+          return;
+        }
+
+        if (titleUpdatedAt.size === 0) return;
+
+        const titlesToUpdate = new Set();
+        const titlesToDelete = new Set();
+        for (const [t, info] of titleUpdatedAt) {
+          if (info.type === "delete") titlesToDelete.add(t);
+          else                        titlesToUpdate.add(t);
+        }
+
+        // --- 3. 自分がプレイしている曲だけに絞る ---
+        const localScoreData = (() => {
+          try { return JSON.parse(localStorage.getItem(`playdata_${uid}`)); } catch { return null; }
+        })();
+        const myPlayedTitles = new Set(
+          (localScoreData?.scores ?? [])
+            .filter(s => !(s.lamp === "NO PLAY" && (s.score === -1 || s.score == null) && (s.bp === -1 || s.bp == null)))
+            .map(s => s.title)
+            .filter(Boolean)
+        );
+
+        const targetUpdateTitles = [...titlesToUpdate].filter(t => myPlayedTitles.has(t));
+        const targetDeleteTitles = [...titlesToDelete].filter(t => myPlayedTitles.has(t));
+        if (targetUpdateTitles.length === 0 && targetDeleteTitles.length === 0) return;
+
+        // --- 4. 対象曲ごとに順位算出 ---
+        function calcRank(arr, key, ascending) {
+          const valid = arr
+            .map(d => ({ uid: d.userUid, val: (d[key] === -1 || d[key] == null) ? null : Number(d[key]) }))
+            .filter(x => x.val !== null);
+          valid.sort((a, b) => ascending ? a.val - b.val : b.val - a.val);
+          const rankMap = new Map();
+          let rank = 1;
+          for (let i = 0; i < valid.length; i++) {
+            if (i > 0 && valid[i].val !== valid[i - 1].val) rank = i + 1;
+            rankMap.set(valid[i].uid, rank);
+          }
+          return rankMap;
+        }
+
+        // 既存の rankingJson をローカルキャッシュから取得して差分更新する
+        const stored = (() => {
+          try { return JSON.parse(localStorage.getItem(localKey)); } catch { return null; }
+        })();
+        const existingRankingJson = stored?.rankingJson ?? {};
+        const rankingJsonMain = {};
+        const rankingJsonJp   = {};
+
+        // 既存値を振り分け（対象曲以外はそのまま引き継ぐ）
+        for (const [title, val] of Object.entries(existingRankingJson)) {
+          const isJp = /^[^\x00-\x7E\uff41-\uff5a\uff21-\uff3a\uff10-\uff19]/.test(title);
+          if (isJp) rankingJsonJp[title]   = val;
+          else      rankingJsonMain[title] = val;
+        }
+
+        // 削除曲：ranking_${title} キャッシュから自分のエントリを除去し、残りで順位再計算
+        for (const chartTitle of targetDeleteTitles) {
+          const rankCacheKey  = `ranking_${chartTitle}`;
+          const rankCacheData = (() => {
+            try { return JSON.parse(localStorage.getItem(rankCacheKey)); } catch { return null; }
+          })();
+
+          let entries = [];
+          if (rankCacheData?.scores) {
+            // キャッシュから削除済みユーザーのエントリを除いて再計算
+            // （delFlag が来た = そのユーザーのドキュメントが消えている）
+            // score_updates の userUid を特定するため、titleUpdatedAt 経由では取れないので
+            // キャッシュにある全エントリを Firestore で再確認せずそのまま使う方針を取る。
+            // ※ランキングページ側が削除時にキャッシュも更新しているため整合性は保たれる。
+            entries = rankCacheData.scores.filter(s =>
+              !(s.lamp === "NO PLAY" && (s.score === -1 || s.score == null) && (s.bp === -1 || s.bp == null))
+            );
+          } else {
+            // キャッシュなし → Firestore から取得して ranking_${title} キャッシュも生成
+            try {
+              const snap = await getDocs(query(
+                collection(db, "scores"),
+                where("title", "==", chartTitle)
+              ));
+              const rankNow = Date.now();
+              snap.forEach(d => {
+                const data = d.data();
+                if (data.userUid && !(data.lamp === "NO PLAY" && (data.score === -1 || data.score == null) && (data.bp === -1 || data.bp == null))) {
+                  entries.push({ ...data, docId: d.id });
+                }
+              });
+              try {
+                localStorage.setItem(rankCacheKey,                JSON.stringify({ scores: entries }));
+                localStorage.setItem(`ranking_time_${chartTitle}`, rankNow.toString());
+                localStorage.setItem(`ranking_lastsync_${chartTitle}`, rankNow.toString());
+              } catch (e) { console.warn("ranking キャッシュ保存失敗:", e); }
+            } catch (e) {
+              console.warn(`スコア取得失敗(del): ${chartTitle}`, e);
+              continue;
+            }
+          }
+
+          const bpRankMap    = calcRank(entries, "bp",    true);
+          const scoreRankMap = calcRank(entries, "score", false);
+          const myBp    = bpRankMap.get(uid) ?? null;
+          const myScore = scoreRankMap.get(uid) ?? null;
+
+          const isJp = /^[^\x00-\x7E\uff41-\uff5a\uff21-\uff3a\uff10-\uff19]/.test(chartTitle);
+          if (isJp) rankingJsonJp[chartTitle]   = { bprank: myBp, scorerank: myScore };
+          else      rankingJsonMain[chartTitle] = { bprank: myBp, scorerank: myScore };
+        }
+
+        // 更新曲：ranking_${title} キャッシュを優先、なければ Firestore から取得
+        for (const chartTitle of targetUpdateTitles) {
+          const rankCacheKey  = `ranking_${chartTitle}`;
+          const rankCacheTime = localStorage.getItem(`ranking_time_${chartTitle}`);
+          const rankCacheData = (() => {
+            try { return JSON.parse(localStorage.getItem(rankCacheKey)); } catch { return null; }
+          })();
+
+          let entries = [];
+          if (
+            rankCacheData?.scores &&
+            rankCacheTime &&
+            (now - parseInt(rankCacheTime)) < FORCE_REFRESH_INTERVAL
+          ) {
+            // ranking_${title} ローカルキャッシュが有効 → Firestore スキップ
+            entries = rankCacheData.scores.filter(s =>
+              !(s.lamp === "NO PLAY" && (s.score === -1 || s.score == null) && (s.bp === -1 || s.bp == null))
+            );
+          } else {
+            // キャッシュなし or 期限切れ → Firestore から全員分取得して ranking_${title} も更新
+            try {
+              const snap = await getDocs(query(
+                collection(db, "scores"),
+                where("title", "==", chartTitle)
+              ));
+              const rankNow = Date.now();
+              snap.forEach(d => {
+                const data = d.data();
+                if (data.userUid && !(data.lamp === "NO PLAY" && (data.score === -1 || data.score == null) && (data.bp === -1 || data.bp == null))) {
+                  entries.push({ ...data, docId: d.id });
+                }
+              });
+              try {
+                localStorage.setItem(rankCacheKey,                JSON.stringify({ scores: entries }));
+                localStorage.setItem(`ranking_time_${chartTitle}`, rankNow.toString());
+                localStorage.setItem(`ranking_lastsync_${chartTitle}`, rankNow.toString());
+              } catch (e) { console.warn("ranking キャッシュ保存失敗:", e); }
+            } catch (e) {
+              console.warn(`スコア取得失敗: ${chartTitle}`, e);
+              continue;
+            }
+          }
+
+          const bpRankMap    = calcRank(entries, "bp",    true);
+          const scoreRankMap = calcRank(entries, "score", false);
+          const myBp    = bpRankMap.get(uid) ?? null;
+          const myScore = scoreRankMap.get(uid) ?? null;
+
+          const isJp = /^[^\x00-\x7E\uff41-\uff5a\uff21-\uff3a\uff10-\uff19]/.test(chartTitle);
+          if (isJp) rankingJsonJp[chartTitle]   = { bprank: myBp, scorerank: myScore };
+          else      rankingJsonMain[chartTitle] = { bprank: myBp, scorerank: myScore };
+        }
+
+        // --- 5. Firestore 書き込み（rankingUpdatedAt のみ更新、scoreUpdatedAt は触らない）---
+        const writeNow = Date.now();
+        try {
+          await Promise.all([
+            setDoc(doc(db, "ranking_cache", uid), {
+              rankingJson:      rankingJsonMain,
+              rankingUpdatedAt: writeNow
+            }, { merge: true }),
+            setDoc(doc(db, "ranking_cache", `${uid}_jp`), {
+              rankingJson:      rankingJsonJp,
+              rankingUpdatedAt: writeNow
+            }, { merge: true })
+          ]);
+
+          // ローカルキャッシュ更新
+          const merged = { ...rankingJsonMain, ...rankingJsonJp };
+          localStorage.setItem(localKey, JSON.stringify({ rankingJson: merged }));
+        } catch (e) {
+          console.warn("ranking_cache 書き込み失敗:", e);
+        }
+      }
+
       function updateCache(userUid, newScores) {
         const cacheKey = `playdata_${userUid}`;
         const cacheTimeKey = `playdata_time_${userUid}`;
@@ -707,9 +955,15 @@
           displayNameLabel.classList.remove("label-disabled");
           anonymousLabel.classList.remove("label-disabled");
 
-          // ===== DBR Logger連携：sessionStorageからJSONを自動ロード =====
-          if (new URLSearchParams(window.location.search).get("from") === "logger") {
+          // ranking_cache をバックグラウンドで更新（UI操作を妨げないよう await しない）
+          buildRankingCacheIfNeeded(currentUserUid).catch(e => console.warn("ranking_cache 更新エラー:", e));
+
+          // ===== DBR Logger連携 / 拡張機能連携：sessionStorageからJSONを自動ロード =====
+          const fromParam = new URLSearchParams(window.location.search).get("from");
+          if (fromParam === "logger") {
             loadFromLoggerIfPresent();
+          } else if (fromParam === "extend") {
+            loadFromExtendIfPresent();
           }
         } else {
           currentUserUid = null;
@@ -1414,6 +1668,24 @@
           const finalScores = Array.from(updatedMap.values());
           updateCache(currentUserUid, finalScores);
 
+          // score_updates に更新曲リストを記録
+          // buildRankingCacheIfNeeded がこれを読んで影響曲だけ再計算する
+          const updatedTitles = previewItems
+            .filter(item => item.status !== "skip" && item.status !== "title_only")
+            .map(item => item.title)
+            .filter((v, i, a) => a.indexOf(v) === i); // 重複除去
+          if (updatedTitles.length > 0) {
+            const now2 = Date.now();
+            addDoc(collection(db, "score_updates"), {
+              userUid:   currentUserUid,
+              titles:    updatedTitles,
+              updatedAt: now2
+            }).catch(e => console.warn("score_updates 書き込み失敗:", e));
+            // ranking_cache の scoreUpdatedAt も更新（残す方針なので）
+            setDoc(doc(db, "ranking_cache", currentUserUid), { scoreUpdatedAt: now2 }, { merge: true })
+              .catch(e => console.warn("scoreUpdatedAt 更新失敗:", e));
+          }
+
           const summary = [
             `${count}件のプレーデータをアップロードしました。`,
             skipped > 0 ? `（${skipped}件は12時間以内の再登録のため、スキップされました）` : ""
@@ -1477,15 +1749,50 @@
           const q = query(collection(db, "scores"), where("userUid", "==", currentUserUid));
           const snapshot = await getDocs(q);
           if (snapshot.empty) { deleteStatus.textContent = "削除対象のデータはありません。"; return; }
+
+          // 削除前にタイトル一覧を収集
+          const deletedTitles = [...new Set(
+            snapshot.docs
+              .map(d => d.data().title)
+              .filter(Boolean)
+          )];
+
           const deleteOps = snapshot.docs.map(docSnap => deleteDoc(docSnap.ref));
           await Promise.all(deleteOps);
 
+          // playdata キャッシュ削除
           const cacheKey = `playdata_${currentUserUid}`;
           const cacheTimeKey = `playdata_time_${currentUserUid}`;
           const lastSyncKey = `playdata_lastsync_${currentUserUid}`;
           localStorage.removeItem(cacheKey);
           localStorage.removeItem(cacheTimeKey);
           localStorage.removeItem(lastSyncKey);
+
+          // ranking_${title} ローカルキャッシュからも自分のエントリを削除
+          for (const title of deletedTitles) {
+            const rankCacheKey = `ranking_${title}`;
+            const rankCacheData = (() => {
+              try { return JSON.parse(localStorage.getItem(rankCacheKey)); } catch { return null; }
+            })();
+            if (rankCacheData?.scores) {
+              rankCacheData.scores = rankCacheData.scores.filter(s => s.userUid !== currentUserUid);
+              try { localStorage.setItem(rankCacheKey, JSON.stringify(rankCacheData)); } catch { /* ignore */ }
+            }
+          }
+
+          // score_updates に delFlag: true で全削除を通知
+          // → 他ユーザーが次回 upload.html を開いたとき再計算を促す
+          if (deletedTitles.length > 0) {
+            const delNow = Date.now();
+            addDoc(collection(db, "score_updates"), {
+              userUid:   currentUserUid,
+              titles:    deletedTitles,
+              delFlag:   true,
+              updatedAt: delNow
+            }).catch(e => console.warn("score_updates(del) 書き込み失敗:", e));
+            setDoc(doc(db, "ranking_cache", currentUserUid), { scoreUpdatedAt: delNow }, { merge: true })
+              .catch(e => console.warn("scoreUpdatedAt(del) 更新失敗:", e));
+          }
 
           deleteStatus.textContent = `${deleteOps.length}件のデータを削除しました。`;
         } catch (e) {
@@ -1580,6 +1887,61 @@
           "color:#1e6e44"
         ].join(";");
         banner.textContent = "✅ DBR LoggerからJSONデータを受け取りました。内容を確認して送信してください。";
+
+        // ファイル選択ラベルの直前にバナーを挿入
+        const fileLabel = document.querySelector('label[for="jsonFileInput"]');
+        fileLabel.parentNode.insertBefore(banner, fileLabel);
+
+        // 少し遅延させてからプレビューを自動表示
+        // （onAuthStateChanged 内から呼ばれるため、DOM/状態の確定を待つ）
+        setTimeout(() => {
+          uploadBtn.click();
+        }, 300);
+      }
+
+      // ===== 拡張機能連携：sessionStorageからJSONを自動ロードしてプレビューを開く =====
+      function loadFromExtendIfPresent() {
+        const SESSION_KEY   = "dbr_ir_from_extend_json";
+        const SESSION_FNAME = "dbr_ir_from_extend_filename";
+
+        const jsonText = sessionStorage.getItem(SESSION_KEY);
+        if (!jsonText) return;
+
+        const filename = sessionStorage.getItem(SESSION_FNAME) || "dbr-extend.json";
+
+        // 使用後は即座に削除（再読み込みや戻るボタンで二重ロードを防ぐ）
+        sessionStorage.removeItem(SESSION_KEY);
+        sessionStorage.removeItem(SESSION_FNAME);
+
+        // File オブジェクトを生成して file input にセット
+        let file;
+        try {
+          file = new File([jsonText], filename, { type: "application/json" });
+        } catch (e) {
+          alert("拡張機能からのJSONファイルの読み込みに失敗しました。: " + e.message);
+          return;
+        }
+
+        const dt = new DataTransfer();
+        dt.items.add(file);
+        fileInput.files = dt.files;
+
+        // ファイル名表示を更新
+        document.getElementById("fileName").textContent = filename;
+
+        // 拡張機能連携バナーを表示
+        const banner = document.createElement("div");
+        banner.id = "loggerBanner";
+        banner.style.cssText = [
+          "background:#eafaf1",
+          "border:1px solid #7dcea0",
+          "border-radius:0.5rem",
+          "padding:0.6rem 1rem",
+          "margin-bottom:0.75rem",
+          "font-size:0.9rem",
+          "color:#1e6e44"
+        ].join(";");
+        banner.textContent = "✅ 拡張機能からJSONデータを受け取りました。内容を確認して送信してください。";
 
         // ファイル選択ラベルの直前にバナーを挿入
         const fileLabel = document.querySelector('label[for="jsonFileInput"]');
