@@ -155,14 +155,14 @@
   <script type="module">
     import { escapeHtml } from "./html.js";
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
-    import { getFirestore, collection, query, where, getDocs, getDoc, doc } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+    import { getFirestore, collection, query, where, getDocs, getDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
 
     // ===== ranking_cache 取得ユーティリティ =====
     // ranking_cache/{uid} と ranking_cache/{uid}_jp の2ドキュメントを並列取得し、
     // rankingJson（曲名(難易度)→{bprank, scorerank}）をマージして返す。
     // scoreUpdatedAt がローカルキャッシュと同じなら Firestore を読まずにローカルを返す。
-    async function fetchRankingCache(db, uid) {
+    async function fetchRankingCache(db, uid, myUid, scoreMap) {
       console.log("[fetchRankingCache] 開始 uid:", uid);
       const localKey = `rankingcache_${uid}`;
       const stored   = localStorage.getItem(localKey);
@@ -173,7 +173,12 @@
       try {
         const snap = await getDoc(doc(db, "ranking_cache", uid));
         if (!snap.exists()) {
-          // ranking_cache 未作成 → ローカルキャッシュを返すだけ（upload.htmlで作成される）
+          if (myUid === uid) {
+            // 本人ログイン中 → ranking_cache を自力構築する
+            console.log("[fetchRankingCache] ranking_cache 未作成 かつ 本人 → 構築開始");
+            return await buildRankingCache(db, uid, scoreMap, local);
+          }
+          // 他人のページ → ローカルキャッシュを返すだけ（upload.htmlで作成される）
           console.log("[fetchRankingCache] ranking_cache 未作成 → ローカルキャッシュ返却");
           return local?.rankingJson ?? null;
         }
@@ -263,6 +268,107 @@
         console.warn("[fetchRankingCache] ranking_cache 全体取得失敗:", e);
         return local?.rankingJson ?? null;
       }
+    }
+
+    // ===== ranking_cache を自力構築する関数（本人ログイン時・未作成の場合のみ呼ばれる）=====
+    // ranking.html の updateRankingCache と同じ振り分けルール・フィールド構造で書き込む。
+    // ローカルキャッシュがある譜面は rankingUpdatedAt を比較して最小限の取得に留める。
+    async function buildRankingCache(db, uid, scoreMap, local) {
+      const titles = [...scoreMap.keys()];
+      if (titles.length === 0) {
+        console.log("[buildRankingCache] プレイ済み譜面なし → スキップ");
+        return local?.rankingJson ?? null;
+      }
+
+      const localKey        = `rankingcache_${uid}`;
+      const localRankingJson  = local?.rankingJson      ?? {};
+      const localUpdatedAt    = local?.rankingUpdatedAt ?? null;
+
+      // jp / 英数字 で振り分けた更新内容を分けて保持
+      const updatedMain = { ...localRankingJson };
+      const updatedJp   = {};
+
+      // ローカルキャッシュの jp 側エントリを分離
+      for (const [t, v] of Object.entries(localRankingJson)) {
+        if (/^[^\x00-\x7Eａ-ｚＡ-Ｚ０-９]/.test(t)) {
+          updatedJp[t]   = v;
+          delete updatedMain[t];
+        }
+      }
+
+      console.log("[buildRankingCache] 構築開始 譜面数:", titles.length, "localUpdatedAt:", localUpdatedAt);
+
+      // 各譜面について scores コレクションから全エントリを取得しランク算出
+      // （ranking.html の calcRanks と同じロジック）
+      function calcRanks(arr, key, ascending) {
+        const valid = arr
+          .map(d => ({ uid: d.userUid, val: (d[key] === -1 || d[key] == null) ? null : Number(d[key]) }))
+          .filter(x => x.val !== null);
+        valid.sort((a, b) => ascending ? a.val - b.val : b.val - a.val);
+        const rankMap = new Map();
+        let rank = 1;
+        for (let i = 0; i < valid.length; i++) {
+          if (i > 0 && valid[i].val !== valid[i - 1].val) rank = i + 1;
+          rankMap.set(valid[i].uid, rank);
+        }
+        return rankMap;
+      }
+
+      const fetchPromises = titles.map(async (title) => {
+        // ローカルキャッシュが rankingUpdatedAt より新しければスキップ
+        // （localUpdatedAt は構築時刻なので、それより古い ranking_cache は再取得不要）
+        // ここでは常に取得して最新ランクを反映する（初回構築のため）
+        try {
+          const q = query(collection(db, "scores"), where("title", "==", title));
+          const snap = await getDocs(q);
+          if (snap.empty) return;
+
+          const scores = snap.docs.map(d => d.data());
+          const bpRankMap    = calcRanks(scores, "bp",    true);
+          const scoreRankMap = calcRanks(scores, "score", false);
+
+          const myBpRank    = bpRankMap.get(uid)    ?? null;
+          const myScoreRank = scoreRankMap.get(uid) ?? null;
+
+          const isJp = /^[^\x00-\x7Eａ-ｚＡ-Ｚ０-９]/.test(title);
+          if (isJp) {
+            updatedJp[title]   = { bprank: myBpRank, scorerank: myScoreRank };
+          } else {
+            updatedMain[title] = { bprank: myBpRank, scorerank: myScoreRank };
+          }
+        } catch (e) {
+          console.warn("[buildRankingCache] 取得失敗:", title, e);
+        }
+      });
+
+      await Promise.all(fetchPromises);
+
+      const now = Date.now();
+
+      // ranking.html の updateRankingCache と同じ構造で Firestore に書き込む
+      try {
+        await setDoc(doc(db, "ranking_cache", uid), {
+          rankingJson:      updatedMain,
+          rankingUpdatedAt: now
+        }, { merge: true });
+
+        if (Object.keys(updatedJp).length > 0) {
+          await setDoc(doc(db, "ranking_cache", `${uid}_jp`), {
+            rankingJson:      updatedJp,
+            rankingUpdatedAt: now
+          }, { merge: true });
+        }
+
+        console.log("[buildRankingCache] Firestore 書き込み完了 main:", Object.keys(updatedMain).length, "jp:", Object.keys(updatedJp).length);
+      } catch (e) {
+        console.warn("[buildRankingCache] Firestore 書き込み失敗:", e);
+      }
+
+      // マージした全 rankingJson をローカルキャッシュに保存
+      const rankingJson = { ...updatedMain, ...updatedJp };
+      localStorage.setItem(localKey, JSON.stringify({ rankingJson, rankingUpdatedAt: now }));
+      console.log("[buildRankingCache] 構築完了 曲数:", Object.keys(rankingJson).length);
+      return rankingJson;
     }
 
     const firebaseConfig = {
@@ -537,8 +643,9 @@
         }
       });
 
-      // ranking_cache 取得（スコア取得と並行）
-      const rankingJsonPromise = fetchRankingCache(db, userUid);
+      // ranking_cache 取得（myUid 確定後）
+      await myUidReady;
+      const rankingJsonPromise = fetchRankingCache(db, userUid, myUid, scoreMap);
 
       const header = await $.getJSON("dbralleheader.json");
       const [songList, rankingJson] = await Promise.all([
@@ -952,24 +1059,28 @@
       };
     }
 
-    main();
-
     // --- 比較機能 ---
     const auth = getAuth();
     let myUid = null;
     let myScoreMap = new Map();
     let compareActive = false;
 
-    onAuthStateChanged(auth, (user) => {
-      myUid = user?.uid || null;
-      const compareBtn = document.getElementById("compareBtn");
-      if (myUid && myUid !== userUid) {
-        compareBtn.style.display = "inline";
-      } else {
-        compareBtn.style.display = "none";
-        if (compareActive) deactivateCompare();
-      }
+    // myUid の確定を待つ Promise（onAuthStateChanged の初回コールバックで resolve）
+    const myUidReady = new Promise(resolve => {
+      onAuthStateChanged(auth, (user) => {
+        myUid = user?.uid || null;
+        const compareBtn = document.getElementById("compareBtn");
+        if (myUid && myUid !== userUid) {
+          compareBtn.style.display = "inline";
+        } else {
+          compareBtn.style.display = "none";
+          if (compareActive) deactivateCompare();
+        }
+        resolve(myUid);
+      });
     });
+
+    main();
 
     async function getMyScores() {
       if (!myUid) return [];
