@@ -686,6 +686,7 @@
           if (snap.exists()) {
             myRankingUpdatedAt = snap.data().rankingUpdatedAt ?? null;
             console.log("[buildRankingCache] myRankingUpdatedAt:", myRankingUpdatedAt);
+            console.log("[buildRankingCache] 📖 Firestore読み取り: 1件（ranking_cache/{uid}）");
           }
         } catch (e) {
           console.warn("[buildRankingCache] ranking_cache 確認失敗:", e);
@@ -705,7 +706,13 @@
             ? query(collection(db, "score_updates"), where("updatedAt", ">", myRankingUpdatedAt))
             : query(collection(db, "score_updates")); // 未計算なら全件対象
           const snap = await getDocs(q);
-          console.log("[buildRankingCache] score_updates 件数:", snap.size);
+          const suCount = snap.size;
+          if (suCount === 0) {
+            console.log("[buildRankingCache] 📖 Firestore読み取り: 0件（検索は行ったので1件扱い）（score_updates）");
+          } else {
+            console.log("[buildRankingCache] 📖 Firestore読み取り:", suCount, "件（score_updates）");
+          }
+          console.log("[buildRankingCache] score_updates 件数:", suCount);
           snap.forEach(d => {
             const data  = d.data();
             const isDelFlag = !!data.delFlag;
@@ -793,6 +800,7 @@
 
           let entries = [];
           if (rankCacheData?.scores) {
+            console.log("[buildRankingCache] 💾 キャッシュ使用（削除曲）:", chartTitle);
             console.log("[buildRankingCache] 削除曲 キャッシュ使用:", chartTitle);
             // キャッシュから削除済みユーザーのエントリを除いて再計算
             // （delFlag が来た = そのユーザーのドキュメントが消えている）
@@ -811,6 +819,11 @@
                 where("title", "==", chartTitle)
               ));
               const rankNow = Date.now();
+              if (snap.size === 0) {
+                console.log("[buildRankingCache] 📖 Firestore読み取り（削除曲）: 0件（検索は行ったので1件扱い）", chartTitle);
+              } else {
+                console.log("[buildRankingCache] 📖 Firestore読み取り（削除曲）:", snap.size, "件", chartTitle);
+              }
               snap.forEach(d => {
                 const data = d.data();
                 if (data.userUid && !(data.lamp === "NO PLAY" && (data.score === -1 || data.score == null) && (data.bp === -1 || data.bp == null))) {
@@ -852,6 +865,7 @@
             rankCacheTime &&
             (now - parseInt(rankCacheTime)) < FORCE_REFRESH_INTERVAL
           ) {
+            console.log("[buildRankingCache] 💾 キャッシュ使用（更新曲）:", chartTitle);
             console.log("[buildRankingCache] 更新曲 キャッシュ使用:", chartTitle);
             // ranking_${title} ローカルキャッシュが有効 → Firestore スキップ
             entries = rankCacheData.scores.filter(s =>
@@ -865,6 +879,11 @@
                 collection(db, "scores"),
                 where("title", "==", chartTitle)
               ));
+              if (snap.size === 0) {
+                console.log("[buildRankingCache] 📖 Firestore読み取り（更新曲）: 0件（検索は行ったので1件扱い）", chartTitle);
+              } else {
+                console.log("[buildRankingCache] 📖 Firestore読み取り（更新曲）:", snap.size, "件", chartTitle);
+              }
               const rankNow = Date.now();
               snap.forEach(d => {
                 const data = d.data();

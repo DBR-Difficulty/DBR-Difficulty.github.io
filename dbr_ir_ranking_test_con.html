@@ -222,6 +222,7 @@
       cleanupOldCache(cacheKey);
 
       if (cachedData && cachedTime && (now - parseInt(cachedTime)) > FORCE_REFRESH_INTERVAL) {
+        console.log("[loadAndRender] 💾 キャッシュ使用: ranking_${title}（scores:", cachedData ? JSON.parse(cachedData).scores?.length ?? 0 : 0, "件）");
         console.log("[loadAndRender] キャッシュあり");
         // キャッシュが存在する場合
         const cache = JSON.parse(cachedData);
@@ -241,6 +242,11 @@
             );
 
             const diffSnap = await getDocs(diffQuery);
+            if (diffSnap.size === 0) {
+              console.log("[loadAndRender] 📖 Firestore読み取り: 0件（検索は行ったので1件扱い）（scores差分）");
+            } else {
+              console.log("[loadAndRender] 📖 Firestore読み取り:", diffSnap.size, "件（scores差分）");
+            }
 
             if (diffSnap.size > 0) {
               // 差分データをマージ（userUidをキーに）

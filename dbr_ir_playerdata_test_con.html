@@ -175,15 +175,18 @@
         if (!snap.exists()) {
           if (myUid === uid) {
             // 本人ログイン中 → ranking_cache を自力構築する
+            console.log("[fetchRankingCache] 📖 Firestore読み取り: 1件（ranking_cache/{uid}）");
             console.log("[fetchRankingCache] ranking_cache 未作成 かつ 本人 → 構築開始");
             return await buildRankingCache(db, uid, scoreMap, local);
           }
           // 他人のページ → ローカルキャッシュを返すだけ（upload.htmlで作成される）
+          console.log("[fetchRankingCache] 📖 Firestore読み取り: 1件（ranking_cache/{uid}）");
           console.log("[fetchRankingCache] ranking_cache 未作成 → ローカルキャッシュ返却");
           return local?.rankingJson ?? null;
         }
         myRankingUpdatedAt = snap.data().rankingUpdatedAt ?? null;
         console.log("[fetchRankingCache] myRankingUpdatedAt:", myRankingUpdatedAt);
+        console.log("[fetchRankingCache] 📖 Firestore読み取り: 1件（ranking_cache/{uid}）");
       } catch (e) {
         console.warn("[fetchRankingCache] ranking_cache 確認失敗:", e);
         return local?.rankingJson ?? null;
@@ -215,7 +218,13 @@
           }
         });
 
-        console.log("[fetchRankingCache] score_updates 件数:", snap.size);
+        const suCount = snap.size;
+        if (suCount === 0) {
+          console.log("[fetchRankingCache] 📖 Firestore読み取り: 0件（検索は行ったので1件扱い）（score_updates）");
+        } else {
+          console.log("[fetchRankingCache] 📖 Firestore読み取り:", suCount, "件（score_updates）");
+        }
+        console.log("[fetchRankingCache] score_updates 件数:", suCount);
         // 振り分け
         const titlesToDelete = [];
         for (const [t, info] of titleUpdatedAt) {
@@ -227,15 +236,33 @@
         }
 
         console.log("[fetchRankingCache] needsRefetch:", needsRefetch, "titlesToDelete:", titlesToDelete);
-        // delFlagあり → ローカルキャッシュから該当タイトルを除去して保存
-        if (titlesToDelete.length > 0 && local?.rankingJson) {
-          const updated = { ...local.rankingJson };
-          for (const t of titlesToDelete) {
-            delete updated[t];
+        // delFlagあり → rankingJson と リスト表示用キャッシュ（playdata_${uid}）から該当タイトルを除去
+        if (titlesToDelete.length > 0) {
+          // rankingJson から除去
+          if (local?.rankingJson) {
+            const updated = { ...local.rankingJson };
+            for (const t of titlesToDelete) delete updated[t];
+            localStorage.setItem(localKey, JSON.stringify({ rankingJson: updated }));
           }
-          localStorage.setItem(localKey, JSON.stringify({ rankingJson: updated }));
+          // リスト表示用キャッシュからも除去
+          const playdataKey = `playdata_${uid}`;
+          const playdataRaw = localStorage.getItem(playdataKey);
+          if (playdataRaw) {
+            try {
+              const playdataCache = JSON.parse(playdataRaw);
+              if (playdataCache.scores) {
+                const deleteSet = new Set(titlesToDelete);
+                playdataCache.scores = playdataCache.scores.filter(s => !deleteSet.has(s.title));
+                localStorage.setItem(playdataKey, JSON.stringify(playdataCache));
+                console.log("[fetchRankingCache] リストキャッシュから削除:", titlesToDelete);
+              }
+            } catch (e) { console.warn("[fetchRankingCache] リストキャッシュ更新失敗:", e); }
+          }
           // ranking_cache 再取得が不要な場合はここで除去済みキャッシュを返す
-          if (!needsRefetch) return updated;
+          if (!needsRefetch) {
+            const currentLocal = localStorage.getItem(localKey);
+            return currentLocal ? JSON.parse(currentLocal).rankingJson : null;
+          }
         }
 
       } catch (e) {
@@ -245,12 +272,14 @@
 
       // 更新なし かつ ローカルキャッシュあり → そのまま返す
       if (!needsRefetch && local?.rankingJson) {
+        console.log("[fetchRankingCache] 💾 キャッシュ使用: rankingJson（Firestore追加読み取りなし）");
         console.log("[fetchRankingCache] 更新なし → ローカルキャッシュ返却");
         return local.rankingJson;
       }
 
       // --- 3. 全体取得（最大 2 read）---
       console.log("[fetchRankingCache] ranking_cache 全体取得開始");
+      console.log("[fetchRankingCache] 📖 Firestore読み取り: 最大2件（ranking_cache/{uid}, {uid}_jp）");
       try {
         const [snapMain, snapJp] = await Promise.all([
           getDoc(doc(db, "ranking_cache", uid)),
@@ -263,6 +292,29 @@
 
         localStorage.setItem(localKey, JSON.stringify({ rankingJson }));
         console.log("[fetchRankingCache] 全体取得完了 曲数:", Object.keys(rankingJson).length);
+
+        // rankingJson に存在しない曲をリストキャッシュから除去
+        // （他人がアクセスした場合も、削除済み曲をリストに表示しないようにする）
+        // ※ rankingJson が空オブジェクトの場合は除去しない（未プレイ or 未計算の可能性）
+        if (Object.keys(rankingJson).length > 0) {
+          const playdataKey = `playdata_${uid}`;
+          const playdataRaw = localStorage.getItem(playdataKey);
+          if (playdataRaw) {
+            try {
+              const playdataCache = JSON.parse(playdataRaw);
+              if (playdataCache.scores) {
+                const before = playdataCache.scores.length;
+                playdataCache.scores = playdataCache.scores.filter(s => rankingJson.hasOwnProperty(s.title));
+                const removed = before - playdataCache.scores.length;
+                if (removed > 0) {
+                  localStorage.setItem(playdataKey, JSON.stringify(playdataCache));
+                  console.log("[fetchRankingCache] rankingJsonにない曲をリストキャッシュから除去:", removed, "件");
+                }
+              }
+            } catch (e) { console.warn("[fetchRankingCache] リストキャッシュ整合失敗:", e); }
+          }
+        }
+
         return rankingJson;
       } catch (e) {
         console.warn("[fetchRankingCache] ranking_cache 全体取得失敗:", e);
@@ -321,7 +373,11 @@
         try {
           const q = query(collection(db, "scores"), where("title", "==", title));
           const snap = await getDocs(q);
-          if (snap.empty) return;
+          if (snap.empty) {
+            console.log("[buildRankingCache] 📖 Firestore読み取り: 0件（検索は行ったので1件扱い）", title);
+            return;
+          }
+          console.log("[buildRankingCache] 📖 Firestore読み取り:", snap.docs.length, "件", title);
 
           const scores = snap.docs.map(d => d.data());
           const bpRankMap    = calcRanks(scores, "bp",    true);
@@ -542,6 +598,7 @@
       // キャッシュチェック
       if (cachedData && cachedTime && (now - parseInt(cachedTime)) < FORCE_REFRESH_INTERVAL) {
         // キャッシュが有効な場合
+        console.log("[main] 💾 キャッシュ使用: playdata（scores:", JSON.parse(cachedData).scores?.length ?? 0, "件）");
         const cache = JSON.parse(cachedData);
         displayName = cache.displayName;
         scores = cache.scores;
@@ -551,6 +608,7 @@
           try {
             // 最後に同期した時刻以降のデータのみ取得
             const userSnap = await getDoc(doc(db, "users", userUid));
+            console.log("[main] 📖 Firestore読み取り: 1件（users/{uid}）");
             if (userSnap.exists()) {
               const userData = userSnap.data();
               displayName = userData.anonymous ? "匿名希望" : (userData.displayName || "未設定");
@@ -563,6 +621,11 @@
               where("timestamp", ">", lastSync)
             );
             const diffSnap = await getDocs(diffQuery);
+            if (diffSnap.size === 0) {
+              console.log("[main] 📖 Firestore読み取り: 0件（検索は行ったので1件扱い）（scores差分）");
+            } else {
+              console.log("[main] 📖 Firestore読み取り:", diffSnap.size, "件（scores差分）");
+            }
 
             if (diffSnap.size > 0) {
               const scoreMap = new Map(scores.map(s => [s.title, s]));
@@ -609,6 +672,11 @@
 
         // 全件取得
         const snap = await getDocs(query(collection(db, "scores"), where("userUid", "==", userUid)));
+        if (snap.size === 0) {
+          console.log("[main] 📖 Firestore読み取り: 0件（検索は行ったので1件扱い）（scores全件）");
+        } else {
+          console.log("[main] 📖 Firestore読み取り:", snap.size, "件（scores全件）");
+        }
         snap.forEach(doc => {
           const data = doc.data();
           if (data.title) {
