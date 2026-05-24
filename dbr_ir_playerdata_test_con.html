@@ -289,12 +289,13 @@
         const snapMain = await getDoc(doc(db, "ranking_cache", uid));
         const rankingJson = snapMain.exists() ? (snapMain.data().rankingJson ?? {}) : {};
 
-        const refetchNow = Date.now();
         console.log("[fetchRankingCache] 全体取得完了 曲数:", Object.keys(rankingJson).length);
 
         // 全体取得で rankingJson が空 かつ 本人ログイン中 かつ scoreMap に曲がある場合
         // → 削除→再アップロード直後などで ranking_cache がまだ再構築されていない状態
         //   → buildRankingCache で自力構築してそちらの結果を返す
+        // ※ この場合は rankingUpdatedAt を更新しない（空のまま更新すると upload 側の
+        //   buildRankingCacheIfNeeded が「更新なし」と判断して構築をスキップしてしまうため）
         if (Object.keys(rankingJson).length === 0 && myUid === uid && scoreMap.size > 0) {
           console.log("[fetchRankingCache] rankingJson が空 かつ 本人 かつ scoreMap あり → buildRankingCache にフォールスルー");
           return await buildRankingCache(db, uid, scoreMap, local);
@@ -304,7 +305,10 @@
 
         // 全体取得後に rankingUpdatedAt を更新する
         // （次回の score_updates 差分チェックで同じ更新を再検知しないようにするため）
-        if (myUid === uid) {
+        // ※ rankingJson が空の場合は更新しない（空のまま rankingUpdatedAt を進めると
+        //   upload 側が「更新対象なし」と誤判定して ranking_cache を構築しなくなるため）
+        if (myUid === uid && Object.keys(rankingJson).length > 0) {
+          const refetchNow = Date.now();
           setDoc(doc(db, "ranking_cache", uid), { rankingUpdatedAt: refetchNow }, { merge: true })
             .then(() => console.log("[fetchRankingCache] ✏️ Firestore書き込み: ranking_cache/{uid} rankingUpdatedAt更新（全体取得後）"))
             .catch(e => console.warn("[fetchRankingCache] ranking_cache rankingUpdatedAt更新失敗（全体取得後）:", e));
