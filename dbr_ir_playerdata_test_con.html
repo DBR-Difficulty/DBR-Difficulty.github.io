@@ -290,8 +290,17 @@
         const rankingJson = snapMain.exists() ? (snapMain.data().rankingJson ?? {}) : {};
 
         const refetchNow = Date.now();
-        localStorage.setItem(localKey, JSON.stringify({ rankingJson }));
         console.log("[fetchRankingCache] 全体取得完了 曲数:", Object.keys(rankingJson).length);
+
+        // 全体取得で rankingJson が空 かつ 本人ログイン中 かつ scoreMap に曲がある場合
+        // → 削除→再アップロード直後などで ranking_cache がまだ再構築されていない状態
+        //   → buildRankingCache で自力構築してそちらの結果を返す
+        if (Object.keys(rankingJson).length === 0 && myUid === uid && scoreMap.size > 0) {
+          console.log("[fetchRankingCache] rankingJson が空 かつ 本人 かつ scoreMap あり → buildRankingCache にフォールスルー");
+          return await buildRankingCache(db, uid, scoreMap, local);
+        }
+
+        localStorage.setItem(localKey, JSON.stringify({ rankingJson }));
 
         // 全体取得後に rankingUpdatedAt を更新する
         // （次回の score_updates 差分チェックで同じ更新を再検知しないようにするため）
