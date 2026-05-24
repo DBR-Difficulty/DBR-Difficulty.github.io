@@ -289,8 +289,17 @@
         const snapMain = await getDoc(doc(db, "ranking_cache", uid));
         const rankingJson = snapMain.exists() ? (snapMain.data().rankingJson ?? {}) : {};
 
+        const refetchNow = Date.now();
         localStorage.setItem(localKey, JSON.stringify({ rankingJson }));
         console.log("[fetchRankingCache] 全体取得完了 曲数:", Object.keys(rankingJson).length);
+
+        // 全体取得後に rankingUpdatedAt を更新する
+        // （次回の score_updates 差分チェックで同じ更新を再検知しないようにするため）
+        if (myUid === uid) {
+          setDoc(doc(db, "ranking_cache", uid), { rankingUpdatedAt: refetchNow }, { merge: true })
+            .then(() => console.log("[fetchRankingCache] ✏️ Firestore書き込み: ranking_cache/{uid} rankingUpdatedAt更新（全体取得後）"))
+            .catch(e => console.warn("[fetchRankingCache] ranking_cache rankingUpdatedAt更新失敗（全体取得後）:", e));
+        }
 
         // rankingJson に存在しない曲をリストキャッシュから除去
         // （他人がアクセスした場合も、削除済み曲をリストに表示しないようにする）
@@ -678,17 +687,12 @@
       const hashtags = "DBR_IR";
       twitterBtn.href = `https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}&hashtags=${encodeURIComponent(hashtags)}`;
 
-      // ranking_cache 取得（myUid 確定後）
-      // ※ fetchRankingCache はリストキャッシュを書き換える可能性があるため、
-      //   scoreMap/titleSet/filtered の構築はこの後に行う
+      // songList を先に取得し、その後 scoreMap を構築してから rankingCache を取得する。
+      // ※ fetchRankingCache(buildRankingCache) は scoreMap が確定していないと
+      //   「プレイ済み譜面なし → スキップ」になってしまうため、順序が重要。
       await myUidReady;
-      const rankingJsonPromise = fetchRankingCache(db, userUid, myUid, scoreMap);
-
       const header = await $.getJSON("dbralleheader.json");
-      const [songList, rankingJson] = await Promise.all([
-        $.getJSON(header.data_url),
-        rankingJsonPromise
-      ]);
+      const songList = await $.getJSON(header.data_url);
 
       // データをMapに格納（fetchRankingCacheによるキャッシュ書き換え後のscoresを使う）
       const latestCacheRaw = localStorage.getItem(`playdata_${userUid}`);
@@ -699,6 +703,9 @@
           titleSet.add(data.title);
         }
       });
+
+      // scoreMap 確定後に rankingCache を取得
+      const rankingJson = await fetchRankingCache(db, userUid, myUid, scoreMap);
 
       const filtered = songList.filter(song => titleSet.has(song.title));
       filtered.sort((a, b) => {
