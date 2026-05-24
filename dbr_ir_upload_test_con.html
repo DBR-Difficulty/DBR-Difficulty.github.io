@@ -842,9 +842,7 @@
           const myBp    = bpRankMap.get(uid) ?? null;
           const myScore = scoreRankMap.get(uid) ?? null;
 
-          const isJp = /^[^\x00-\x7E\uff41-\uff5a\uff21-\uff3a\uff10-\uff19]/.test(chartTitle);
           rankingJsonMain[chartTitle] = { bprank: myBp, scorerank: myScore };
-          else      rankingJsonMain[chartTitle] = { bprank: myBp, scorerank: myScore };
         }
 
         // 更新曲：ranking_${title} キャッシュを優先、なければ Firestore から取得
@@ -903,9 +901,7 @@
           const myBp    = bpRankMap.get(uid) ?? null;
           const myScore = scoreRankMap.get(uid) ?? null;
 
-          const isJp = /^[^\x00-\x7E\uff41-\uff5a\uff21-\uff3a\uff10-\uff19]/.test(chartTitle);
           rankingJsonMain[chartTitle] = { bprank: myBp, scorerank: myScore };
-          else      rankingJsonMain[chartTitle] = { bprank: myBp, scorerank: myScore };
         }
 
         // --- 5. Firestore 書き込み（rankingUpdatedAt のみ更新、scoreUpdatedAt は触らない）---
