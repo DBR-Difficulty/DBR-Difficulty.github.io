@@ -782,13 +782,9 @@
         })();
         const existingRankingJson = stored?.rankingJson ?? {};
         const rankingJsonMain = {};
-        const rankingJsonJp   = {};
-
-        // 既存値を振り分け（対象曲以外はそのまま引き継ぐ）
+        // ローカルキャッシュの既存値を引き継ぐ（対象曲以外はそのまま）
         for (const [title, val] of Object.entries(existingRankingJson)) {
-          const isJp = /^[^\x00-\x7E\uff41-\uff5a\uff21-\uff3a\uff10-\uff19]/.test(title);
-          if (isJp) rankingJsonJp[title]   = val;
-          else      rankingJsonMain[title] = val;
+          rankingJsonMain[title] = val;
         }
 
         // 削除曲：ranking_${title} キャッシュから自分のエントリを除去し、残りで順位再計算
@@ -847,7 +843,7 @@
           const myScore = scoreRankMap.get(uid) ?? null;
 
           const isJp = /^[^\x00-\x7E\uff41-\uff5a\uff21-\uff3a\uff10-\uff19]/.test(chartTitle);
-          if (isJp) rankingJsonJp[chartTitle]   = { bprank: myBp, scorerank: myScore };
+          rankingJsonMain[chartTitle] = { bprank: myBp, scorerank: myScore };
           else      rankingJsonMain[chartTitle] = { bprank: myBp, scorerank: myScore };
         }
 
@@ -908,28 +904,21 @@
           const myScore = scoreRankMap.get(uid) ?? null;
 
           const isJp = /^[^\x00-\x7E\uff41-\uff5a\uff21-\uff3a\uff10-\uff19]/.test(chartTitle);
-          if (isJp) rankingJsonJp[chartTitle]   = { bprank: myBp, scorerank: myScore };
+          rankingJsonMain[chartTitle] = { bprank: myBp, scorerank: myScore };
           else      rankingJsonMain[chartTitle] = { bprank: myBp, scorerank: myScore };
         }
 
         // --- 5. Firestore 書き込み（rankingUpdatedAt のみ更新、scoreUpdatedAt は触らない）---
-        const writeNow = Date.now();
         try {
-          await Promise.all([
-            setDoc(doc(db, "ranking_cache", uid), {
-              rankingJson:      rankingJsonMain,
-              rankingUpdatedAt: writeNow
-            }, { merge: true }),
-            setDoc(doc(db, "ranking_cache", `${uid}_jp`), {
-              rankingJson:      rankingJsonJp,
-              rankingUpdatedAt: writeNow
-            }, { merge: true })
-          ]);
+          console.log("[buildRankingCache] \u270f\ufe0f Firestore\u66f8\u304d\u8fbc\u307f: ranking_cache/{uid}", Object.keys(rankingJsonMain).length, "\u66f2");
+          await setDoc(doc(db, "ranking_cache", uid), {
+            rankingJson:      rankingJsonMain,
+            rankingUpdatedAt: writeNow
+          }, { merge: true });
 
           // ローカルキャッシュ更新
-          const merged = { ...rankingJsonMain, ...rankingJsonJp };
-          localStorage.setItem(localKey, JSON.stringify({ rankingJson: merged }));
-          console.log("[buildRankingCache] 完了 曲数:", Object.keys(merged).length);
+          localStorage.setItem(localKey, JSON.stringify({ rankingJson: rankingJsonMain }));
+          console.log("[buildRankingCache] 完了 曲数:", Object.keys(rankingJsonMain).length);
         } catch (e) {
           console.warn("[buildRankingCache] ranking_cache 書き込み失敗:", e);
         }

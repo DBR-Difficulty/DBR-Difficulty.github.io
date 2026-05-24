@@ -360,30 +360,23 @@
       const scoreRankMap = calcRanks(scores, "score", false);  // スコア: 降順
 
       // ranking_cache への書き込み
-      // キーは "曲名(難易度)" 形式。英数字・記号始まり → ranking_cache/{uid}、
-      // 日本語始まり（ひらがな/カタカナ/漢字）→ ranking_cache/{uid}_jp に振り分ける。
       async function updateRankingCache(uid, chartTitle, bpRank, scoreRank) {
         console.log("[updateRankingCache] 開始 uid:", uid, "title:", chartTitle, "bp:", bpRank, "score:", scoreRank);
-        const isJp = /^[^\x00-\x7Eａ-ｚＡ-Ｚ０-９]/.test(chartTitle);
-        const docId = isJp ? `${uid}_jp` : uid;
-        const docRef = doc(db, "ranking_cache", docId);
+        const docRef = doc(db, "ranking_cache", uid);
         const now = Date.now();
 
         try {
           const snap = await getDoc(docRef);
+          console.log("[updateRankingCache] 📖 Firestore読み取り: 1件（ranking_cache/{uid}）");
           const existing = snap.exists() ? (snap.data().rankingJson ?? {}) : {};
           existing[chartTitle] = { bprank: bpRank ?? null, scorerank: scoreRank ?? null };
 
           // rankingUpdatedAt のみ更新（scoreUpdatedAt はスコア変更時のみ更新するので触らない）
+          console.log("[updateRankingCache] ✏️ Firestore書き込み: ranking_cache/{uid} rankingJson更新 title:", chartTitle, "bp:", bpRank, "score:", scoreRank);
           await setDoc(docRef, {
             rankingJson:      existing,
             rankingUpdatedAt: now
           }, { merge: true });
-
-          // jp側の場合もメインドキュメントの rankingUpdatedAt を合わせる
-          if (isJp) {
-            await setDoc(doc(db, "ranking_cache", uid), { rankingUpdatedAt: now }, { merge: true });
-          }
         } catch (e) {
           console.warn("[updateRankingCache] ranking_cache 書き込み失敗:", e);
         }
@@ -522,6 +515,7 @@
             if (!confirm("このスコアを削除しますか？")) return;
             if (!confirm("後悔しませんね？")) return;
             try {
+              console.log("[deleteScore] 🗑️ Firestore削除: scores/", d.docId, "title:", title, "userUid:", d.userUid);
               await deleteDoc(doc(db, "scores", d.docId));
 
               // キャッシュからも削除
@@ -537,6 +531,8 @@
               // → 他のユーザーが次回 upload.html を開いたとき再計算を促す
               try {
                 const now = Date.now();
+                console.log("[deleteScore] 📝 Firestore追加: score_updates {userUid:", d.userUid, "titles:", [title], "delFlag: true}");
+                console.log("[deleteScore] ✏️ Firestore書き込み: ranking_cache/{uid} scoreUpdatedAt更新");
                 await Promise.all([
                   addDoc(collection(db, "score_updates"), {
                     userUid:   d.userUid,

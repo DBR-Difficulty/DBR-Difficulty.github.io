@@ -888,6 +888,7 @@ const titleSpecials = [
     ['Destiny Sword','ですてぃにーそーど'],
     ['Devil\'s Gear','でヴぃるずぎあ'],
     ['Digital Radiance','でじたるれいでぃあんす'],
+    ['Digital MinD(A/T Libra mix)','でじたるまいんどえーてぃーりぶらみっくす'],
     ['Digital Skipper','でじたるすきっぱー'],
     ['Digitank System','でじたんくしすてむ'],
     ['Discloze','でぃすくろーず'],
@@ -995,7 +996,7 @@ const titleSpecials = [
     ['GENOCIDE','じぇのさいど'],
     ['GENOM SCREAMS','げのむすくりーむず'],
     ['GET ON BEAT(WILD STYLE)','げっとおんびーとわいるどすたいる'],
-    ['GET READY!!','げっとれでぃ'],
+    ['GET READY!!','げっとれでぃー'],
     ['GET UP AGAIN','げっとあっぷあげいん'],
     ['GHOST','ごーすと'],
     ['GHOST REVIVAL','ごーすとりヴぁいヴぁる'],
@@ -1112,6 +1113,7 @@ const titleSpecials = [
     ['INORI','いのり'],
     ['INSERTiON','いんさーしょん'],
     ['INVISIBLE STRIX','いんヴぃじぶるすとりっくす'],
+    ['IS THIS LOVE?','いずでぃすらぶ'],
     ['IXION','いくしおん'],
     ['IceCube Pf.(RX-Ver.S.P.L.)','あいすきゅーぶぴーえふあーるえっくすばーじょんえすぴーえる'], //
     ['If','いふ'],
@@ -1136,6 +1138,7 @@ const titleSpecials = [
     ['Just Gimme','じゃすとぎみー'],
     ['Just a Little Smile','りとすま','じゃすとありとるすまいる'],
     ['KAMIKAZE','かみかぜ'],
+    ['KEEP ON MOVIN\'','きーぽん','きーぷおんむーびん'],
     ['KEY','きー'],
     ['KING','きんぐ'],
     ['KING OF GROOVE','きんぐおぶぐるーヴ'],
@@ -1248,7 +1251,7 @@ const titleSpecials = [
     ['Meteor☆Shower','めておしゃわー'],
     ['Miami Sunset Drive','まいあみさんせっとどらいヴ'],
     ['Midnight Drive','みっどないとどらいヴ'],
-    ['Midnight Lady','みっどないとれでぃ'],
+    ['Midnight Lady','みっどないとれでぃー'],
     ['Mighty Cutie','まいてぃーきゅーてぃ'],
     ['Mind Mapping','まいんどまっぴんぐ'],
     ['Mira','みら'],
@@ -1311,6 +1314,7 @@ const titleSpecials = [
     ['OUTER LIMITS(CSDD)','あうたーりみっつしーえすでぃすとーてっど'],
     ['OUTER PLANETS','あうたーぷらねっつ'],
     ['OVER THE CLOUDS','おーヴぁーざくらうず','ハウス'],
+    ['OVER THE CLOUDS -Flying Grind mix-','おーヴぁーざくらうずふらいんぐぐらいんどみっくす'],
     ['OVER TIME','おーヴぁーたいむ'],
     ['OVER VOLTAGE','おーヴぁーヴぉるてーじ'],
     ['Odin','おーでぃん'],
@@ -1396,6 +1400,7 @@ const titleSpecials = [
     ['RALLY \'25','らりーにじゅうご'],
     ['RAVE SYNDROME','れいヴしんどろーむ'],
     ['REMEMBER ME','りめんばーみー'],
+    ['Remember You','りめんばーゆー'],
     ['REMINISCENCE','れみにせんす'],
     ['REPLAY','りぷれい'],
     ['RESISTANCE','れじすたんす'],
@@ -1422,7 +1427,8 @@ const titleSpecials = [
     ['Rave lithosphere','れいヴりそすふぃあ'],
     ['Re:GENERATION','りじぇねれーしょん'],
     ['Re:Story','りすとーりー'],
-    ['Ready To Rockit Blues','れでぃとぅーろっくいっとぶるーす'],
+    ['Ready To Rockit Blues','れでぃーとぅーろっくいっとぶるーす'],
+    ['Ready To Rockit Blues(譜面変更前)','れでぃーとぅーろっくいっとぶるーすふめんへんこうまえ'],
     ['Real','りある'],
     ['Really Love','りありーらヴ'],
     ['Recollection','りこれくしょん'],
@@ -1800,6 +1806,7 @@ const titleSpecials = [
     ['fun','ふぁん'],
     ['garden','がーでん'],
     ['gentle stress','じぇんとるすとれす'],
+    ['gentle stress(譜面変更前)','じぇんとるすとれすふめんへんこうまえ'],
     ['get set mind','げっとせっとまいんど'],
     ['heaven above','へヴんあばーヴ','へヴんあぼーヴ'],
     ['i feel ...','あいふぃーる'],
@@ -2516,6 +2523,7 @@ function normalizeForSearch(str, keepSymbols = false, isTitleSide = true) {
     s = s.replace(/ねーしよん/g, 'ねいしよん');
     s = s.replace(/れーしよん/g, 'れいしよん');
     s = s.replace(/ういーあー/g, 'ういあ');
+    s = s.replace(/れでいー/g, 'れでい');
 
     return s;
 }

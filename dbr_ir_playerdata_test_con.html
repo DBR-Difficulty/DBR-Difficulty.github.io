@@ -159,9 +159,7 @@
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
 
     // ===== ranking_cache 取得ユーティリティ =====
-    // ranking_cache/{uid} と ranking_cache/{uid}_jp の2ドキュメントを並列取得し、
-    // rankingJson（曲名(難易度)→{bprank, scorerank}）をマージして返す。
-    // scoreUpdatedAt がローカルキャッシュと同じなら Firestore を読まずにローカルを返す。
+    // ranking_cache/{uid} から rankingJson（曲名(難易度)→{bprank, scorerank}）を取得して返す。
     async function fetchRankingCache(db, uid, myUid, scoreMap) {
       console.log("[fetchRankingCache] 開始 uid:", uid);
       const localKey = `rankingcache_${uid}`;
@@ -258,6 +256,13 @@
               }
             } catch (e) { console.warn("[fetchRankingCache] リストキャッシュ更新失敗:", e); }
           }
+          // Firestore の ranking_cache の rankingUpdatedAt を更新
+          // （次回のscoreUpdatedAt比較で再検知しないようにするため）
+          const delNow = Date.now();
+          setDoc(doc(db, "ranking_cache", uid), { rankingUpdatedAt: delNow }, { merge: true })
+            .then(() => console.log("[fetchRankingCache] ✏️ Firestore書き込み: ranking_cache/{uid} rankingUpdatedAt更新"))
+            .catch(e => console.warn("[fetchRankingCache] ranking_cache rankingUpdatedAt更新失敗:", e));
+
           // ranking_cache 再取得が不要な場合はここで除去済みキャッシュを返す
           if (!needsRefetch) {
             const currentLocal = localStorage.getItem(localKey);
@@ -279,16 +284,10 @@
 
       // --- 3. 全体取得（最大 2 read）---
       console.log("[fetchRankingCache] ranking_cache 全体取得開始");
-      console.log("[fetchRankingCache] 📖 Firestore読み取り: 最大2件（ranking_cache/{uid}, {uid}_jp）");
+      console.log("[fetchRankingCache] 📖 Firestore読み取り: 1件（ranking_cache/{uid}）");
       try {
-        const [snapMain, snapJp] = await Promise.all([
-          getDoc(doc(db, "ranking_cache", uid)),
-          getDoc(doc(db, "ranking_cache", `${uid}_jp`))
-        ]);
-        const rankingJson = {
-          ...(snapMain.exists() ? (snapMain.data().rankingJson ?? {}) : {}),
-          ...(snapJp.exists()   ? (snapJp.data().rankingJson   ?? {}) : {})
-        };
+        const snapMain = await getDoc(doc(db, "ranking_cache", uid));
+        const rankingJson = snapMain.exists() ? (snapMain.data().rankingJson ?? {}) : {};
 
         localStorage.setItem(localKey, JSON.stringify({ rankingJson }));
         console.log("[fetchRankingCache] 全体取得完了 曲数:", Object.keys(rankingJson).length);
@@ -336,17 +335,7 @@
       const localRankingJson  = local?.rankingJson      ?? {};
       const localUpdatedAt    = local?.rankingUpdatedAt ?? null;
 
-      // jp / 英数字 で振り分けた更新内容を分けて保持
-      const updatedMain = { ...localRankingJson };
-      const updatedJp   = {};
-
-      // ローカルキャッシュの jp 側エントリを分離
-      for (const [t, v] of Object.entries(localRankingJson)) {
-        if (/^[^\x00-\x7Eａ-ｚＡ-Ｚ０-９]/.test(t)) {
-          updatedJp[t]   = v;
-          delete updatedMain[t];
-        }
-      }
+      const rankingJsonOut = { ...localRankingJson };
 
       console.log("[buildRankingCache] 構築開始 譜面数:", titles.length, "localUpdatedAt:", localUpdatedAt);
 
@@ -386,12 +375,7 @@
           const myBpRank    = bpRankMap.get(uid)    ?? null;
           const myScoreRank = scoreRankMap.get(uid) ?? null;
 
-          const isJp = /^[^\x00-\x7Eａ-ｚＡ-Ｚ０-９]/.test(title);
-          if (isJp) {
-            updatedJp[title]   = { bprank: myBpRank, scorerank: myScoreRank };
-          } else {
-            updatedMain[title] = { bprank: myBpRank, scorerank: myScoreRank };
-          }
+          rankingJsonOut[title] = { bprank: myBpRank, scorerank: myScoreRank };
         } catch (e) {
           console.warn("[buildRankingCache] 取得失敗:", title, e);
         }
@@ -403,28 +387,19 @@
 
       // ranking.html の updateRankingCache と同じ構造で Firestore に書き込む
       try {
+        console.log("[buildRankingCache] ✏️ Firestore書き込み: ranking_cache/{uid}", Object.keys(rankingJsonOut).length, "曲");
         await setDoc(doc(db, "ranking_cache", uid), {
-          rankingJson:      updatedMain,
+          rankingJson:      rankingJsonOut,
           rankingUpdatedAt: now
         }, { merge: true });
-
-        if (Object.keys(updatedJp).length > 0) {
-          await setDoc(doc(db, "ranking_cache", `${uid}_jp`), {
-            rankingJson:      updatedJp,
-            rankingUpdatedAt: now
-          }, { merge: true });
-        }
-
-        console.log("[buildRankingCache] Firestore 書き込み完了 main:", Object.keys(updatedMain).length, "jp:", Object.keys(updatedJp).length);
+        console.log("[buildRankingCache] Firestore 書き込み完了:", Object.keys(rankingJsonOut).length, "曲");
       } catch (e) {
         console.warn("[buildRankingCache] Firestore 書き込み失敗:", e);
       }
 
-      // マージした全 rankingJson をローカルキャッシュに保存
-      const rankingJson = { ...updatedMain, ...updatedJp };
-      localStorage.setItem(localKey, JSON.stringify({ rankingJson, rankingUpdatedAt: now }));
-      console.log("[buildRankingCache] 構築完了 曲数:", Object.keys(rankingJson).length);
-      return rankingJson;
+      localStorage.setItem(localKey, JSON.stringify({ rankingJson: rankingJsonOut, rankingUpdatedAt: now }));
+      console.log("[buildRankingCache] 構築完了 曲数:", Object.keys(rankingJsonOut).length);
+      return rankingJsonOut;
     }
 
     const firebaseConfig = {
@@ -703,15 +678,9 @@
       const hashtags = "DBR_IR";
       twitterBtn.href = `https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}&hashtags=${encodeURIComponent(hashtags)}`;
 
-      // データをMapに格納
-      scores.forEach(data => {
-        if (data.title) {
-          scoreMap.set(data.title, data);
-          titleSet.add(data.title);
-        }
-      });
-
       // ranking_cache 取得（myUid 確定後）
+      // ※ fetchRankingCache はリストキャッシュを書き換える可能性があるため、
+      //   scoreMap/titleSet/filtered の構築はこの後に行う
       await myUidReady;
       const rankingJsonPromise = fetchRankingCache(db, userUid, myUid, scoreMap);
 
@@ -720,6 +689,16 @@
         $.getJSON(header.data_url),
         rankingJsonPromise
       ]);
+
+      // データをMapに格納（fetchRankingCacheによるキャッシュ書き換え後のscoresを使う）
+      const latestCacheRaw = localStorage.getItem(`playdata_${userUid}`);
+      const latestScores = latestCacheRaw ? (JSON.parse(latestCacheRaw).scores ?? scores) : scores;
+      latestScores.forEach(data => {
+        if (data.title) {
+          scoreMap.set(data.title, data);
+          titleSet.add(data.title);
+        }
+      });
 
       const filtered = songList.filter(song => titleSet.has(song.title));
       filtered.sort((a, b) => {
