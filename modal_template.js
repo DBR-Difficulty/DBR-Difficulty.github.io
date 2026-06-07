@@ -606,6 +606,7 @@ function parseUnlockMethod(formatted) {
         .replace(/GITADORA セレクション 楽曲パック vol\.(\d+)/g, 'GD$1')
         .replace(/BPL セレクション 楽曲パック vol\.(\d+)/g, 'BPL$1')
         .replace(/東方Project セレクション 楽曲パック vol\.(\d+)/g, 'TH$1')
+        .replace(/The 4th セレクション 楽曲パック vol\.(\d+)/g, '4th$1')
         .replace(/ULTIMATE MOBILE セレクション 楽曲パック vol\.(\d+)/g, 'UM$1')
         .replace(/DJPOINT解禁/g, 'DJP');
 }

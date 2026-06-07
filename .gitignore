@@ -10,3 +10,4 @@ sitemap_generator.py
 sitemap_list.txt
 repomix-output.xml
 test_title_search.cjs
+dbr-proxy_warmup.mjs

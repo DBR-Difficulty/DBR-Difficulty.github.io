@@ -17,6 +17,8 @@ const titleSpecials = [
     ['dAuntl3ss','dauntless','どーんとれす'],
     ['COSMIC V3LOCITY', 'COSMIC VELOCITY', 'こずみっくヴぇろしてぃ'],
     ['Space Battleship S4TØ','Space Battleship SATO','すぺーすばとるしっぷさとー'],
+    ['VØID','ヴぉいど'],
+    ['Lagrangian Point Ø','Lagrangian Point 0','らぐらんじゅぽいんとぜろ','らぐらんじあんぽいんとぜろ'],
 
     // 変換面倒
     ['旋律のドグマ～Misérables～','せんりつのどぐまみぜらぶる'],
@@ -157,7 +159,6 @@ const titleSpecials = [
     ['Punch Love♡仮面','ぱんちらぶかめん'],
     ['beatchic☆仮面～好き、でいさせて～','びーとちっくかめんすきでいさせて','びーとしっくかめんすきでいさせて'],
     ['Volcanic Dragon','ヴぉるかにっくどらごん'],
-    ['VØID','ヴぉいど'],
     ['Say YEEEAHH','せいいぇー'],
     ['FIRE FIRE','ファイアファイア','ファイアーファイアー'],
     ['Spica','すぴか'],
@@ -1028,6 +1029,7 @@ const titleSpecials = [
     ['Get Wicked','げっとうぃきっど'],
     ['Get\'em up to R.A.V.E','げってむあっぷとぅーれいヴ'],
     ['Gimme a Big Beat','ぎみーあびっぐびーと'],
+    ['Gimme a Big Beat(青龍 Remix)','ぎみーあびっぐびーとせいりゅうりみっくす'],
     ['Giudecca','じゅでっか'],
     ['Give Me A Sign','ぎヴみーあさいん'],
     ['Give Me Your Love','ぎヴみーゆあらヴ'],
@@ -2078,6 +2080,12 @@ const titleSpecials = [
     ['diving money','だいびんぐまにー'],
     ['Turning the motor over','たーにんぐざもーたーおーばー','ラテンスカ'],
     ['Attack the music','あたっくざみゅーじっく'],
+    ['Second Heaven(Mamonis Remix)','せかんどへヴんまもにすりみっくす'],
+    ['Kick The Rainbow','きっくざれいんぼー'],
+    ['In Your EyEs','いんゆああいず'],
+    ['Juicy','じゅーしー'],
+    ['Rush!!','らっしゅ'],
+    ['It\'s my Miracle','いっつまいみらくる'],
 
     // 難読
     ['閠槞彁の願い','ぎょくろうかのねがい'],
@@ -2319,6 +2327,8 @@ const titleSpecials = [
     ['Survival Games','さばいばるげーむず','ウィザウチュナイ-ツヴァイ-'],
     ['Squeeze','すくいーず','ウィザウチュナイ-ゼクス-'],
     ['隅田川夏恋歌','すみだがわかれんか','A.I.デイトポップ'],
+    ['Bleep Beep Bop','ぶりーぷびーぷぽっぷ','チッピンレイヴ'],
+    ['Sakura Sunrise','さくらさんらいず','ハッピーハードコア'],
 
     // 略称等
     ['waxing and wanding','わきしんぐあんどわんでぃんぐ'],

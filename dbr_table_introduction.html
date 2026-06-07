@@ -141,13 +141,17 @@
       <li><a href="#modal-new">【モーダル：新規提案】</a></li>
       <li><a href="#modal-change">【モーダル：変更提案】</a></li>
       <li><a href="#modal-recommend">【モーダル：おすすめ提案】</a></li>
-      <li><a href="#excel">【難易度表をExcelで出力】</a></li>
+      <li><a href="#suggestions">【DBR難易度表 提案状況・履歴一覧】</a></li>
     </ul>
     <p><b>プレイヤー補助ツール</b></p>
     <ul style="list-style: none; padding-left: 1em;">
+      <li><a href="#logger">【DBR Logger】</a></li>
       <li><a href="#extend">【拡張機能使用時の追加項目】</a></li>
       <li><a href="#dbr-record">【DBRプレー記録管理ページ】</a></li>
       <li><a href="#dbr-ir">【DBR IR】</a></li>
+      <li><a href="#ir-upload">└【アップロード画面】</a></li>
+      <li><a href="#ir-playerdata">└【プレイヤーデータ画面】</a></li>
+      <li><a href="#ir-ranking">└【譜面別ランキング画面】</a></li>
     </ul>
   </div>
   <div class="section-box">
@@ -332,12 +336,17 @@
         <img src="picture/dbrtable_ac.png" alt="AC版難易度表" style="max-width:100%; height: auto;">
     </div>
 
+    <div style="max-width: 600px;">
+        <img src="picture/dbrtable_ac2.png" alt="AC版難易度表_続き" style="max-width:100%; height: auto;">
+    </div>
+
     <p>譜面の表示範囲を絞り込めます。<br>
-    絞り込んだ内容は保存され、他の表とも共有されます。（おすすめ度のみ各表で独立して保存されます）</p>
+    絞り込んだ内容は保存され、他の表とも共有されます。（おすすめ度は各表で独立して保存、曲名検索は保存しません）</p>
 
     <ul>
       <li>表示レベル範囲：表示するレベル範囲を設定できます。</li>
       <li>表示SPレベル範囲：表示するSPレベル範囲を設定できます。</li>
+      <li>曲名検索：単純な部分一致だけではなく、著名な呼称、読み、表記揺れなどをある程度吸収します。</li>
       <li>おすすめ度：表示するおすすめ度（<a href="#premise">【前提】</a>を参照）の範囲を設定できます。（AC用：初期表示時は☆、◎、○　他表：初期表示時は全て表示）</li>
       <li>AC削除・未収録曲を除く：現行AC作品に存在する譜面のみ表示します。（初期表示時はオフ）</li>
       <li>フィルターをリセット：以上全ての項目を初期表示時の状態に戻します。</li>
@@ -490,40 +499,11 @@
       <li>レベル（必須）：譜面のレベルを小数第二位までの数値で入力してください。詳細は<a href="#premise">【前提】</a>をご参照ください。</li>
       <li>おすすめ度（任意）：譜面のおすすめ度を選択してください。詳細は<a href="#premise">【前提】</a>をご参照ください。</li>
       <li>コメント（任意）：譜面に対してのおすすめコメント、譜面傾向、解説、攻略情報など、自由に入力してください。</li>
-      <li>INFINITAS収録有無（任意）：INFINITASにその譜面が収録済みの場合、「INF有り」を選択してください。</li>
+      <li>備考（任意）：提案内容の補足などを入力してください。</li>
     </ul>
 
-    <div style="max-width: 400px;">
-        <img src="picture/dbrtable_modal_new_inf1.png" alt="新規提案モーダルINF解禁区分1" style="max-width:100%; height: auto;">
-    </div>
-
-    <div style="max-width: 400px;">
-        <img src="picture/dbrtable_modal_new_inf2.png" alt="新規提案モーダルINF解禁区分2" style="max-width:100%; height: auto;">
-    </div>
-
-    <p>「INFINITAS収録有無」で「INF有り」を選択した場合、以下の項目を表示します。</p>
-
-    <ul>
-      <li>INFINITAS解禁区分（任意）：INFINITAS内の楽曲解禁方法を選択してください。楽曲パックの場合、vol.も入力してください。</li>
-    </ul>
-
-    <div style="max-width: 400px;">
-        <img src="picture/dbrtable_modal_new_detail.png" alt="新規提案モーダル詳細譜面情報" style="max-width:100%; height: auto;">
-    </div>
-
-    <p>「詳細な譜面情報を提供する」を選択した場合、以下の項目を表示します。</p>
-
-    <ul>
-      <li>SP総ノーツ数（任意）：提案する譜面の、SP譜面としての総ノーツ数です。</li>
-      <li>SP皿枚数（任意）：提案する譜面の、SP譜面としての総スクラッチノーツ数です。</li>
-      <li>BPM（任意）：提案する譜面のBPMです。ソフランする場合「最小値-最大値」で記載してください（例：95-210）。</li>
-      <li>TexTageID（任意）：TexTageで提案する曲を表示した際のURLから、「https://textage.cc/score/バージョン/（ここを入力してください）.html」</li>
-      <li>動画URL（任意）：提案する譜面の動画URLを入力してください。提案者ご自身の動画か掲載許可を得た動画URLでお願いします。<br>
-        この項目が既に記載されている場合は、そのまま送信してください。2動画以上掲載したい場合は、送信後に備考欄へ追記してください。</li>
-    </ul>
-
-    <p>送信後、<a href="https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?gid=1709558806#gid=1709558806" target="_blank">新規提案シート</a>に遷移します。<br>
-    送信した新規提案が正しく反映されていることを確認してください。備考を入力したい方は、このタイミングで追加するようお願いします。</p>
+    <p>送信後、<a href="https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?gid=1709558806#gid=1709558806" target="_blank">新規提案シート</a>へのリンクを表示します。<br>
+    送信した新規提案が正しく反映されていることを確認してください。</p>
   </div>
 
   <div class="section-box">
@@ -542,7 +522,7 @@
       <li>提案理由（必須）：そのレベルに変更したい理由を入力してください。</li>
     </ul>
 
-    <p>送信後、<a href="https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?gid=1267054778#gid=1267054778" target="_blank">変更提案シート</a>に遷移します。<br>
+    <p>送信後、<a href="https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?gid=1267054778#gid=1267054778" target="_blank">変更提案シート</a>へのリンクを表示します。<br>
     送信した変更提案が正しく反映されていることを確認してください。</p>
   </div>
 
@@ -562,7 +542,7 @@
       <li>提案理由（必須）：そのおすすめ度に変更したい理由を入力してください。</li>
     </ul>
 
-    <p>送信後、<a href="https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?gid=1779953087#gid=1779953087" target="_blank">おすすめ提案シート</a>に遷移します。<br>
+    <p>送信後、<a href="https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?gid=1779953087#gid=1779953087" target="_blank">おすすめ提案シート</a>へのリンクを表示します。<br>
     送信したおすすめ提案が正しく反映されていることを確認してください。</p>
   </div>
 
@@ -581,8 +561,60 @@
     </div>
 
     <p><a href="dbr_table_extend.html">拡張機能</a>と併用する場合、表更新時の最新化が二度手間になってしまうため、プレー履歴の管理は拡張機能側で行うことを強く推奨します。<br></p>
+  </div>
+
+  <div class="section-box">
+    <h2 id="suggestions">【DBR難易度表 提案状況・履歴一覧】</h2>
+    <p>難易度表の<a href="https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?usp=sharing" target="_blank">管理用スプレッドシート</a>での提案状況、反映済の履歴を見やすく表示します。</p>
+
+    <ul>
+      <li><b><a href="dbr_suggestions.html" style="font-size: 1.2rem;">DBR難易度表 提案状況一覧</a></b></li>
+      <li><b><a href="dbr_suggestions_log.html" style="font-size: 1.2rem;">DBR難易度表 提案履歴一覧</a></b></li>
+    </ul>
+
+    <div style="max-width: 600px;">
+        <img src="picture/dbr_suggestions_log.png" alt="提案履歴" style="max-width:100%; height: auto;">
+    </div>
+
+    <ul>
+      <li>ライト/ダークモード：UIのライト/ダークモードを切り替えます。</li>
+      <li>再読み込み：<a href="https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?usp=sharing" target="_blank">管理用スプレッドシート</a>の内容を再読み込みします。</li>
+      <li>提案状況/履歴を見る：現在の提案状況と、反映済提案履歴の表示を切り替えます。</li>
+    </ul>
+
+    <ul>
+      <li>新規提案：レベルの新規提案が行われている譜面です。<a href="#modal-new">【モーダル：新規提案】</a>などをご参照ください。</li>
+      <li>変更提案：レベルの変更提案が行われている譜面です。<a href="#modal-change">【モーダル：変更提案】</a>などをご参照ください。</li>
+      <li>おすすめ提案：おすすめ度の変更提案が行われている譜面です。<a href="#modal-recommend">【モーダル：おすすめ提案】</a>などをご参照ください。</li>
+      <li>細分化待ち：レベルの細分化時、レベルが変更される予定の譜面です。他シートと違い管理者側でのみ編集できます。<a href="#change-rule">【難易度表の細分化を行いたい場合のルール】</a>などをご参照ください。</li>
+      <li>修正依頼：ノーツ数などのデータ入力ミスや不具合の報告、動画など難易度表への情報提供、細分化希望、その他機能の要望など、上記に当てはまらない依頼全般です。</li>
+    </ul>
+
   </div>  
   <strong><span style="font-size: 2.33rem;">プレイヤー補助ツール</span></strong><br>
+
+  <div class="section-box">
+    <h2 id="logger">【DBR Logger】</h2>
+    <p>@dbr_logger様と共同開発させていただいたDBR進捗管理アプリです。<br>
+    日々の推移を含めたランプ、BP、スコアが記録できます。<br>
+    詳細はリンク先の「マニュアル」を参照してください。</p>
+    <ul>
+      <li><b><a href="https://dbr-logger.github.io/" style="font-size: 1.5rem;">DBR Logger</a></b></li>
+    </ul>
+    <div style="display: flex; flex-direction: column; align-items: center; max-width: 34.375rem;">
+      <blockquote class="twitter-tweet">
+        <p lang="ja" dir="ltr">DBR進捗管理アプリ「DBR Logger」を公開しました。<br>
+        曲ごとのクリアランプ・BP・スコア・メモを記録し、難易度帯別のクリア状況や、BP・スコアの推移をグラフで確認できます。アカウント登録不要で、お手元のブラウザからすぐにお使いいただけます。
+        <a href="https://t.co/NiNsPrWcQD">https://t.co/NiNsPrWcQD</a>
+        <a href="https://t.co/qHXlUhg5UZ">pic.twitter.com/qHXlUhg5UZ</a></p>
+        &mdash; DBR進捗管理 (@dbr_logger)
+        <a href="https://twitter.com/dbr_logger/status/2058443317453689301?ref_src=twsrc%5Etfw">May 24, 2026</a>
+      </blockquote>
+      <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+      <div style="font-size: 0.9em; margin-top: 0.25rem;">公式アカウントから使用イメージを引用</div>
+    </div>
+  </div>
+
   <div class="section-box">
     <h2 id="extend">【拡張機能使用時の追加項目】</h2>
     <p>難易度表を拡張し、ブラウザにプレー記録を保存できるようになります。<br>
@@ -613,6 +645,9 @@
 
   <div class="section-box">
     <h2 id="dbr-record">【DBRプレー記録管理ページ】</h2>
+    <p><b style="font-size: 1.3rem;">※<a href="#dbr-ir">DBR IR</a>への対応など、より多機能な<a href="#logger">DBR Logger</a>への移行を推奨します。</b><br>
+    　 [エクスポート]→DBR Loggerの[JSON読み込み]で簡単にデータ移行できます。<br>
+    　 不具合修正などを除き、今後原則として【DBRプレー記録管理ページ】の更新は行いません。</p>
     <p>ブラウザにプレー記録を保存します。<b><a href="dbr_table_extend.html">拡張機能</a></b>と<b>記録を共有</b>しています。<br>
     軽量化、操作性の向上のため、最新の難易度表ではなくあらかじめ生成済のデータを使用しており（ページ上部に最終生成日を記載しています）<br>
     表示する項目や機能も最低限のものになっています。<br>
@@ -646,12 +681,13 @@
 
   <div class="section-box">
     <h2 id="dbr-ir">【DBR IR】</h2>
-    <p><b><a href="dbr_table_extend.html">拡張機能</a></b>でエクスポートしたJSONファイルをアップロードして参加できます。<br>
-    </p>
+    <p><b><a href="dbr_table_extend.html">拡張機能</a></b>または<b><a href="#logger">DBR Logger</a></b>でエクスポートしたJSONファイルをアップロードして参加できます。<br>
+      <b><a href="dbr_table_extend.html">拡張機能</a></b>の[DBR IRへ送信]、<b><a href="#logger">DBR Logger</a></b>の[DBR IR送信]からはエクスポートなしで直接送信できます。</p>
     <ul>
       <b><li><a href="dbr_ir_upload.html">DBR IR プレーデータアップロード</a></li></b>
     </ul>
 
+    <h2 id="ir-upload">【アップロード画面】</h2>
     <div style="max-width: 800px;">
         <img src="picture/ir_upload.png" alt="DBR IR アップロードページ" style="max-width:100%; height: auto;">
         <div style="text-align: center; font-size: 0.9em; margin-top: 0.25rem;">アップロード画面</div>
@@ -661,11 +697,25 @@
       <li>プロフィール保存：表示するユーザー名と、匿名希望状態を反映します。</li>
       <li>自分のプレーデータを見る：自分のプレイヤーデータ画面を開きます。</li>
       <li>JSONファイルを選択：<a href="dbr_table_extend.html">拡張機能</a></b>でエクスポートしたJSONファイルを選択してください。</li>
-      <li>送信：選択したJSONファイルを送信します。送信後12時間の間は、別のJSONファイルを送信しても更新されません。</li>
+      <li>送信：選択したJSONファイルを送信します。</li>
       <li>自分のプレーデータをすべて削除：送信済の全プレーデータを削除します。</li>
       <li>アカウントを削除：アカウントを削除します。送信済の全プレーデータも削除されます。</li>
     </ul><br>
+    
+    <div style="max-width: 600px;">
+        <img src="picture/ir_upload_check.png" alt="アップロード確認" style="max-width:100%; height: auto;">
+        <div style="text-align: center; font-size: 0.9em; margin-top: 0.25rem;">アップロード内容の確認</div>
+    </div></p>
 
+    <p>[送信]クリック後、アップロード内容の確認を行います。</p>
+
+    <ul>
+      <li>内容を取得：表示されている更新内容をExcelまたはPNGで出力します。更新履歴は保持されないので、必要な方はここで取得してください。</li>
+      <li>キャンセル：内容をDBR IRに反映せずに終了します。</li>
+      <li>送信：内容をDBR IRに反映します。反映後、12時間が経過するまで同じ譜面の記録は更新できません。</li>
+    </ul><br>
+
+    <h2 id="ir-playerdata">【プレイヤーデータ画面】</h2>
     <div style="max-width: 800px;">
         <img src="picture/ir_mypage.png" alt="DBR IR プレイヤー個別ページ" style="max-width:100%; height: auto;">
         <div style="text-align: center; font-size: 0.9em; margin-top: 0.25rem;">プレイヤーデータ画面</div>
@@ -678,10 +728,12 @@
       <li>INFINITAS収録曲のみ表示：INFINITASに収録されている譜面のみ表示します。レベルが未査定の譜面は管理方法の都合上表示されない場合があります。（初期表示時はオフ）</li>
       <li>おまけ：片手クリアポイント基準の値を表示：FC:5pt、EXH:4pt、HARD:3pt、NORMAL:2pt、EASY:1ptの合計値を表示します。（初期表示時はオフ）</li>
       <li>ソートを初期表示状態に戻す：以上全ての項目を初期表示時の状態に戻します。</li>
+      <li>Twitterで共有：Twitterにプレイヤーデータ画面へのリンクを共有できます。</li>
     </ul>
     <p>プレーデータの表示内容は<a href="#extend">【拡張機能使用時の追加項目】</a>と共通です。<br>
       ユーザーが匿名希望状態の場合、名前が「匿名希望」になります。</p>
 
+    <h2 id="ir-ranking">【譜面別ランキング画面】</h2>
     <div style="max-width: 600px;">
         <img src="picture/ir_ranking.png" alt="DBR IR マイページ" style="max-width:100%; height: auto;">
         <div style="text-align: center; font-size: 0.9em; margin-top: 0.25rem;">譜面別ランキング画面</div>
