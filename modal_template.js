@@ -261,6 +261,9 @@ function setupModal(columnsToShow) {
                     case "33":
                         verText = "33 Sparkle Shower";
                         break;
+                    case "34":
+                        verText = "34 ZINRAI";
+                        break;
                     case "0":
                         verText = "CS or INFINITAS 専用曲";
                         break;
