@@ -2093,6 +2093,10 @@ const titleSpecials = [
     ['Ex-Otogibanashi','いーえっくすおとぎばなし'],
     ['D.K.N. ON','でぃーけーえぬおん','だけんおん'],
     ['FIZZY FIZZY POP','ふぃじーふぃじーぽっぷ'],
+    ['Digitized Ocean','でじたいずどおーしゃん'],
+    ['super double play sessions','すーぱーだぶるぷれいせっしょんず'],
+    ['9-1','くのいち'],
+    ['霹靂','へきれき'],
 
     // 難読
     ['閠槞彁の願い','ぎょくろうかのねがい'],

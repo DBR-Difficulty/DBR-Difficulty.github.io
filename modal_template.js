@@ -554,7 +554,7 @@ function setupModal(columnsToShow) {
                     data["バージョン"] = modalData.ver;
                     data["レベル"] = formData.level_new;
                     data["曲名"] = modalData.title;
-                    data["動画URL"] = modalData.video || "";
+                    data["動画URL"] = videoURL || "";
                     data["TexTageID"] = extractTextageID(modalData.textageHTML);
                     data["ノーツ数(SP)"] = halfNotes != null ? halfNotes : '';
                     data["皿枚数(SP)"] = halfScratch != null ? halfScratch : '';
