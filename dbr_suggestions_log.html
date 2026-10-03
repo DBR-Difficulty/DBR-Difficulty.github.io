@@ -356,7 +356,7 @@ header h1 {
   width: 3.5rem;
   outline: none;
   transition: border-color 0.15s;
-  -moz-appearance: textfield;
+  appearance: textfield;
 }
 .level-range-wrap input[type="number"]::-webkit-outer-spin-button,
 .level-range-wrap input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
@@ -557,6 +557,57 @@ td {
 }
 
 .rec-arrow { display: flex; align-items: center; gap: 0.375rem; }
+
+/* 代理提案希望: 曲名マーク（雑談内の反映報告から判定。pill状の小さい丸バッジ） */
+.title-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1em;
+  padding: 0.13em;
+  margin-left: 0.2rem;
+  border-radius: 999px;
+  font-size: 0.55rem;
+  font-weight: 700;
+  line-height: 1;
+  vertical-align: middle;
+  flex: none;
+  box-sizing: border-box;
+  text-align: center;
+}
+.title-mark-done,
+.title-mark-unknown { font-size: 0.46rem; padding: 0.25em; }
+/* 済（雑談内の反映報告と履歴データが一致） = ○と同系色（青） */
+.title-mark-done    { background: #1a2e3a; color: var(--accent);  border: 1px solid #4f9cf955; }
+/* ？（反映報告はあるが該当する履歴データが見つからない） = グレー */
+.title-mark-unknown { background: #2a2e38; color: var(--text-sub); border: 1px solid #8a93a855; }
+[data-theme="classic"] .title-mark-done    { background: #e6e6fa; color: #0000a0; border-color: #0000c066; }
+[data-theme="classic"] .title-mark-unknown { background: #ececec; color: #555555; border-color: #88888899; }
+[data-theme="classic"] .title-mark { font-weight: bold; }
+
+/* 曲名マークのツールチップ（ホバー／タップ／キーボードフォーカスで表示） */
+.title-mark[data-tip] { cursor: pointer; }
+/* 新規提案/変更提案/おすすめ提案: 曲名そのものに付与する「現在の値」ツールチップ */
+.title-tip {
+  cursor: help;
+}
+#mark-tip {
+  position: fixed; z-index: 10000; display: none;
+  max-width: min(18rem, calc(100vw - 1rem));
+  padding: 0.35rem 0.6rem;
+  background: var(--surface2); color: var(--text);
+  border: 1px solid var(--border); border-radius: var(--radius);
+  font-size: 0.75rem; line-height: 1.5; font-weight: normal;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.35);
+  pointer-events: none;
+}
+/* title-tip（LV〜曲名などのセル群）由来のツールチップは少し大きく表示。
+   title-mark（代理提案希望のバッジ）由来は上記の標準サイズのまま */
+#mark-tip.mark-tip-lg {
+  max-width: min(20rem, calc(100vw - 1rem));
+  padding: 0.5rem 0.75rem;
+  font-size: 0.85rem;
+}
 
 /* 異議バブル（モダン） */
 .obj-thread { display: flex; flex-direction: column; gap: 0.25rem; }
@@ -800,6 +851,8 @@ thead th.sortable.sort-desc .sort-icon { opacity: 1; color: var(--accent); }
     おすすめ提案 <span class="count" id="cnt-rec">-</span>
   </button><button class="tab-btn" data-tab="subdivision">
     細分化待ち <span class="count" id="cnt-sub">-</span>
+  </button><button class="tab-btn" data-tab="proxy">
+    代理提案希望 <span class="count" id="cnt-proxy">-</span>
   </button><button class="tab-btn" data-tab="revision">
     修正依頼 <span class="count" id="cnt-rev">-</span>
   </button>
@@ -903,6 +956,26 @@ thead th.sortable.sort-desc .sort-icon { opacity: 1; color: var(--accent); }
   </div>
 </div>
 
+<!-- 代理提案希望 -->
+<div class="tab-panel" id="panel-proxy">
+  <div class="table-wrap">
+    <div class="state-box" id="loading-proxy"><div class="spinner"></div>読み込み中…</div>
+    <table id="table-proxy" style="display:none">
+      <thead>
+        <tr>
+          <th class="col-date sortable" data-sort-tab="proxy" data-sort-key="date">記載日時<span class="sort-icon">⇅</span></th>
+          <th class="col-level sortable" data-sort-tab="proxy" data-sort-key="level">レベル（概算）<span class="sort-icon">⇅</span></th>
+          <th class="col-title">曲名(難易度)</th>
+          <th class="col-main">コメント</th>
+          <th class="obj-cell">雑談</th>
+        </tr>
+      </thead>
+      <tbody id="body-proxy"></tbody>
+    </table>
+    <div class="state-box" id="empty-proxy" style="display:none">提案はありません</div>
+  </div>
+</div>
+
 <!-- 修正依頼 -->
 <div class="tab-panel" id="panel-revision">
   <div class="table-wrap">
@@ -929,6 +1002,7 @@ const GAS_PROPOSALS_URL = "https://dbr-proxy.vercel.app/api/suggestions_log";
 // -------------------------------------------------------------------
 let infTitleSet     = null;  // null = 未ロード, Set = ロード済み
 let deletedTitleSet = null;
+let titleDataMap    = null;  // Map<曲名, {level, recommend}>（曲名ツールチップの「現在の値」用）
 let dbrDataLoading  = false;
 
 async function loadDBRData() {
@@ -965,12 +1039,17 @@ async function loadDBRData() {
 
     infTitleSet     = new Set();
     deletedTitleSet = new Set();
+    titleDataMap    = new Map();
 
     songArray.forEach(song => {
       if (!song.title) return;
       const t = song.title;
       if (song.inf)      infTitleSet.add(t);
       if (song.acdelete) deletedTitleSet.add(t);
+      titleDataMap.set(t, {
+        level:     song.level     !== undefined && song.level     !== null ? String(song.level)     : "",
+        recommend: song.recommend !== undefined && song.recommend !== null ? String(song.recommend) : ""
+      });
     });
 
     // ボタンを有効化
@@ -985,7 +1064,7 @@ async function loadDBRData() {
       acBtn.title = `現行AC作品でプレーできる曲のみ表示`;
     }
 
-    if (infOnly || acOnly) renderCurrent();
+    if (infOnly || acOnly || ["new","change","recommend","subdivision"].includes(currentTab)) renderCurrent();
 
   } catch (err) {
     console.error("[proposals] 難易度表JSON読み込み失敗:", err);
@@ -996,6 +1075,7 @@ async function loadDBRData() {
     // 空Setにして「該当なし」として扱う
     infTitleSet     = new Set();
     deletedTitleSet = new Set();
+    titleDataMap    = new Map();
   } finally {
     dbrDataLoading = false;
   }
@@ -1018,7 +1098,7 @@ function applyTheme(theme) {
 // -------------------------------------------------------------------
 // データ管理
 // -------------------------------------------------------------------
-let allData = { new_proposals: [], change_proposals: [], recommend_proposals: [], subdivision_proposals: [], revision_requests: [] };
+let allData = { new_proposals: [], change_proposals: [], recommend_proposals: [], subdivision_proposals: [], proxy_proposals: [], revision_requests: [] };
 let currentTab = "new";
 let objOnly = false;
 let infOnly = false;
@@ -1033,12 +1113,93 @@ const sortState = {
   change: { key: null, dir: null },
   recommend: { key: null, dir: null },
   subdivision: { key: null, dir: null },
+  proxy: { key: null, dir: null },
   revision: { key: null, dir: null },
 };
 
 // -------------------------------------------------------------------
 // 初期化
 // -------------------------------------------------------------------
+// -------------------------------------------------------------------
+// 曲名マークのツールチップ（PCはホバー、スマホはタップ、キーボードはフォーカス/Enter）
+// -------------------------------------------------------------------
+(function setupMarkTip() {
+  let tip = null, current = null;
+  // 直前に表示していた行・内容・位置のキャッシュ（同じ行内での連続表示時に位置を固定するため）
+  let lastTipText = null, lastRow = null, lastLeft = null, lastTop = null, clearCacheTimer = null;
+
+  function ensure() {
+    if (!tip) {
+      tip = document.createElement("div");
+      tip.id = "mark-tip";
+      tip.setAttribute("role", "tooltip");
+      document.body.appendChild(tip);
+    }
+    return tip;
+  }
+  function show(el) {
+    if (clearCacheTimer) { clearTimeout(clearCacheTimer); clearCacheTimer = null; }
+
+    const t = ensure();
+    const text = el.dataset.tip || "";
+    // data-tip-align="left" が指定された要素（曲名(難易度)セルなど幅の広いセル）は
+    // セル全体の中央寄せではなく、セルの左端を基準に表示する
+    const align = el.dataset.tipAlign === "left" ? "left" : "center";
+    t.textContent = text;
+    t.style.display = "block";
+    // title-tip（LV〜曲名などのセル群）由来は少し大きく、title-mark（バッジ）由来は従来サイズのまま
+    t.classList.toggle("mark-tip-lg", el.classList.contains("title-tip"));
+
+    // 直前と同じ行（<tr>）かつ同じ内容であれば、寄せ方向が異なっていても位置を再計算せず固定
+    // （同じ行のLV〜曲名間を移動してもツールチップが動かない。行が変われば別の曲なので位置も更新する）
+    const row = el.closest("tr");
+    if (row && row === lastRow && text !== "" && text === lastTipText && lastLeft !== null && lastTop !== null) {
+      t.style.left = lastLeft + "px";
+      t.style.top  = lastTop + "px";
+    } else {
+      const r = el.getBoundingClientRect();
+      const w = t.offsetWidth, h = t.offsetHeight, m = 6;
+      const centerLeft = r.left + r.width / 2 - w / 2;
+      const rawLeft = align === "left" ? r.left : centerLeft;
+      let left = Math.min(Math.max(m, rawLeft), window.innerWidth - w - m);
+      let top = r.top - h - m;
+      if (top < m) top = r.bottom + m;   // 上に収まらなければ下に表示
+      t.style.left = left + "px";
+      t.style.top  = top + "px";
+      lastLeft = left;
+      lastTop  = top;
+    }
+    lastTipText = text;
+    lastRow = row;
+    current = el;
+  }
+  function hide() {
+    if (tip) tip.style.display = "none";
+    current = null;
+    // 少し間を置いてキャッシュを破棄（直後に同一内容の隣接要素へ表示し直す場合は位置固定を維持するため）
+    if (clearCacheTimer) clearTimeout(clearCacheTimer);
+    clearCacheTimer = setTimeout(() => { lastTipText = null; lastRow = null; lastLeft = null; lastTop = null; }, 150);
+  }
+  const canHover = window.matchMedia("(hover: hover)").matches;
+  const markOf = e => e.target.closest ? e.target.closest("[data-tip]") : null;
+
+  if (canHover) {
+    document.addEventListener("mouseover", e => { const m = markOf(e); if (m) show(m); });
+    document.addEventListener("mouseout",  e => { if (markOf(e)) hide(); });
+  }
+  document.addEventListener("click", e => {
+    const m = markOf(e);
+    if (!m) { hide(); return; }
+    if (current === m && tip && tip.style.display === "block" && !canHover) hide();
+    else show(m);
+  });
+  document.addEventListener("focusin",  e => { const m = markOf(e); if (m) show(m); });
+  document.addEventListener("focusout", e => { if (markOf(e)) hide(); });
+  document.addEventListener("keydown",  e => { if (e.key === "Escape") hide(); });
+  window.addEventListener("scroll", hide, true);
+  window.addEventListener("resize", hide);
+})();
+
 document.addEventListener("DOMContentLoaded", () => {
   applyTheme(currentTheme);
 
@@ -1114,7 +1275,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("ac-only-btn").classList.remove("active");
 
     // ソートリセット
-    ["new","change","recommend","subdivision","revision"].forEach(tab => {
+    ["new","change","recommend","subdivision","proxy","revision"].forEach(tab => {
       sortState[tab].key = null;
       sortState[tab].dir = null;
       updateSortHeaders(tab);
@@ -1169,6 +1330,102 @@ function parseDateNum(str) {
   return y * 10000 + m * 100 + d;
 }
 
+// -------------------------------------------------------------------
+// 代理提案希望_log: 雑談スレッド内の「反映報告」を解析し、
+// 新規提案_log／変更提案_logと突き合わせて「済」マークを表示する。
+//
+// 管理人が雑談の最後に次のような一文を書く運用を想定（いずれも対応）:
+//   「新規提案反映 提案日 2026/5/3」「変更提案反映 提案日:2026/5/3」
+//   「新規提案反映 提案日：2026/5/3」「変更提案反映 提案日2026/05/03」
+//   「新規提案日 2026/5/3」（「反映」「提案」を省略した略記）
+//   「変更提案 提案日:2026/5/3」（「反映」のみ省略）
+//   「（管理者）新規提案日：2026/9/19」（基本運用。先頭に（管理者）が付く）等
+//   - （任意）「（管理者）」または「(管理者)」 → 先頭に付いていてもいなくても良い
+//   - 「新規提案」／「変更提案」          → どちらの履歴シートと突き合わせるか
+//   - （任意）「反映」                     → あってもなくても良い
+//   - （任意）「提案」＋「日」、または「日」単独 → あってもなくても良い
+//   - 日付は 2026/5/3 のように月日が1桁の表記揺れもあり得る
+//   - 「日」と日付の間の区切りは半角コロン/全角コロン/空白などが考えられる
+// 複数回書かれている場合は一番最後の記述を採用する（訂正を想定）
+// -------------------------------------------------------------------
+const REFLECTION_RE = /(?:[（(]管理者[）)]\s*)?(新規提案|変更提案)(?:反映)?\s*(?:提案)?日\s*[:：]?\s*(\d{4})\/(\d{1,2})\/(\d{1,2})/;
+
+function parseReflectionNote(objections) {
+  if (!objections || objections.length === 0) return null;
+  let result = null;
+  for (const msg of objections) {
+    const m = String(msg).match(REFLECTION_RE);
+    if (!m) continue;
+    const type = m[1] === "新規提案" ? "new" : "change";
+    const y = parseInt(m[2], 10), mo = parseInt(m[3], 10), d = parseInt(m[4], 10);
+    result = {
+      type,
+      dateStr: `${y}/${mo}/${d}`,
+      num: y * 10000 + mo * 100 + d
+    };
+  }
+  return result;
+}
+
+// 雑談スレッド表示用: 反映報告の管理用一文は雑談欄から除外する
+// （これまでの雑談のやり取りとは本質的に関係なく、必要な情報は曲名マークのツールチップで確認できるため）
+function stripReflectionMessages(objections) {
+  if (!objections || objections.length === 0) return objections;
+  return objections.filter(msg => !REFLECTION_RE.test(String(msg)));
+}
+
+// 新規提案_log／変更提案_logから、曲名・提案日が一致する提案を検索
+function findReflectedProposal(type, title, dateNum) {
+  const list = type === "new" ? (allData.new_proposals || []) : (allData.change_proposals || []);
+  return list.find(p => p.title === title && parseDateNum(p.date) === dateNum) || null;
+}
+
+// 代理提案希望_log の1件分について、雑談から反映報告マークを生成
+//   - 反映報告があり、履歴シート上に同曲名・同提案日のデータが見つかる → 「済」
+//   - 反映報告はあるが、該当データが見つからない（記載ミス等の可能性） → 「？」
+//   - 反映報告が見つからない                                         → マークなし
+function proxyReflectionMark(title, objections) {
+  const note = parseReflectionNote(objections);
+  if (!note) return "";
+  const typeLabel = note.type === "new" ? "新規提案" : "変更提案";
+  const matched = findReflectedProposal(note.type, title, note.num);
+  if (matched) {
+    const lv = note.type === "new" ? matched.level : matched.level_to;
+    const lvPart = lv ? `・☆${lv}` : "";
+    return markSpan("title-mark-done", "済", `${typeLabel}として反映されています（提案日：${note.dateStr}${lvPart}）`);
+  }
+  return markSpan("title-mark-unknown", "？", `${typeLabel}への反映報告がありますが、該当する履歴データが見つかりません（提案日：${note.dateStr}）`);
+}
+
+// 曲名マーク1個分のHTML（ツールチップは data-tip。ホバー/タップで表示）
+function markSpan(cls, label, tip) {
+  return `<span class="title-mark ${cls}" data-tip="${escHtml(tip)}" tabindex="0" role="button" aria-label="${escHtml(tip)}">${label}</span>`;
+}
+
+// 空値の表示用プレースホルダー
+function fmtVal(v) {
+  return (v !== null && v !== undefined && String(v).trim() !== "") ? v : "-";
+}
+
+// 難易度表JSON（titleDataMap）から曲名で現在のlevel/recommendを取得
+// INF有のみ/AC有のみと同じデータソース。未ロード or 曲名不一致の場合は null
+function songInfoFor(title) {
+  if (!titleDataMap) return null;
+  return titleDataMap.get(title) || null;
+}
+
+// 新規提案/変更提案/おすすめ提案/細分化待ち: 「提案LV（またはLV変更／おすすめ度変更／希望LV）
+// ～曲名(難易度)」のセル群に「現在の値」ツールチップを付与するための属性文字列。
+// 対象となる複数の<td>すべてにこれを埋め込むことで、行内のそのエリアであれば
+// どこにマウスを乗せても／タップしても同じツールチップが表示される。
+// （値は難易度表JSON側の現在値を参照する。suggestions_log のみで使用）
+// align="left" を渡すと、セル中央ではなくセル左端を基準に表示する
+// （曲名(難易度)セルのように横幅が広いセルで、中央寄せだと体感より右に出てしまうのを防ぐため）
+function tipTd(tip, align) {
+  const alignAttr = align === "left" ? ` data-tip-align="left"` : "";
+  return `data-tip="${escHtml(tip)}"${alignAttr} tabindex="0" role="button" aria-label="${escHtml(tip)}"`;
+}
+
 // ソート適用
 function applySort(rows, tab) {
   const st = sortState[tab];
@@ -1205,6 +1462,7 @@ async function loadData() {
     document.getElementById("cnt-change").textContent = allData.change_proposals.length;
     document.getElementById("cnt-rec").textContent    = allData.recommend_proposals.length;
     document.getElementById("cnt-sub").textContent    = allData.subdivision_proposals.length;
+    document.getElementById("cnt-proxy").textContent  = (allData.proxy_proposals || []).length;
     document.getElementById("cnt-rev").textContent    = (allData.revision_requests || []).length;
 
     showLoading(false);
@@ -1217,14 +1475,14 @@ async function loadData() {
 }
 
 function showLoading(on) {
-  ["new","change","rec","sub","rev"].forEach(id => {
+  ["new","change","rec","sub","proxy","rev"].forEach(id => {
     const el = document.getElementById(`loading-${id}`);
     if (el) el.style.display = on ? "block" : "none";
   });
 }
 
 function showError(msg) {
-  ["new","change","rec","sub","rev"].forEach(id => {
+  ["new","change","rec","sub","proxy","rev"].forEach(id => {
     const el = document.getElementById(`loading-${id}`);
     if (el) el.innerHTML = `<div class="error-msg">⚠ 取得に失敗しました: ${escHtml(msg)}</div>`;
   });
@@ -1243,6 +1501,7 @@ function switchTab(tab) {
     "change": "panel-change",
     "recommend": "panel-recommend",
     "subdivision": "panel-subdivision",
+    "proxy": "panel-proxy",
     "revision": "panel-revision"
   };
   const panelId = panelMap[tab];
@@ -1258,7 +1517,24 @@ function renderCurrent() {
   else if (currentTab === "change")      renderChange();
   else if (currentTab === "recommend")   renderRecommend();
   else if (currentTab === "subdivision") renderSubdivision();
+  else if (currentTab === "proxy")       renderProxy();
   else if (currentTab === "revision")    renderRevision();
+}
+
+// -------------------------------------------------------------------
+// レベル（概算）文字列のパース（代理提案希望タブ用）
+// 「xx.xx～xx.xx」「xx.xx～」「xx.xx～？」「？～xx.xx」「xx.xx？」等の
+// 自由記載から、左辺・右辺の数値をそれぞれ抽出する。
+// 数値が1つしか見つからない場合は左辺=右辺として扱う。
+// 数値が全く見つからない場合は両方nullを返す（想定外の値でも処理は止めない）。
+// -------------------------------------------------------------------
+function parseLevelRange(str) {
+  if (!str) return { left: null, right: null };
+  const matches = String(str).match(/\d+(\.\d+)?/g);
+  if (!matches || matches.length === 0) return { left: null, right: null };
+  const left  = parseFloat(matches[0]);
+  const right = matches.length > 1 ? parseFloat(matches[1]) : left;
+  return { left, right };
 }
 
 // -------------------------------------------------------------------
@@ -1278,7 +1554,13 @@ function applyFilter(rows, searchFields) {
     // --- レベル範囲フィルタ（level_from または level_to が範囲内なら表示） ---
     if (levelMin !== null || levelMax !== null) {
       if (currentTab !== "recommend") {
-        if (row.level_from !== undefined || row.level_to !== undefined) {
+        if (currentTab === "proxy") {
+          // 代理提案希望の場合（自由記載のレベル（概算）文字列から左辺・右辺を抽出）
+          const { left, right } = parseLevelRange(row.level);
+          const isLeftIn  = left  !== null && (levelMin === null || left  >= levelMin) && (levelMax === null || left  <= levelMax);
+          const isRightIn = right !== null && (levelMin === null || right >= levelMin) && (levelMax === null || right <= levelMax);
+          if (!isLeftIn && !isRightIn) return false;
+        } else if (row.level_from !== undefined || row.level_to !== undefined) {
           // 変更提案の場合
           const valFrom = parseFloat(row.level_from);
           const valTo   = parseFloat(row.level_to);
@@ -1319,17 +1601,20 @@ function renderNew() {
   table.style.display = "table";
   empty.style.display = "none";
 
-  tbody.innerHTML = rows.map(r => `
+  tbody.innerHTML = rows.map(r => {
+    const tip = `現：${fmtVal(songInfoFor(r.title)?.recommend)}, ☆${fmtVal(songInfoFor(r.title)?.level)}`;
+    return `
     <tr>
       <td class="col-date">${escHtml(r.date)}</td>
-      <td class="col-level"><span class="level-val">☆${escHtml(r.level)}</span></td>
-      <td class="col-rec">${recChip(r.recommend)}</td>
-      <td class="col-title">${escHtml(r.title)}</td>
+      <td class="col-level title-tip" ${tipTd(tip)}><span class="level-val">☆${escHtml(r.level)}</span></td>
+      <td class="col-rec title-tip" ${tipTd(tip)}>${recChip(r.recommend)}</td>
+      <td class="col-title title-tip" ${tipTd(tip, "left")}>${escHtml(r.title)}</td>
       <td class="col-main">${longText(r.comment)}</td>
       <td class="col-main">${longText(r.remarks)}</td>
       <td class="obj-cell">${objThread(r.objections)}</td>
     </tr>
-  `).join("");
+  `;
+  }).join("");
 }
 
 // -------------------------------------------------------------------
@@ -1348,21 +1633,24 @@ function renderChange() {
   table.style.display = "table";
   empty.style.display = "none";
 
-  tbody.innerHTML = rows.map(r => `
+  tbody.innerHTML = rows.map(r => {
+    const tip = `現：☆${fmtVal(songInfoFor(r.title)?.level)}`;
+    return `
     <tr>
       <td class="col-date">${escHtml(r.date)}</td>
-      <td class="col-level">
+      <td class="col-level title-tip" ${tipTd(tip)}>
         <div class="level-arrow">
           <span class="from">☆${escHtml(r.level_from)}</span>
           <span class="arr">⇒</span>
           <span class="to">☆${escHtml(r.level_to)}</span>
         </div>
       </td>
-      <td class="col-title">${escHtml(r.title)}</td>
+      <td class="col-title title-tip" ${tipTd(tip, "left")}>${escHtml(r.title)}</td>
       <td class="col-main">${longText(r.reason)}</td>
       <td class="obj-cell">${objThread(r.objections)}</td>
     </tr>
-  `).join("");
+  `;
+  }).join("");
 }
 
 // -------------------------------------------------------------------
@@ -1381,21 +1669,24 @@ function renderRecommend() {
   table.style.display = "table";
   empty.style.display = "none";
 
-  tbody.innerHTML = rows.map(r => `
+  tbody.innerHTML = rows.map(r => {
+    const tip = `現：${fmtVal(songInfoFor(r.title)?.recommend)}`;
+    return `
     <tr>
       <td class="col-date">${escHtml(r.date)}</td>
-      <td>
+      <td class="title-tip" ${tipTd(tip)}>
         <div class="rec-arrow">
           ${recChip(r.rec_from)}
           <span style="color:var(--text-sub)">⇒</span>
           ${recChip(r.rec_to)}
         </div>
       </td>
-      <td class="col-title">${escHtml(r.title)}</td>
+      <td class="col-title title-tip" ${tipTd(tip, "left")}>${escHtml(r.title)}</td>
       <td class="col-main">${longText(r.reason)}</td>
       <td class="obj-cell">${objThread(r.objections)}</td>
     </tr>
-  `).join("");
+  `;
+  }).join("");
 }
 
 // 細分化待ちの描画関数
@@ -1412,13 +1703,41 @@ function renderSubdivision() {
   table.style.display = "table";
   empty.style.display = "none";
 
+  tbody.innerHTML = rows.map(r => {
+    const tip = `現：☆${fmtVal(songInfoFor(r.title)?.level)}`;
+    return `
+    <tr>
+      <td class="col-date">${escHtml(r.date)}</td>
+      <td class="col-level title-tip" ${tipTd(tip)}><span class="level-val">☆${escHtml(r.level)}</span></td>
+      <td class="col-title title-tip" ${tipTd(tip, "left")}>${escHtml(r.title)}</td>
+      <td class="col-main">${longText(r.comment)}</td>
+      <td class="obj-cell">${objThread(r.objections)}</td>
+    </tr>
+  `;
+  }).join("");
+}
+
+// 代理提案希望の描画関数
+function renderProxy() {
+  let rows = applyFilter(allData.proxy_proposals || [], ["title","comment"]);
+  rows = applySort(rows, "proxy");
+  document.getElementById("result-count").textContent = `${rows.length} 件`;
+
+  const tbody = document.getElementById("body-proxy");
+  const table = document.getElementById("table-proxy");
+  const empty = document.getElementById("empty-proxy");
+
+  if (rows.length === 0) { table.style.display = "none"; empty.style.display = "block"; return; }
+  table.style.display = "table";
+  empty.style.display = "none";
+
   tbody.innerHTML = rows.map(r => `
     <tr>
       <td class="col-date">${escHtml(r.date)}</td>
       <td class="col-level"><span class="level-val">☆${escHtml(r.level)}</span></td>
-      <td class="col-title">${escHtml(r.title)}</td>
+      <td class="col-title">${escHtml(r.title)}${proxyReflectionMark(r.title, r.objections)}</td>
       <td class="col-main">${longText(r.comment)}</td>
-      <td class="obj-cell">${objThread(r.objections)}</td>
+      <td class="obj-cell">${objThread(stripReflectionMessages(r.objections), ["雑談","返信"])}</td>
     </tr>
   `).join("");
 }
@@ -1470,13 +1789,14 @@ function longText(str) {
   return `<div class="long-text">${escHtml(str).replace(/\n/g, "<br>")}</div>`;
 }
 
-function objThread(objections) {
+function objThread(objections, labels) {
   if (!objections || objections.length === 0) {
     return `<span class="obj-none">-</span>`;
   }
+  const [labelA, labelB] = labels || ["異議", "反論"];
   const items = objections.map((o, i) => `
     <div class="obj-bubble">
-      <div class="obj-idx">${i % 2 === 0 ? "異議" : "反論"} ${Math.floor(i/2)+1}</div>
+      <div class="obj-idx">${i % 2 === 0 ? labelA : labelB} ${Math.floor(i/2)+1}</div>
       ${escHtml(o).replace(/\n/g,"<br>")}
     </div>
   `).join("");

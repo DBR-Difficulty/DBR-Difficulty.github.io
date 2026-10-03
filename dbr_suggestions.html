@@ -558,6 +558,71 @@ td {
 
 .rec-arrow { display: flex; align-items: center; gap: 0.375rem; }
 
+/* 代理提案希望: 曲名マーク（表jsonとの照合結果。pill状ではなく小さい丸バッジ） */
+.title-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1em;
+  padding: 0.13em;
+  margin-left: 0.2rem;
+  border-radius: 999px;
+  font-size: 0.55rem;
+  font-weight: 700;
+  line-height: 1;
+  vertical-align: middle;
+  flex: none;
+  box-sizing: border-box;
+  text-align: center;
+}
+/* 漢字（新・変）は？より視覚的に大きく見えるため、フォントサイズのみ少し小さく */
+.title-mark-change,
+.title-mark-new,
+.title-mark-objection { font-size: 0.46rem; padding: 0.25em; }
+/* 変（既存曲に対する変更提案と推測） = ☆と同系色（オレンジ） */
+.title-mark-change  { background: #3a2a0e; color: var(--warn);    border: 1px solid #f9c94f55; }
+/* 新（表に未収録＝新規提案と推測） = ◎と同系色（緑） */
+.title-mark-new     { background: #0e3a22; color: var(--accent3); border: 1px solid #6ecf8e55; }
+/* 異（提案中の譜面に対する異議。新/変の右側に追加表示） = 赤 */
+.title-mark-objection { background: #3a1214; color: #f95f5f; border: 1px solid #f95f5f55; }
+/* 済（代理提案済み。新/変の右側に表示） = ○と同系色（青） */
+.title-mark-done { font-size: 0.46rem; padding: 0.25em; background: #1a2e3a; color: var(--accent); border: 1px solid #4f9cf955; }
+/* ？（表の曲名と一致しない） = グレー */
+.title-mark-unknown { background: #2a2e38; color: var(--text-sub); border: 1px solid #8a93a855; }
+/* クラシックテーマ: 白背景で読みやすいよう、淡い背景 + 濃い文字に調整 */
+[data-theme="classic"] .title-mark-new       { background: #e4f3e4; color: #006a00; border-color: #00880066; }
+[data-theme="classic"] .title-mark-change    { background: #fff1d1; color: #9a6200; border-color: #cc880080; }
+[data-theme="classic"] .title-mark-objection { background: #fde6e6; color: #b30000; border-color: #cc000066; }
+[data-theme="classic"] .title-mark-done      { background: #e6e6fa; color: #0000a0; border-color: #0000c066; }
+[data-theme="classic"] .title-mark-unknown   { background: #ececec; color: #555555; border-color: #88888899; }
+
+/* クラシックテーマでも背景・枠はそのまま維持（rec-chipとは異なり常時視認できるバッジとして扱う） */
+[data-theme="classic"] .title-mark { font-weight: bold; }
+
+/* 曲名マークのツールチップ（ホバー／タップ／キーボードフォーカスで表示） */
+.title-mark[data-tip] { cursor: pointer; }
+/* 細分化待ち: LV〜曲名のセルに付与する「現在の値」ツールチップ */
+.title-tip {
+  cursor: help;
+}
+#mark-tip {
+  position: fixed; z-index: 10000; display: none;
+  max-width: min(18rem, calc(100vw - 1rem));
+  padding: 0.35rem 0.6rem;
+  background: var(--surface2); color: var(--text);
+  border: 1px solid var(--border); border-radius: var(--radius);
+  font-size: 0.75rem; line-height: 1.5; font-weight: normal;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.35);
+  pointer-events: none;
+}
+/* title-tip（LV〜曲名などのセル群）由来のツールチップは少し大きく表示。
+   title-mark（代理提案希望のバッジ）由来は上記の標準サイズのまま */
+#mark-tip.mark-tip-lg {
+  max-width: min(20rem, calc(100vw - 1rem));
+  padding: 0.5rem 0.75rem;
+  font-size: 0.85rem;
+}
+
 /* 異議バブル（モダン） */
 .obj-thread { display: flex; flex-direction: column; gap: 0.25rem; }
 .obj-bubble {
@@ -745,7 +810,7 @@ thead th.sortable.sort-desc .sort-icon { opacity: 1; color: var(--accent); }
   }
 
   /* タブバー: 2列折り返し
-     5タブの場合 → 1行目3つ(各約33%)、2行目2つ(各約33%、中央揃え)
+     6タブの場合 → 1行目3つ(各約33%)、2行目3つ(各約33%)
      margin-bottom: -2px によるはみ出し問題を解消するため
      border-bottom を box-shadow に差し替え、ボタン側で線を引く */
   .tab-bar {
@@ -787,6 +852,7 @@ thead th.sortable.sort-desc .sort-icon { opacity: 1; color: var(--accent); }
   <button id="theme-toggle" title="UIを切り替え">☀ ライトモード</button>
   <button id="reload-btn">↺ 再読み込み</button>
   <a href="dbr_suggestions_log.html" class="nav-link-btn">提案履歴を見る</a>
+  <a href="#" id="open-sheet-btn" class="nav-link-btn" target="_blank" rel="noopener noreferrer">このシートを開く</a>
   <a href="index.html" class="nav-link-btn">TOPへ戻る</a>
   
   <span class="spacer"></span>
@@ -803,6 +869,8 @@ thead th.sortable.sort-desc .sort-icon { opacity: 1; color: var(--accent); }
     おすすめ提案 <span class="count" id="cnt-rec">-</span>
   </button><button class="tab-btn" data-tab="subdivision">
     細分化待ち <span class="count" id="cnt-sub">-</span>
+  </button><button class="tab-btn" data-tab="proxy">
+    代理提案希望 <span class="count" id="cnt-proxy">-</span>
   </button><button class="tab-btn" data-tab="revision">
     修正依頼 <span class="count" id="cnt-rev">-</span>
   </button>
@@ -906,6 +974,26 @@ thead th.sortable.sort-desc .sort-icon { opacity: 1; color: var(--accent); }
   </div>
 </div>
 
+<!-- 代理提案希望 -->
+<div class="tab-panel" id="panel-proxy">
+  <div class="table-wrap">
+    <div class="state-box" id="loading-proxy"><div class="spinner"></div>読み込み中…</div>
+    <table id="table-proxy" style="display:none">
+      <thead>
+        <tr>
+          <th class="col-date sortable" data-sort-tab="proxy" data-sort-key="date">記載日時<span class="sort-icon">⇅</span></th>
+          <th class="col-level sortable" data-sort-tab="proxy" data-sort-key="level">レベル（概算）<span class="sort-icon">⇅</span></th>
+          <th class="col-title">曲名(難易度)</th>
+          <th class="col-main">コメント</th>
+          <th class="obj-cell">雑談</th>
+        </tr>
+      </thead>
+      <tbody id="body-proxy"></tbody>
+    </table>
+    <div class="state-box" id="empty-proxy" style="display:none">提案はありません</div>
+  </div>
+</div>
+
 <!-- 修正依頼 -->
 <div class="tab-panel" id="panel-revision">
   <div class="table-wrap">
@@ -932,7 +1020,10 @@ const GAS_PROPOSALS_URL = "https://script.google.com/macros/s/AKfycbzLcryGU1xVPX
 // -------------------------------------------------------------------
 let infTitleSet     = null;  // null = 未ロード, Set = ロード済み
 let deletedTitleSet = null;
+let titleLevelMap   = null;  // Map<曲名, level文字列>（代理提案希望の新規/変更判定用）
 let dbrDataLoading  = false;
+let proxyNewDateMap    = new Map();  // 新規提案: 曲名 → 最も早い提案の {num, level}（代理提案希望の「異」判定用）
+let proxyChangeDateMap = new Map();  // 変更提案: 曲名 → 最も早い提案の {num, level}（同上）
 
 async function loadDBRData() {
   if (dbrDataLoading || (infTitleSet !== null)) return;
@@ -968,12 +1059,15 @@ async function loadDBRData() {
 
     infTitleSet     = new Set();
     deletedTitleSet = new Set();
+    titleLevelMap   = new Map();
 
     songArray.forEach(song => {
       if (!song.title) return;
       const t = song.title;
       if (song.inf)      infTitleSet.add(t);
       if (song.acdelete) deletedTitleSet.add(t);
+      // level: ""(未査定) または "13.00"のような数値文字列(査定済)
+      titleLevelMap.set(t, song.level !== undefined && song.level !== null ? String(song.level) : "");
     });
 
     // ボタンを有効化
@@ -988,7 +1082,7 @@ async function loadDBRData() {
       acBtn.title = `現行AC作品でプレーできる曲のみ表示`;
     }
 
-    if (infOnly || acOnly) renderCurrent();
+    if (infOnly || acOnly || ["proxy","subdivision"].includes(currentTab)) renderCurrent();
 
   } catch (err) {
     console.error("[proposals] 難易度表JSON読み込み失敗:", err);
@@ -999,6 +1093,7 @@ async function loadDBRData() {
     // 空Setにして「該当なし」として扱う
     infTitleSet     = new Set();
     deletedTitleSet = new Set();
+    titleLevelMap   = new Map();
   } finally {
     dbrDataLoading = false;
   }
@@ -1021,8 +1116,18 @@ function applyTheme(theme) {
 // -------------------------------------------------------------------
 // データ管理
 // -------------------------------------------------------------------
-let allData = { new_proposals: [], change_proposals: [], recommend_proposals: [], subdivision_proposals: [], revision_requests: [] };
+let allData = { new_proposals: [], change_proposals: [], recommend_proposals: [], subdivision_proposals: [], proxy_proposals: [], revision_requests: [] };
 let currentTab = "new";
+
+// 各タブに対応するスプレッドシートのシートURL（「このシートを開く」ボタン用）
+const SHEET_URLS = {
+  new:         "https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?gid=1709558806#gid=1709558806",
+  change:      "https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?gid=1267054778#gid=1267054778",
+  recommend:   "https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?gid=1779953087#gid=1779953087",
+  subdivision: "https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?gid=1648403616#gid=1648403616",
+  proxy:       "https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?gid=2016855471#gid=2016855471",
+  revision:    "https://docs.google.com/spreadsheets/d/1R-bgS7CZ1BBTzsk4KRKRSmBAZWNotZnQLfWtZFQr-Ek/edit?gid=1133259776#gid=1133259776",
+};
 let objOnly = false;
 let infOnly = false;
 let acOnly = false;
@@ -1036,14 +1141,100 @@ const sortState = {
   change: { key: null, dir: null },
   recommend: { key: null, dir: null },
   subdivision: { key: null, dir: null },
+  proxy: { key: null, dir: null },
   revision: { key: null, dir: null },
 };
 
 // -------------------------------------------------------------------
 // 初期化
 // -------------------------------------------------------------------
+// -------------------------------------------------------------------
+// 曲名マークのツールチップ（PCはホバー、スマホはタップ、キーボードはフォーカス/Enter）
+// -------------------------------------------------------------------
+(function setupMarkTip() {
+  let tip = null, current = null;
+  // 直前に表示していた行・内容・位置のキャッシュ（同じ行内での連続表示時に位置を固定するため）
+  let lastTipText = null, lastRow = null, lastLeft = null, lastTop = null, clearCacheTimer = null;
+
+  function ensure() {
+    if (!tip) {
+      tip = document.createElement("div");
+      tip.id = "mark-tip";
+      tip.setAttribute("role", "tooltip");
+      document.body.appendChild(tip);
+    }
+    return tip;
+  }
+  function show(el) {
+    if (clearCacheTimer) { clearTimeout(clearCacheTimer); clearCacheTimer = null; }
+
+    const t = ensure();
+    const text = el.dataset.tip || "";
+    // data-tip-align="left" が指定された要素（曲名(難易度)セルなど幅の広いセル）は
+    // セル全体の中央寄せではなく、セルの左端を基準に表示する
+    const align = el.dataset.tipAlign === "left" ? "left" : "center";
+    t.textContent = text;
+    t.style.display = "block";
+    // title-tip（LV〜曲名などのセル群）由来は少し大きく、title-mark（バッジ）由来は従来サイズのまま
+    t.classList.toggle("mark-tip-lg", el.classList.contains("title-tip"));
+
+    // 直前と同じ行（<tr>）かつ同じ内容であれば、寄せ方向が異なっていても位置を再計算せず固定
+    // （同じ行のLV〜曲名間を移動してもツールチップが動かない。行が変われば別の曲なので位置も更新する）
+    const row = el.closest("tr");
+    if (row && row === lastRow && text !== "" && text === lastTipText && lastLeft !== null && lastTop !== null) {
+      t.style.left = lastLeft + "px";
+      t.style.top  = lastTop + "px";
+    } else {
+      const r = el.getBoundingClientRect();
+      const w = t.offsetWidth, h = t.offsetHeight, m = 6;
+      const centerLeft = r.left + r.width / 2 - w / 2;
+      const rawLeft = align === "left" ? r.left : centerLeft;
+      let left = Math.min(Math.max(m, rawLeft), window.innerWidth - w - m);
+      let top = r.top - h - m;
+      if (top < m) top = r.bottom + m;   // 上に収まらなければ下に表示
+      t.style.left = left + "px";
+      t.style.top  = top + "px";
+      lastLeft = left;
+      lastTop  = top;
+    }
+    lastTipText = text;
+    lastRow = row;
+    current = el;
+  }
+  function hide() {
+    if (tip) tip.style.display = "none";
+    current = null;
+    // 少し間を置いてキャッシュを破棄（直後に同一内容の隣接要素へ表示し直す場合は位置固定を維持するため）
+    if (clearCacheTimer) clearTimeout(clearCacheTimer);
+    clearCacheTimer = setTimeout(() => { lastTipText = null; lastRow = null; lastLeft = null; lastTop = null; }, 150);
+  }
+  const canHover = window.matchMedia("(hover: hover)").matches;
+  const markOf = e => e.target.closest ? e.target.closest("[data-tip]") : null;
+
+  if (canHover) {
+    document.addEventListener("mouseover", e => { const m = markOf(e); if (m) show(m); });
+    document.addEventListener("mouseout",  e => { if (markOf(e)) hide(); });
+  }
+  document.addEventListener("click", e => {
+    const m = markOf(e);
+    if (!m) { hide(); return; }
+    if (current === m && tip && tip.style.display === "block" && !canHover) hide();
+    else show(m);
+  });
+  document.addEventListener("focusin",  e => { const m = markOf(e); if (m) show(m); });
+  document.addEventListener("focusout", e => { if (markOf(e)) hide(); });
+  document.addEventListener("keydown",  e => { if (e.key === "Escape") hide(); });
+  window.addEventListener("scroll", hide, true);
+  window.addEventListener("resize", hide);
+})();
+
 document.addEventListener("DOMContentLoaded", () => {
   applyTheme(currentTheme);
+
+  const openSheetBtn = document.getElementById("open-sheet-btn");
+  if (openSheetBtn && SHEET_URLS[currentTab]) {
+    openSheetBtn.href = SHEET_URLS[currentTab];
+  }
 
   loadData();
   loadDBRData();  // 難易度表JSONを非同期で先読み
@@ -1117,7 +1308,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("ac-only-btn").classList.remove("active");
 
     // ソートリセット
-    ["new","change","recommend","subdivision","revision"].forEach(tab => {
+    ["new","change","recommend","subdivision","proxy","revision"].forEach(tab => {
       sortState[tab].key = null;
       sortState[tab].dir = null;
       updateSortHeaders(tab);
@@ -1208,6 +1399,7 @@ async function loadData() {
     document.getElementById("cnt-change").textContent = allData.change_proposals.length;
     document.getElementById("cnt-rec").textContent    = allData.recommend_proposals.length;
     document.getElementById("cnt-sub").textContent    = allData.subdivision_proposals.length;
+    document.getElementById("cnt-proxy").textContent  = (allData.proxy_proposals || []).length;
     document.getElementById("cnt-rev").textContent    = (allData.revision_requests || []).length;
 
     showLoading(false);
@@ -1220,14 +1412,14 @@ async function loadData() {
 }
 
 function showLoading(on) {
-  ["new","change","rec","sub","rev"].forEach(id => {
+  ["new","change","rec","sub","proxy","rev"].forEach(id => {
     const el = document.getElementById(`loading-${id}`);
     if (el) el.style.display = on ? "block" : "none";
   });
 }
 
 function showError(msg) {
-  ["new","change","rec","sub","rev"].forEach(id => {
+  ["new","change","rec","sub","proxy","rev"].forEach(id => {
     const el = document.getElementById(`loading-${id}`);
     if (el) el.innerHTML = `<div class="error-msg">⚠ 取得に失敗しました: ${escHtml(msg)}</div>`;
   });
@@ -1246,6 +1438,7 @@ function switchTab(tab) {
     "change": "panel-change",
     "recommend": "panel-recommend",
     "subdivision": "panel-subdivision",
+    "proxy": "panel-proxy",
     "revision": "panel-revision"
   };
   const panelId = panelMap[tab];
@@ -1253,6 +1446,18 @@ function switchTab(tab) {
   if (panelId) {
     document.getElementById(panelId).classList.add("active");
   }
+
+  const openSheetBtn = document.getElementById("open-sheet-btn");
+  if (openSheetBtn) {
+    const url = SHEET_URLS[tab];
+    if (url) {
+      openSheetBtn.href = url;
+      openSheetBtn.style.display = "";
+    } else {
+      openSheetBtn.style.display = "none";
+    }
+  }
+
   renderCurrent();
 }
 
@@ -1261,7 +1466,24 @@ function renderCurrent() {
   else if (currentTab === "change")      renderChange();
   else if (currentTab === "recommend")   renderRecommend();
   else if (currentTab === "subdivision") renderSubdivision();
+  else if (currentTab === "proxy")       renderProxy();
   else if (currentTab === "revision")    renderRevision();
+}
+
+// -------------------------------------------------------------------
+// レベル（概算）文字列のパース（代理提案希望タブ用）
+// 「xx.xx～xx.xx」「xx.xx～」「xx.xx～？」「？～xx.xx」「xx.xx？」等の
+// 自由記載から、左辺・右辺の数値をそれぞれ抽出する。
+// 数値が1つしか見つからない場合は左辺=右辺として扱う。
+// 数値が全く見つからない場合は両方nullを返す（想定外の値でも処理は止めない）。
+// -------------------------------------------------------------------
+function parseLevelRange(str) {
+  if (!str) return { left: null, right: null };
+  const matches = String(str).match(/\d+(\.\d+)?/g);
+  if (!matches || matches.length === 0) return { left: null, right: null };
+  const left  = parseFloat(matches[0]);
+  const right = matches.length > 1 ? parseFloat(matches[1]) : left;
+  return { left, right };
 }
 
 // -------------------------------------------------------------------
@@ -1281,7 +1503,13 @@ function applyFilter(rows, searchFields) {
     // --- レベル範囲フィルタ（level_from または level_to が範囲内なら表示） ---
     if (levelMin !== null || levelMax !== null) {
       if (currentTab !== "recommend") {
-        if (row.level_from !== undefined || row.level_to !== undefined) {
+        if (currentTab === "proxy") {
+          // 代理提案希望の場合（自由記載のレベル（概算）文字列から左辺・右辺を抽出）
+          const { left, right } = parseLevelRange(row.level);
+          const isLeftIn  = left  !== null && (levelMin === null || left  >= levelMin) && (levelMax === null || left  <= levelMax);
+          const isRightIn = right !== null && (levelMin === null || right >= levelMin) && (levelMax === null || right <= levelMax);
+          if (!isLeftIn && !isRightIn) return false;
+        } else if (row.level_from !== undefined || row.level_to !== undefined) {
           // 変更提案の場合
           const valFrom = parseFloat(row.level_from);
           const valTo   = parseFloat(row.level_to);
@@ -1415,13 +1643,45 @@ function renderSubdivision() {
   table.style.display = "table";
   empty.style.display = "none";
 
+  tbody.innerHTML = rows.map(r => {
+    // 現在の難易度は難易度表JSON（titleLevelMap）から取得。未ロード・曲名不一致・未査定は「-」
+    const tip = `現：☆${fmtVal(titleLevelMap ? titleLevelMap.get(r.title) : null)}`;
+    return `
+    <tr>
+      <td class="col-date">${escHtml(r.date)}</td>
+      <td class="col-level title-tip" ${tipTd(tip)}><span class="level-val">☆${escHtml(r.level)}</span></td>
+      <td class="col-title title-tip" ${tipTd(tip, "left")}>${escHtml(r.title)}</td>
+      <td class="col-main">${longText(r.comment)}</td>
+      <td class="obj-cell">${objThread(r.objections)}</td>
+    </tr>
+  `;
+  }).join("");
+}
+
+// 代理提案希望の描画関数
+function renderProxy() {
+  let rows = applyFilter(allData.proxy_proposals || [], ["title","comment"]);
+  rows = applySort(rows, "proxy");
+  document.getElementById("result-count").textContent = `${rows.length} 件`;
+
+  const tbody = document.getElementById("body-proxy");
+  const table = document.getElementById("table-proxy");
+  const empty = document.getElementById("empty-proxy");
+
+  if (rows.length === 0) { table.style.display = "none"; empty.style.display = "block"; return; }
+  table.style.display = "table";
+  empty.style.display = "none";
+
+  proxyNewDateMap    = buildEarliestDateMap(allData.new_proposals,    p => p.level);
+  proxyChangeDateMap = buildEarliestDateMap(allData.change_proposals, p => p.level_to);
+
   tbody.innerHTML = rows.map(r => `
     <tr>
       <td class="col-date">${escHtml(r.date)}</td>
       <td class="col-level"><span class="level-val">☆${escHtml(r.level)}</span></td>
-      <td class="col-title">${escHtml(r.title)}</td>
+      <td class="col-title">${escHtml(r.title)}${proxyTitleMark(r.title, r.date)}</td>
       <td class="col-main">${longText(r.comment)}</td>
-      <td class="obj-cell">${objThread(r.objections)}</td>
+      <td class="obj-cell">${objThread(r.objections, ["雑談","返信"])}</td>
     </tr>
   `).join("");
 }
@@ -1473,13 +1733,98 @@ function longText(str) {
   return `<div class="long-text">${escHtml(str).replace(/\n/g, "<br>")}</div>`;
 }
 
-function objThread(objections) {
+// -------------------------------------------------------------------
+// 代理提案希望: 曲名を表jsonと照合し、新規/変更/不明のマークを生成
+//   - 曲名が完全一致し、その曲のlevelが入っている（査定済） → 変更提案と推測（「変」）
+//   - 曲名が完全一致し、その曲のlevelが空（未査定）        → 新規提案と推測（「新」）
+//   - 曲名が一致しない                                      → 判定不能（「？」）
+//   - 追加: levelなし かつ 新規提案に完全一致曲名あり、または
+//           levelあり かつ 変更提案に完全一致曲名あり、のうち
+//           代理提案の記載日時が、その新規/変更提案の記載日時より遅い場合のみ
+//           → 代理提案のほうが遅ければ「異」（提案中の譜面への異議）、
+//             同日または早ければ「済」（代理提案済み）を「新」「変」の右に追加
+// titleLevelMap が未ロードの間は何も表示しない
+// -------------------------------------------------------------------
+// 提案一覧から 曲名 → 最も早い提案の { num: 記載日(数値), level: 提案レベル } のMapを作成
+//   getLevel: 提案1件から「提案中のレベル」を取り出す関数
+//   （新規提案は level、変更提案は変更後の level_to）
+function buildEarliestDateMap(list, getLevel) {
+  const map = new Map();
+  (list || []).forEach(p => {
+    const n = parseDateNum(p.date);
+    if (!n) return;
+    if (!map.has(p.title) || n < map.get(p.title).num) {
+      map.set(p.title, { num: n, level: getLevel(p) });
+    }
+  });
+  return map;
+}
+
+// 代理提案と、同名の新規/変更提案との記載日の前後関係を返す
+//   rel "later"   : 代理提案のほうが遅い → 「異」
+//   rel "earlier" : 代理提案が同日または早い → 「済」
+//   null          : 該当する提案がない／日付が読み取れない → マークなし
+function proxyRelation(dateMap, title, proxyDate) {
+  const proposed = dateMap.get(title);
+  const proxyNum = parseDateNum(proxyDate);
+  if (proposed === undefined || !(proxyNum > 0)) return null;
+  return { rel: proxyNum > proposed.num ? "later" : "earlier", level: proposed.level };
+}
+
+function proxyRelationMark(r) {
+  if (!r) return "";
+  const hasLv = r.level !== undefined && r.level !== null && String(r.level).trim() !== "";
+  if (r.rel === "later") {
+    return markSpan("title-mark-objection", "異", `提案中の譜面に対する異議です（${hasLv ? `提案☆${r.level}）` : ""}`);
+  }
+  return markSpan("title-mark-done", "済", `代理提案が行われています${hasLv ? `（提案☆${r.level}）` : ""}`);
+}
+
+// 空値の表示用プレースホルダー
+function fmtVal(v) {
+  return (v !== null && v !== undefined && String(v).trim() !== "") ? v : "-";
+}
+
+// 細分化待ち: 「希望LV～曲名(難易度)」のセル群に「現在の値」ツールチップを付与するための属性文字列。
+// 対象となる複数の<td>すべてにこれを埋め込むことで、行内のそのエリアであれば
+// どこにマウスを乗せても／タップしても同じツールチップが表示される。
+// align="left" を渡すと、セル中央ではなくセル左端を基準に表示する
+// （曲名(難易度)セルのように横幅が広いセルで、中央寄せだと体感より右に出てしまうのを防ぐため）
+function tipTd(tip, align) {
+  const alignAttr = align === "left" ? ` data-tip-align="left"` : "";
+  return `data-tip="${escHtml(tip)}"${alignAttr} tabindex="0" role="button" aria-label="${escHtml(tip)}"`;
+}
+
+// 曲名マーク1個分のHTML（ツールチップは data-tip。ホバー/タップで表示）
+function markSpan(cls, label, tip) {
+  return `<span class="title-mark ${cls}" data-tip="${escHtml(tip)}" tabindex="0" role="button" aria-label="${escHtml(tip)}">${label}</span>`;
+}
+
+function proxyTitleMark(title, proxyDate) {
+  if (titleLevelMap === null) return "";
+  if (!titleLevelMap.has(title)) {
+    return markSpan("title-mark-unknown", "？", "難易度表と完全一致する曲名が見つかりません");
+  }
+  const level = titleLevelMap.get(title);
+  const hasLevel = !!(level && String(level).trim() !== "");
+  if (hasLevel) {
+    // levelあり（変）: 変更提案に同名の曲があれば「異」または「済」を追加
+    const rel = proxyRelation(proxyChangeDateMap, title, proxyDate);
+    return markSpan("title-mark-change", "変", `既に査定済みの譜面です（現☆${level}）`) + proxyRelationMark(rel);
+  }
+  // levelなし（新）: 新規提案に同名の曲があれば「異」または「済」を追加
+  const rel = proxyRelation(proxyNewDateMap, title, proxyDate);
+  return markSpan("title-mark-new", "新", "まだ未査定の譜面です") + proxyRelationMark(rel);
+}
+
+function objThread(objections, labels) {
   if (!objections || objections.length === 0) {
     return `<span class="obj-none">-</span>`;
   }
+  const [labelA, labelB] = labels || ["異議", "反論"];
   const items = objections.map((o, i) => `
     <div class="obj-bubble">
-      <div class="obj-idx">${i % 2 === 0 ? "異議" : "反論"} ${Math.floor(i/2)+1}</div>
+      <div class="obj-idx">${i % 2 === 0 ? labelA : labelB} ${Math.floor(i/2)+1}</div>
       ${escHtml(o).replace(/\n/g,"<br>")}
     </div>
   `).join("");

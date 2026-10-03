@@ -1263,9 +1263,9 @@ const titleSpecials = [
     ['Mighty Cutie','まいてぃーきゅーてぃ'],
     ['Mind Mapping','まいんどまっぴんぐ'],
     ['Mira','みら'],
-    ['Mobo★Moga','もぼもが'],
+    ['Mobo★Moga','もぼもが','フレンチポップ'],
     ['Modular Technology','もじゅらーてくのろじー'],
-    ['Monkey Business','もんきーびじねす'],
+    ['Monkey Business','もんきーびじねす','ハードダンス'],
     ['Monkey Dance','もんきーだんす'],
     ['Monkey Dance \'09','もんきーだんすぜろきゅう'],
     ['More Move','もあむーヴ'],
@@ -2102,12 +2102,12 @@ const titleSpecials = [
 
     // ZINRAI
     ['PISTOL SWORD','ぴすとるそーど'],
-    ['月下散刄','げっかさんじん'],
+    ['月下散刄','げっかさんじん','げっかさんば','つきのしたにちるやいば'],
     ['夜叉ノ魂','やしゃのたましい'],
     ['Citroforte','しとろふぉるて'],
     ['DEADRABBIT!!','でっどらびっと'],
     ['Deathstalker','ですすとーかー'],
-    ['TEKNO KEISER','てくのかいざー'],
+    ['TEKNO KEISER','てくのかいざー','デステクノ'],
     ['ΛИ0MΛLY','あのまりー'],
     ['BENiZAKURA','べにざくら'],
     ['Dying 4 U','だいいんぐふぉーゆー'],
@@ -2129,6 +2129,8 @@ const titleSpecials = [
     ['映夢雪花抄','花映塚永夜抄','えいむせっかしょう','えいむゆきげしょう'],
     ['倍倍FIGHT!','ばいばいふぁいと'],
     ['フランケンシュタインの怪物','ふらんけんしゅたいんのかいぶつ'],
+    ['History of dj TAKA - single style collection -','ひすとりーおぶでぃーじぇーたかしんぐるすたいるこれくしょん'],
+    ['moffing 猫叉Master meets β2 黒パカミックス','もっふぃんぐねこまたますたーみーつべーたつーくろぱかみっくす'],
 
     // 難読
     ['閠槞彁の願い','ぎょくろうかのねがい'],
