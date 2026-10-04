@@ -1221,7 +1221,17 @@ const sortState = {
     if (current === m && tip && tip.style.display === "block" && !canHover) hide();
     else show(m);
   });
-  document.addEventListener("focusin",  e => { const m = markOf(e); if (m) show(m); });
+  // タップ／クリックでフォーカスが当たった場合の focusin では表示しない。
+  // （タップ時は focusin で一度表示 → 直後の click のトグルで消える、という動きになり
+  //   スマホで2回タップしないと出ない原因になっていたため。表示は click に一本化する）
+  // キーボード（Tabキー）でフォーカスした場合のみ focusin で表示する。
+  let pointerFocus = false;
+  document.addEventListener("pointerdown", () => {
+    pointerFocus = true;
+    setTimeout(() => { pointerFocus = false; }, 500);
+  }, true);
+  document.addEventListener("keydown", () => { pointerFocus = false; }, true);
+  document.addEventListener("focusin",  e => { const m = markOf(e); if (m && !pointerFocus) show(m); });
   document.addEventListener("focusout", e => { if (markOf(e)) hide(); });
   document.addEventListener("keydown",  e => { if (e.key === "Escape") hide(); });
   window.addEventListener("scroll", hide, true);
