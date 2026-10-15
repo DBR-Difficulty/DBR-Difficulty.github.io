@@ -607,6 +607,7 @@ function parseUnlockMethod(formatted) {
         .replace(/jubeat セレクション 楽曲パック vol\.(\d+)/g, 'jb$1')
         .replace(/SOUND VOLTEX セレクション 楽曲パック vol\.(\d+)/g, 'SV$1')
         .replace(/GITADORA セレクション 楽曲パック vol\.(\d+)/g, 'GD$1')
+        .replace(/DanceDanceRevolution セレクション 楽曲パック vol\.(\d+)/g, 'DDR$1')
         .replace(/BPL セレクション 楽曲パック vol\.(\d+)/g, 'BPL$1')
         .replace(/東方Project セレクション 楽曲パック vol\.(\d+)/g, 'TH$1')
         .replace(/The 4th セレクション 楽曲パック vol\.(\d+)/g, '4th$1')
